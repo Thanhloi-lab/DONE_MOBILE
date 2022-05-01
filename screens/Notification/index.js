@@ -1,12 +1,12 @@
-import { StyleSheet, Text, View } from "react-native";
+import { Text, View } from "react-native";
 import React from "react";
 
-const Notificcation = () => {
+const Notification = () => {
   return (
     <View>
-      <Text>Notification</Text>
+      <Text>notification</Text>
     </View>
   );
 };
 
-export default Notificcation;
+export default Notification;
