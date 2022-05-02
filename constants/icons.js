@@ -39,9 +39,15 @@ const management = require("../assets/icons/management.png");
 const group = require("../assets/icons/group.png");
 const pin = require("../assets/icons/pin.png");
 const unPin = require("../assets/icons/unpin.png");
+const done_name = require("../assets/icons/done_name.png");
+const password = require("../assets/icons/password.png");
+const email = require("../assets/icons/email.png");
 
 
 export default {
+    password,
+    email,
+    done_name,
     pin,
     unPin,
     group,

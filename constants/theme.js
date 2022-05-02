@@ -14,6 +14,7 @@ export const COLORS = {
     // base colors
     primary: "#fe6332", // orange
     primary1:'#ffe5e3',
+    primary2:'#fa7d55ba',
     secondary: "#0C381F",   // dark green
 
     green: "#66D59A",

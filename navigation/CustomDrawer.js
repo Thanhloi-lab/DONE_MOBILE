@@ -4,9 +4,10 @@ import { View, Text, Image, TouchableOpacity, StatusBar } from 'react-native';
 import { createDrawerNavigator, DrawerContentScrollView} from '@react-navigation/drawer';
 import MainLayout from "../screens/MainLayout";
 import Animated from "react-native-reanimated";
-
 import { COLORS, FONTS, SIZES, icons, dummyData, constants } from '../constants';
+
 import tabsSlice from '../stores/tab/tabsSlice';
+import authenticationSlice from '../stores/Authentication/authenticationSlice';
 import { useSelector, useDispatch } from 'react-redux';
 
 
@@ -211,8 +212,11 @@ const CustomDrawerContent = ({ navigation, selectedTab }) => {
                     }}
                 >
                     <CustomDrawerItem
-                        label="Layout"
+                        label="Logout"
                         icon={icons.logout}
+                        onPress={() => {
+                            dispatch(authenticationSlice.actions.deleteToken());
+                        }}
                     />
                 </View>
             </Animated.View>

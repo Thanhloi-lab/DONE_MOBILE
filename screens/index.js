@@ -4,9 +4,9 @@ import Home from './Home';
 import Statistics from './Statistics';
 import Notification from './Notification';
 import TaskDetail from './Task/Detail';
-import LoginScreen from './Login';
-import RegisterScreen from './Register';
-import ForgotPassword from './ForgetPassword';
+import { Login, Register, ForgotPassword } from './Authentication'
 
-
-export {Group, Management, Home, Statistics, Notification, TaskDetail, LoginScreen, RegisterScreen, ForgotPassword}
+export {
+    Group, Management, Home, Statistics, Notification,
+    TaskDetail, Login, Register, ForgotPassword
+}

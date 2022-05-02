@@ -25,7 +25,7 @@ export default function Wrapper() {
     const token = useSelector((state) => state.authentication.token);
 
     return (
-        <NavigationContainer>
+        <NavigationContainer style={{flex:1}}>
             {(token !== null && token !== "") ? (
                 <Stack.Navigator
                     screenOptions={{
