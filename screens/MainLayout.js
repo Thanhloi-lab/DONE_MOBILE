@@ -1,12 +1,12 @@
 import React from "react";
 import { StyleSheet, Text, View, FlatList, Image, SafeAreaView, TouchableOpacity, TouchableWithoutFeedback } from "react-native";
 import Animated, { Extrapolate, useSharedValue, useAnimatedStyle, withTiming } from "react-native-reanimated";
-import { connect } from 'react-redux';
-import { setSelectedTab } from '../stores/tab/tabAction';
+import { useDispatch, useSelector } from 'react-redux';
+import tabsSlice from '../stores/tab/tabsSlice';
 import { LinearGradient } from "expo-linear-gradient";
 import { COLORS, FONTS, SIZES, icons, dummyData, constants } from '../constants';
 import { useDrawerProgress, useDrawerStatus } from '@react-navigation/drawer';
-import {Group, Management, Home, Statistics, Notification} from '../screens/index.js'
+import { Group, Management, Home, Statistics, Notification } from '../screens/index.js'
 import { Header } from '../components';
 
 const TabButton = ({ label, icon, isFocused, onPress, outerContainerStyle, innerContainerStyle }) => {
@@ -64,7 +64,9 @@ const TabButton = ({ label, icon, isFocused, onPress, outerContainerStyle, inner
     )
 }
 
-const MainLayout = ({ navigation, selectedTab, setSelectedTab}) => {
+const MainLayout = ({ navigation, mainNavigation }) => {
+    const dispatch = useDispatch();
+    const selectedTab = useSelector((state) => state.tabs.selectedTab);
 
     const isDrawerOpen = useDrawerStatus();
     const flatListRef = React.useRef();
@@ -161,14 +163,14 @@ const MainLayout = ({ navigation, selectedTab, setSelectedTab}) => {
     })
 
     React.useEffect(() => {
-        setSelectedTab(constants.screens.home);
+        dispatch(tabsSlice.actions.setSelectedTab(constants.screens.home));
     }, [])
 
     React.useEffect(() => {
         if (selectedTab == constants.screens.home) {
             flatListRef?.current?.scrollToIndex({
-                index:0, 
-                animated:false
+                index: 0,
+                animated: false
             })
             homeTabFlex.value = withTiming(4, { duration: 500 });
             homeTabColor.value = withTiming(COLORS.primary, { duration: 500 });
@@ -180,8 +182,8 @@ const MainLayout = ({ navigation, selectedTab, setSelectedTab}) => {
 
         if (selectedTab == constants.screens.group) {
             flatListRef?.current?.scrollToIndex({
-                index:1, 
-                animated:false
+                index: 1,
+                animated: false
             })
             groupTabFlex.value = withTiming(4, { duration: 500 });
             groupTabColor.value = withTiming(COLORS.primary, { duration: 500 });
@@ -193,8 +195,8 @@ const MainLayout = ({ navigation, selectedTab, setSelectedTab}) => {
 
         if (selectedTab == constants.screens.statistics) {
             flatListRef?.current?.scrollToIndex({
-                index:3, 
-                animated:false
+                index: 3,
+                animated: false
             })
             statisticsTabFlex.value = withTiming(4, { duration: 500 });
             statisticsTabColor.value = withTiming(COLORS.primary, { duration: 500 });
@@ -206,8 +208,8 @@ const MainLayout = ({ navigation, selectedTab, setSelectedTab}) => {
 
         if (selectedTab == constants.screens.management) {
             flatListRef?.current?.scrollToIndex({
-                index:2, 
-                animated:false
+                index: 2,
+                animated: false
             })
             managementTabFlex.value = withTiming(4, { duration: 500 });
             managementTabColor.value = withTiming(COLORS.primary, { duration: 500 });
@@ -219,8 +221,8 @@ const MainLayout = ({ navigation, selectedTab, setSelectedTab}) => {
 
         if (selectedTab == constants.screens.notification) {
             flatListRef?.current?.scrollToIndex({
-                index:4, 
-                animated:false
+                index: 4,
+                animated: false
             })
             notificationTabFlex.value = withTiming(4, { duration: 500 });
             notificationTabColor.value = withTiming(COLORS.primary, { duration: 500 });
@@ -262,7 +264,7 @@ const MainLayout = ({ navigation, selectedTab, setSelectedTab}) => {
                     marginTop: 40,
                     alignItems: "center",
                 }}
-                title={selectedTab.toUpperCase()}
+                title={selectedTab}
                 leftComponent={
                     <TouchableOpacity
                         style={{
@@ -326,7 +328,7 @@ const MainLayout = ({ navigation, selectedTab, setSelectedTab}) => {
                                     width: SIZES.width
                                 }}
                             >
-                                {item.label == constants.screens.home && <Home navigation={navigation}/>}
+                                {item.label == constants.screens.home && <Home navigation={navigation} />}
                                 {item.label == constants.screens.group && <Group />}
                                 {item.label == constants.screens.management && <Management />}
                                 {item.label == constants.screens.statistics && <Statistics />}
@@ -381,7 +383,7 @@ const MainLayout = ({ navigation, selectedTab, setSelectedTab}) => {
                         isFocused={selectedTab == constants.screens.home}
                         outerContainerStyle={homeFlexStyle}
                         innerContainerStyle={homeColorStyle}
-                        onPress={() => setSelectedTab(constants.screens.home)}
+                        onPress={() => dispatch(tabsSlice.actions.setSelectedTab(constants.screens.home))}
                     />
                     <TabButton
                         label={constants.screens.group}
@@ -389,7 +391,7 @@ const MainLayout = ({ navigation, selectedTab, setSelectedTab}) => {
                         isFocused={selectedTab == constants.screens.group}
                         outerContainerStyle={groupFlexStyle}
                         innerContainerStyle={groupColorStyle}
-                        onPress={() => setSelectedTab(constants.screens.group)}
+                        onPress={() => dispatch(tabsSlice.actions.setSelectedTab(constants.screens.group))}
                     />
                     <TabButton
                         label={constants.screens.management}
@@ -397,7 +399,7 @@ const MainLayout = ({ navigation, selectedTab, setSelectedTab}) => {
                         isFocused={selectedTab == constants.screens.management}
                         outerContainerStyle={managementFlexStyle}
                         innerContainerStyle={managementColorStyle}
-                        onPress={() => setSelectedTab(constants.screens.management)}
+                        onPress={() => dispatch(tabsSlice.actions.setSelectedTab(constants.screens.management))}
                     />
                     <TabButton
                         label={constants.screens.statistics}
@@ -405,7 +407,7 @@ const MainLayout = ({ navigation, selectedTab, setSelectedTab}) => {
                         isFocused={selectedTab == constants.screens.statistics}
                         outerContainerStyle={statisticsFlexStyle}
                         innerContainerStyle={statisticsColorStyle}
-                        onPress={() => setSelectedTab(constants.screens.statistics)}
+                        onPress={() => dispatch(tabsSlice.actions.setSelectedTab(constants.screens.statistics))}
                     />
                     <TabButton
                         label={constants.screens.notification}
@@ -413,7 +415,7 @@ const MainLayout = ({ navigation, selectedTab, setSelectedTab}) => {
                         isFocused={selectedTab == constants.screens.notification}
                         outerContainerStyle={notificationFlexStyle}
                         innerContainerStyle={notificationColorStyle}
-                        onPress={() => setSelectedTab(constants.screens.notification)}
+                        onPress={() => dispatch(tabsSlice.actions.setSelectedTab(constants.screens.notification))}
                     />
 
                 </View>
@@ -422,18 +424,4 @@ const MainLayout = ({ navigation, selectedTab, setSelectedTab}) => {
     );
 }
 
-
-function mapStateToProps(state) {
-    return {
-        selectedTab: state.tabReducer.selectedTab
-    }
-}
-
-function mapDispatchToProps(dispatch) {
-    return {
-        setSelectedTab: (selectedTab) => {
-            return dispatch(setSelectedTab(selectedTab));
-        }
-    }
-}
-export default connect(mapStateToProps, mapDispatchToProps)(MainLayout)
+export default MainLayout;

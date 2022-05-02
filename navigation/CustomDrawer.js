@@ -3,11 +3,12 @@ import React from 'react';
 import { View, Text, Image, TouchableOpacity, StatusBar } from 'react-native';
 import { createDrawerNavigator, DrawerContentScrollView} from '@react-navigation/drawer';
 import MainLayout from "../screens/MainLayout";
+import Animated from "react-native-reanimated";
 
 import { COLORS, FONTS, SIZES, icons, dummyData, constants } from '../constants';
-import { connect } from 'react-redux';
-import { setSelectedTab } from '../stores/tab/tabAction';
-import Animated from "react-native-reanimated";
+import tabsSlice from '../stores/tab/tabsSlice';
+import { useSelector, useDispatch } from 'react-redux';
+
 
 const Drawer = createDrawerNavigator();
 
@@ -50,8 +51,8 @@ const CustomDrawerItem = ({ label, icon, isFocused, onPress }) => {
     )
 }
 
-const CustomDrawerContent = ({ navigation, selectedTab, setSelectedTab }) => {
-
+const CustomDrawerContent = ({ navigation, selectedTab }) => {
+    const dispatch = useDispatch();
 
     return (
         <DrawerContentScrollView
@@ -138,7 +139,7 @@ const CustomDrawerContent = ({ navigation, selectedTab, setSelectedTab }) => {
                         icon={icons.home}
                         isFocused={selectedTab == constants.screens.home}
                         onPress={() => {
-                            setSelectedTab(constants.screens.home);
+                            dispatch(tabsSlice.actions.setSelectedTab(constants.screens.home));
                             navigation.navigate("MainLayout")
                         }}
                     />
@@ -148,7 +149,7 @@ const CustomDrawerContent = ({ navigation, selectedTab, setSelectedTab }) => {
                         icon={icons.group}
                         isFocused={selectedTab == constants.screens.group}
                         onPress={() => {
-                            setSelectedTab(constants.screens.group);
+                            dispatch(tabsSlice.actions.setSelectedTab(constants.screens.group));
                             navigation.navigate("MainLayout")
                         }}
                     />
@@ -158,7 +159,7 @@ const CustomDrawerContent = ({ navigation, selectedTab, setSelectedTab }) => {
                         icon={icons.management}
                         isFocused={selectedTab == constants.screens.management}
                         onPress={() => {
-                            setSelectedTab(constants.screens.management);
+                            dispatch(tabsSlice.actions.setSelectedTab(constants.screens.management));
                             navigation.navigate("MainLayout")
                         }}
                     />
@@ -168,7 +169,7 @@ const CustomDrawerContent = ({ navigation, selectedTab, setSelectedTab }) => {
                         icon={icons.chart}
                         isFocused={selectedTab == constants.screens.statistics}
                         onPress={() => {
-                            setSelectedTab(constants.screens.statistics);
+                            dispatch(tabsSlice.actions.setSelectedTab(constants.screens.statistics));
                             navigation.navigate("MainLayout")
                         }}
                     />
@@ -178,7 +179,7 @@ const CustomDrawerContent = ({ navigation, selectedTab, setSelectedTab }) => {
                         icon={icons.bell}
                         isFocused={selectedTab == constants.screens.notification}
                         onPress={() => {
-                            setSelectedTab(constants.screens.notification);
+                            dispatch(tabsSlice.actions.setSelectedTab(constants.screens.notification));
                             navigation.navigate("MainLayout")
                         }}
                     />
@@ -219,9 +220,10 @@ const CustomDrawerContent = ({ navigation, selectedTab, setSelectedTab }) => {
     )
 }
 
-const CustomDrawer = ({ selectedTab, setSelectedTab, navigation }) => {
+const CustomDrawer = ({...props}) => {
 
     const [statusBarStyle, setStatusBarStyle] = React.useState(STYLES.lightMode);
+    const selectedTab = useSelector((state)=>state.tabs.selectedTab)
 
     const changeStatusBarStyle = (mode) => {
         setStatusBarStyle(STYLES[mode])
@@ -258,7 +260,6 @@ const CustomDrawer = ({ selectedTab, setSelectedTab, navigation }) => {
                         <CustomDrawerContent
                             navigation={props.navigation}
                             selectedTab={selectedTab}
-                            setSelectedTab={setSelectedTab}
                         />
                     )
                 }}
@@ -266,7 +267,7 @@ const CustomDrawer = ({ selectedTab, setSelectedTab, navigation }) => {
                 <Drawer.Screen name="MainLayout">
                     {props => <MainLayout
                         {...props}
-                        navigation={navigation}
+                        mainNavigation={props.navigation}
                     />}
                 </Drawer.Screen>
             </Drawer.Navigator>
@@ -274,18 +275,5 @@ const CustomDrawer = ({ selectedTab, setSelectedTab, navigation }) => {
     )
 }
 
-function mapStateToProps(state) {
-    return {
-        selectedTab: state.tabReducer.selectedTab,
-    }
-}
 
-function mapDispatchToProps(dispatch) {
-    return {
-        setSelectedTab: (selectedTab) => {
-            return dispatch(setSelectedTab(selectedTab));
-        }
-    }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(CustomDrawer)
+export default CustomDrawer
