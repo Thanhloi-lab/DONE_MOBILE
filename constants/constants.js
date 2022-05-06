@@ -3,7 +3,7 @@ const screens = {
     home: "Home",
     search: "Search",
     group: "Group",
-    management: "Management",
+    project: "Project",
     notification: "Notification",
     statistics: "Statistics",
 }
@@ -19,7 +19,7 @@ const bottom_tabs = [
     }, 
     {
         id: 2,
-        label: screens.management,
+        label: screens.project,
     }, 
     {
         id: 3,

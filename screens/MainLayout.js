@@ -6,7 +6,7 @@ import tabsSlice from '../stores/tab/tabsSlice';
 import { LinearGradient } from "expo-linear-gradient";
 import { COLORS, FONTS, SIZES, icons, dummyData, constants } from '../constants';
 import { useDrawerProgress, useDrawerStatus } from '@react-navigation/drawer';
-import { Group, Management, Home, Statistics, Notification } from '../screens/index.js'
+import { Group, Project, Home, Statistics, Notification } from '../screens/index.js'
 import { Header } from '../components';
 
 const TabButton = ({ label, icon, isFocused, onPress, outerContainerStyle, innerContainerStyle }) => {
@@ -206,7 +206,7 @@ const MainLayout = ({ navigation, mainNavigation }) => {
             statisticsTabColor.value = withTiming(COLORS.white, { duration: 500 });
         }
 
-        if (selectedTab == constants.screens.management) {
+        if (selectedTab == constants.screens.project) {
             flatListRef?.current?.scrollToIndex({
                 index: 2,
                 animated: false
@@ -322,7 +322,7 @@ const MainLayout = ({ navigation, mainNavigation }) => {
                     keyExtractor={item => `${item.id}`}
                     renderItem={({ item, index }) => {
                         return (
-                            <View
+                            <View              
                                 style={{
                                     height: SIZES.height,
                                     width: SIZES.width
@@ -330,7 +330,7 @@ const MainLayout = ({ navigation, mainNavigation }) => {
                             >
                                 {item.label == constants.screens.home && <Home navigation={navigation} />}
                                 {item.label == constants.screens.group && <Group />}
-                                {item.label == constants.screens.management && <Management />}
+                                {item.label == constants.screens.project && <Project />}
                                 {item.label == constants.screens.statistics && <Statistics />}
                                 {item.label == constants.screens.notification && <Notification />}
                             </View>
@@ -394,12 +394,12 @@ const MainLayout = ({ navigation, mainNavigation }) => {
                         onPress={() => dispatch(tabsSlice.actions.setSelectedTab(constants.screens.group))}
                     />
                     <TabButton
-                        label={constants.screens.management}
+                        label={constants.screens.project}
                         icon={icons.management}
-                        isFocused={selectedTab == constants.screens.management}
+                        isFocused={selectedTab == constants.screens.project}
                         outerContainerStyle={managementFlexStyle}
                         innerContainerStyle={managementColorStyle}
-                        onPress={() => dispatch(tabsSlice.actions.setSelectedTab(constants.screens.management))}
+                        onPress={() => dispatch(tabsSlice.actions.setSelectedTab(constants.screens.project))}
                     />
                     <TabButton
                         label={constants.screens.statistics}

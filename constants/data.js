@@ -2,8 +2,17 @@ import images from './images';
 const dummyData = {
     myProfile: {
         profile_image: images.LOGO,
-        name: "Loi Cao"
+        name: "Loi Cao",
+        id:1
     },
+    CATEGORY_DEFAULT_PROJECT:[
+        {
+            status:"My Own Project"
+        },
+        {
+            status:"Project"
+        }
+    ],
     STATUS_ID : {
         0: 'DELETED',
         1: 'UNCOMPLETED',
@@ -175,6 +184,29 @@ const dummyData = {
             updateDate: "02/08/2022 16:10:08",
             userCreateGroup: 1,
             userCreateProject: 1,
+        },
+        {
+            content: "Old content",
+            deadline: "02/02/2023 00:00:00",
+            idGroup: 13,
+            idProject: 10,
+            idTask: 9,
+            mailUserCreateGroup: "Hello@gmail.com",
+            mailUserCreateProject: "Hello@gmail.com",
+            nameGroup: "hello kitty",
+            nameProject: "Hello kitty 1",
+            nameTask: "New task",
+            nameUserCreateGroup: "Hello",
+            nameUserCreateProject: "Hello",
+            phoneUserCreateGroup: "0394653441",
+            phoneUserCreateProject: "0394653441",
+            projectCreateDate: "02/08/2022 14:18:42",
+            statusId: 3,
+            statusName: "Hoàn thành",
+            taskCreateDate: "02/08/2022 15:56:51",
+            updateDate: "02/08/2022 16:10:08",
+            userCreateGroup: 1,
+            userCreateProject: 2,
         },
     ]
 }
