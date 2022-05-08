@@ -30,7 +30,7 @@ const HorizontalTaskCard = ({ containerStyle, imageStyle, item, onPress }) => {
         >
             {/* status */}
 
-            <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 15, paddingVertical: 10 }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 15, paddingTop:10, paddingBottom:5 }}>
                 {/* favorite */}
                 <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1, }}>
                     <Image
@@ -66,16 +66,16 @@ const HorizontalTaskCard = ({ containerStyle, imageStyle, item, onPress }) => {
             {/* info */}
             <View style={{ flex: 1, padding: 15, paddingTop: 0 }} numberOfLines={1}>
                 {/* name */}
-                <Text style={{ ...FONTS.h2 }}>
+                <Text style={{ ...FONTS.h2, fontSize:18, lineHeight:20 }}>
                     Task: {item.nameTask}
                 </Text>
 
                 {/* description */}
-                <Text style={{ color: COLORS.darkGray1, ...FONTS.body4, fontSize: 16 }} numberOfLines={1}>
+                <Text style={{ color: COLORS.darkGray1, ...FONTS.body4, fontSize: 14, lineHeight:16 }} numberOfLines={1}>
                     {item.content}
                 </Text>
 
-                <Text style={{ marginTop: SIZES.base, ...FONTS.h2, fontSize: 20 }} numberOfLines={1}>
+                <Text style={{ marginTop: SIZES.base, ...FONTS.h2, fontSize: 16, lineHeight:16 }} numberOfLines={1}>
                     Project: {item.nameProject}
                 </Text>
             </View>

@@ -219,9 +219,8 @@ const Group = ({ navigation }) => {
       {/* List*/}
       <FlatList
         style={{ flex: 1 }}
-        vertical
         data={listProject}
-        keyExtractor={(item) => item.idTask}
+        keyExtractor={(item, index) => index}
         showsVerticalScrollIndicator={false}
         // ListHeaderComponent={
         //     <View style={{ flex: 1}}>

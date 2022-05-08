@@ -4,19 +4,9 @@ import { COLORS, FONTS, SIZES, icons } from '../../constants'
 
 const TaskDetail = () => {
     return (
-        <SafeAreaView style={{ height: '100%', paddingTop:70 }}>
+        <SafeAreaView style={{ height: '100%', }}>
             <ScrollView style={{ flexDirection: 'column' }}>
                 <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-                    <Text
-                        style={{
-                            ...FONTS.h3,
-                            fontSize: 50,
-                            lineHeight: 50,
-                            color: COLORS.primary
-                        }}
-                    >
-                        Detail
-                    </Text>
 
                     <View style={{
                         flexDirection: 'row',

@@ -163,7 +163,6 @@ const Home = ({navigation}) => {
                     return (
                         <HorizontalTaskCard
                             containerStyle={{
-                                height: 150,
                                 justifyContent:'center',
                                 marginHorizontal: SIZES.padding,
                                 marginBottom: index == listTask.length - 1 ? 200 : SIZES.radius,
