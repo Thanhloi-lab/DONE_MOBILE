@@ -217,6 +217,66 @@ const dummyData = {
       userCreateProject: 2,
     },
   ],
+  notification:[
+    {
+      title:"Thêm vào nhóm",
+      content:"Bạn đã được thêm vào nhóm",
+      type:"GroupDetail",
+      idGroup: 1,
+      deadline: "02/02/2023 00:00:00",
+      idGroup: 13,
+      idProject: 10,
+      idTask: 8,
+      mailUserCreateGroup: "Hello@gmail.com",
+      mailUserCreateProject: "Hello@gmail.com",
+      nameGroup: "hello kitty",
+      nameProject: "Hello kitty 1",
+      nameTask: "New task",
+      nameUserCreateGroup: "Hello",
+      nameUserCreateProject: "Hello",
+      phoneUserCreateGroup: "0394653441",
+      phoneUserCreateProject: "0394653441",
+      projectCreateDate: "02/08/2022 14:18:42",
+      statusId: 3,
+      statusName: "Hoàn thành",
+      taskCreateDate: "02/08/2022 15:56:51",
+      updateDate: "02/08/2022 16:10:08",
+      userCreateGroup: 1,
+      userCreateProject: 1,
+      status: "seen",
+      color: "white"
+
+    },
+    {
+      title:"Phân công task mới",
+      content:"task đến hạn",
+      type:"TaskDetail",
+      idGroup: 1,
+      deadline: "02/02/2023 00:00:00",
+      idGroup: 13,
+      idProject: 10,
+      idTask: 8,
+      mailUserCreateGroup: "Hello@gmail.com",
+      mailUserCreateProject: "Hello@gmail.com",
+      nameGroup: "hello kitty",
+      nameProject: "Hello kitty 1",
+      nameTask: "New task",
+      nameUserCreateGroup: "Hello",
+      nameUserCreateProject: "Hello",
+      phoneUserCreateGroup: "0394653441",
+      phoneUserCreateProject: "0394653441",
+      projectCreateDate: "02/08/2022 14:18:42",
+      statusId: 3,
+      statusName: "Hoàn thành",
+      taskCreateDate: "02/08/2022 15:56:51",
+      updateDate: "02/08/2022 16:10:08",
+      userCreateGroup: 1,
+      userCreateProject: 1,
+      status:"new",
+      color:"primary1"
+
+    }
+  ]
 };
 
 export default dummyData;

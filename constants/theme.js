@@ -47,6 +47,7 @@ export const COLORS = {
 
     transparent: "transparent",
     transparentBlack:"#00000012",
+    seenNotification: "#f58442"
 };
 
 export const SIZES = {

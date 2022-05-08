@@ -369,7 +369,7 @@ const MainLayout = ({ navigation, mainNavigation }) => {
                                 )}
                                 {item.label == constants.screens.statistics && <Statistics />}
                                 {item.label == constants.screens.notification && (
-                                    <Notification />
+                                    <Notification navigation={navigation} />
                                 )}
                             </View>
                         );
