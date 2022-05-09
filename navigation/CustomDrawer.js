@@ -1,7 +1,7 @@
 import 'react-native-gesture-handler';
 import React from 'react';
 import { View, Text, Image, TouchableOpacity, StatusBar } from 'react-native';
-import { createDrawerNavigator, DrawerContentScrollView} from '@react-navigation/drawer';
+import { createDrawerNavigator, DrawerContentScrollView } from '@react-navigation/drawer';
 import MainLayout from "../screens/MainLayout";
 import Animated from "react-native-reanimated";
 import { COLORS, FONTS, SIZES, icons, dummyData, constants } from '../constants';
@@ -103,7 +103,7 @@ const CustomDrawerContent = ({ navigation, selectedTab }) => {
                         marginTop: SIZES.radius,
                         alightItems: 'center'
                     }}
-                    onPress={() => console.log('profile')}
+                    onPress={() => (navigation.navigate("Profile"))}
                 >
                     <Image
                         source={dummyData.myProfile?.profile_image}
@@ -198,6 +198,7 @@ const CustomDrawerContent = ({ navigation, selectedTab }) => {
                     <CustomDrawerItem
                         label='Setting'
                         icon={icons.setting}
+                        onPress={() => (navigation.navigate("Setting"))}
                     />
 
                     <CustomDrawerItem
@@ -224,10 +225,10 @@ const CustomDrawerContent = ({ navigation, selectedTab }) => {
     )
 }
 
-const CustomDrawer = ({...props}) => {
+const CustomDrawer = ({ ...props }) => {
 
     const [statusBarStyle, setStatusBarStyle] = React.useState(STYLES.lightMode);
-    const selectedTab = useSelector((state)=>state.tabs.selectedTab)
+    const selectedTab = useSelector((state) => state.tabs.selectedTab)
 
     const changeStatusBarStyle = (mode) => {
         setStatusBarStyle(STYLES[mode])
