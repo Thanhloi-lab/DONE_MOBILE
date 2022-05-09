@@ -42,8 +42,22 @@ const unPin = require("../assets/icons/unpin.png");
 const done_name = require("../assets/icons/done_name.png");
 const password = require("../assets/icons/password.png");
 const email = require("../assets/icons/email.png");
-
-
+const birthday = require("../assets/icons/birthday.png");
+const close1 = require("../assets/icons/close1.png");
+const email1 = require("../assets/icons/email1.png");
+const gender = require("../assets/icons/gender.png");
+const phone1 = require("../assets/icons/phone1.png");
+const place = require("../assets/icons/place.png");
+const status = require("../assets/icons/status.png");
+const status1 = require("../assets/icons/status1.png");
+const padlock = require("../assets/icons/padlock.png");
+const darkmode = require("../assets/icons/dark-mode.png");
+const view = require("../assets/icons/view.png");
+const turnoff = require("../assets/icons/turn-off.png");
+const exit = require("../assets/icons/exit.png");
+const password1 = require("../assets/icons/password1.png");
+const loupe = require("../assets/icons/loupe.png");
+const user1 = require("../assets/icons/user1.png");
 export default {
     password,
     email,
@@ -88,5 +102,21 @@ export default {
     cross,
     home,
     heart,
-    location
+    location,
+    user1,
+    birthday,
+    close1,
+    email1,
+    gender,
+    phone1,
+    place,
+    status,
+    status1,
+    padlock,
+    darkmode,
+    turnoff,
+    view,
+    loupe,
+    password1,
+    exit
 }

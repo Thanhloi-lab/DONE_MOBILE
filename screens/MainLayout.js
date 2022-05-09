@@ -325,6 +325,7 @@ const MainLayout = ({ navigation, mainNavigation }) => {
                             justifyContent: "center",
                             borderRadius: SIZES.radius,
                         }}
+                        onPress={() => navigation.navigate("Profile")}
                     >
                         <Image
                             source={dummyData.myProfile?.profile_image}

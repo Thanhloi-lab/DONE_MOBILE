@@ -4,6 +4,12 @@ const dummyData = {
     profile_image: images.LOGO,
     name: "Loi Cao",
     id: 1,
+    gender: "MALE",
+    birth: "16-05-2022",
+    address: "Ho Chi Minh city",
+    status: "active",
+    email: "loicao@gmail.com",
+    phone: "0952462512"
   },
   CATEGORY_DEFAULT_PROJECT: [
     {
@@ -217,11 +223,11 @@ const dummyData = {
       userCreateProject: 2,
     },
   ],
-  notification:[
+  notification: [
     {
-      title:"Thêm vào nhóm",
-      content:"Bạn đã được thêm vào nhóm",
-      type:"GroupDetail",
+      title: "Thêm vào nhóm",
+      content: "Bạn đã được thêm vào nhóm",
+      type: "GroupDetail",
       idGroup: 1,
       deadline: "02/02/2023 00:00:00",
       idGroup: 13,
@@ -248,9 +254,9 @@ const dummyData = {
 
     },
     {
-      title:"Phân công task mới",
-      content:"task đến hạn",
-      type:"TaskDetail",
+      title: "Phân công task mới",
+      content: "task đến hạn",
+      type: "TaskDetail",
       idGroup: 1,
       deadline: "02/02/2023 00:00:00",
       idGroup: 13,
@@ -272,8 +278,8 @@ const dummyData = {
       updateDate: "02/08/2022 16:10:08",
       userCreateGroup: 1,
       userCreateProject: 1,
-      status:"new",
-      color:"primary1"
+      status: "new",
+      color: "primary1"
 
     }
   ]
