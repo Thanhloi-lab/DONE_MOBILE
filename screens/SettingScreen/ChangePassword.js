@@ -45,6 +45,7 @@ const ChangePassword = ({ navigation }) => {
 
     const [show, setShow] = useState("");
     const [error, setError] = useState("");
+    const [hidePass, setHidePass] = useState(true)
 
     const dispatch = useDispatch();
 
@@ -81,7 +82,7 @@ const ChangePassword = ({ navigation }) => {
                             style={{
                                 width: 20,
                                 height: 20,
-                                tintColor: 'black',
+                                tintColor: 'white',
                             }}
                         />
                     </TouchableOpacity>
@@ -108,23 +109,38 @@ const ChangePassword = ({ navigation }) => {
                                             tintColor: "red"
                                         }}
                                     />
-                                    {show === 1 &&
-                                        <TouchableOpacity onPress={() => {
-                                            setCurrentPassword(""); setCurrentPasswordError(!validate("", "password"));
-                                            setShow(""); setError(1);
-                                        }}>
-                                            <Image source={icons.close1} style={{
-                                                width: 20,
-                                                height: 20,
-                                                marginLeft: 320
-                                            }}
-                                            />
-                                        </TouchableOpacity>
+
+                                    {show === 1 && (
+                                        <View style={{ marginLeft: 250, marginBottom: 15, flex: 1, justifyContent: "flex-start", alignItems: "center", flexDirection: "row" }}>
+                                            <TouchableOpacity onPress={() => {
+                                                setCurrentPassword(""); setCurrentPasswordError(!validate("", "password"));
+                                                setShow(""); setError(1);
+                                            }}>
+                                                <Image source={icons.close1} style={{
+                                                    width: 20,
+                                                    height: 20,
+                                                    marginLeft: 35
+                                                }}
+                                                />
+                                            </TouchableOpacity>
+
+                                            <TouchableOpacity onPress={() => {
+                                                hidePass ? setHidePass(false) : setHidePass(true)
+                                            }}>
+                                                <Image source={hidePass ? icons.eye : icons.disable_eye} style={{
+                                                    width: 20,
+                                                    height: 20,
+                                                    marginLeft: 15
+                                                }}
+                                                />
+                                            </TouchableOpacity>
+                                        </View>)
                                     }
                                 </View>
                                 <TextInput
                                     style={styles.input}
                                     value={currentPassword}
+                                    secureTextEntry={hidePass}
                                     onChangeText={(value) => {
                                         setCurrentPasswordError(!validate(value, "password"));
                                         setCurrentPassword(value);
@@ -154,23 +170,37 @@ const ChangePassword = ({ navigation }) => {
                                             tintColor: "red"
                                         }}
                                     />
-                                    {show === 2 &&
-                                        <TouchableOpacity onPress={() => {
-                                            setNewPassword(""); setNewPasswordError(!validate("", "password"));
-                                            setShow(""); setError(2);
-                                        }}>
-                                            <Image source={icons.close1} style={{
-                                                width: 20,
-                                                height: 20,
-                                                marginLeft: 320
-                                            }}
-                                            />
-                                        </TouchableOpacity>
-                                    }
+                                    {show === 2 && (
+                                        <View style={{ marginLeft: 250, marginBottom: 15, flex: 1, justifyContent: "flex-start", alignItems: "center", flexDirection: "row" }}>
+                                            <TouchableOpacity onPress={() => {
+                                                setNewPassword(""); setNewPasswordError(!validate("", "password"));
+                                                setShow(""); setError(2);
+                                            }}>
+                                                <Image source={icons.close1} style={{
+                                                    width: 20,
+                                                    height: 20,
+                                                    marginLeft: 35
+                                                }}
+                                                />
+                                            </TouchableOpacity>
+
+                                            <TouchableOpacity onPress={() => {
+                                                hidePass ? setHidePass(false) : setHidePass(true)
+                                            }}>
+                                                <Image source={hidePass ? icons.eye : icons.disable_eye} style={{
+                                                    width: 20,
+                                                    height: 20,
+                                                    marginLeft: 15
+                                                }}
+                                                />
+                                            </TouchableOpacity>
+                                        </View>
+                                    )}
                                 </View>
                                 <TextInput
                                     style={styles.input}
                                     value={newPassword}
+                                    secureTextEntry={hidePass}
                                     onChangeText={(value) => {
                                         setNewPasswordError(!validate(value, "password"));
                                         setNewPassword(value);
@@ -200,26 +230,45 @@ const ChangePassword = ({ navigation }) => {
                                             tintColor: "red"
                                         }}
                                     />
-                                    {show === 3 &&
-                                        <TouchableOpacity onPress={() => {
-                                            setConfirmPassword(""); setConfirmPasswordError(!validate("", "confirm-password"));
-                                            setShow(""); setError(3);
-                                        }}>
-                                            <Image source={icons.close1} style={{
-                                                width: 20,
-                                                height: 20,
-                                                marginLeft: 320
-                                            }}
-                                            />
-                                        </TouchableOpacity>
+                                    {show === 3 && (
+                                        <View style={{ marginLeft: 250, marginBottom: 15, flex: 1, justifyContent: "flex-start", alignItems: "center", flexDirection: "row" }}>
+                                            <TouchableOpacity onPress={() => {
+                                                setConfirmPassword(""); setConfirmPasswordError(!validate("", "confirm-password"));
+                                                setShow(""); setError(3);
+                                            }}>
+                                                <Image source={icons.close1} style={{
+                                                    width: 20,
+                                                    height: 20,
+                                                    marginLeft: 35
+                                                }}
+                                                />
+                                            </TouchableOpacity>
+                                            <TouchableOpacity onPress={() => {
+                                                hidePass ? setHidePass(false) : setHidePass(true)
+                                            }}>
+                                                <Image source={hidePass ? icons.eye : icons.disable_eye} style={{
+                                                    width: 20,
+                                                    height: 20,
+                                                    marginLeft: 15
+                                                }}
+                                                />
+                                            </TouchableOpacity>
+                                        </View>)
                                     }
+
+
+
                                 </View>
                                 <TextInput
                                     style={styles.input}
                                     value={confirmPassword}
+                                    secureTextEntry={hidePass}
                                     onChangeText={(value) => {
-                                        setConfirmPasswordError(!validate(value, "confirm-password"));
+
                                         setConfirmPassword(value);
+                                        const password = newPassword;
+                                        setConfirmPasswordError(!validate({ confirmPassword, password }, "confirm-password"));
+                                        console.log({ newPassword, confirmPassword })
                                         value !== '' ? setShow(3) : setShow('');
                                         confirmPasswordError ? setError(3) : setError("")
 
@@ -281,15 +330,16 @@ const styles = StyleSheet.create({
     },
     input: {
         height: '100%',
-        width: '100%',
-        paddingRight: 30,
-        paddingLeft: 5
+        width: '90%',
+        justifyContent: "flex-start",
+        paddingRight: 70,
+        paddingLeft: 0
     },
     inputContainer: {
         height: 50,
         fontSize: 15,
         paddingLeft: 68,
-        paddingRight: 30,
+        paddingRight: 50,
         borderRadius: 25,
         color: "#ccc",
         backgroundColor: "#f7f7f7",
