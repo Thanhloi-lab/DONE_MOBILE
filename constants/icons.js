@@ -59,6 +59,9 @@ const password1 = require("../assets/icons/password1.png");
 const loupe = require("../assets/icons/loupe.png");
 const user1 = require("../assets/icons/user1.png");
 const customerservice = require("../assets/icons/customer-service.png");
+const sendemail = require("../assets/icons/send-email.png");
+const facebook = require("../assets/icons/facebook.png");
+const smartphone = require("../assets/icons/smartphone.png");
 export default {
     password,
     email,
@@ -120,5 +123,8 @@ export default {
     loupe,
     password1,
     exit,
-    customerservice
+    customerservice,
+    sendemail,
+    facebook,
+    smartphone,
 }
