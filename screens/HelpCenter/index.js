@@ -28,7 +28,7 @@ const HelpCenter = ({ navigation }) => {
         Linking.openURL(phoneNumber);
     };
 
-    const message = "hello bros!!!"
+    const message = "hello nigga!!!"
     const number = '0765167276';
 
     const openUrl = async (url) => {
@@ -111,7 +111,7 @@ const HelpCenter = ({ navigation }) => {
                             <Text style={{ color: "black", fontSize: 15, ...FONTS.h4, marginLeft: "5%" }}>Contact <Text style={{ color: "blue" }}>Mr.Hien Nguyen</Text> {'\n'}for more information. {'\n'}FB: <Text style={{ color: "green" }}>facebook.com/thanhhienm4</Text></Text>
                         </View>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.button} onPress={() => { Linking.openURL(`mailto:support@me.com?subject=testing&body=${message}`) }}>
+                    <TouchableOpacity style={styles.button} onPress={() => { Linking.openURL(`mailto:ntdtestmail@gmail.com?subject=DoneApp&body=${message}`) }}>
 
                         <View style={styles.viewContainer}>
                             <Image source={icons.sendemail} style={styles.imageStyle} />
