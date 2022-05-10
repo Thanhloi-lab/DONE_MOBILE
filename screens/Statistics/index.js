@@ -30,7 +30,7 @@ const Statistics = () => {
             id: 1,
             name: "Uncompleted",
             icon: icons.unCompleted,
-            color: COLORS.COMPLETED1,
+            color: 'orange',
             expenses: [
                 {
                     id: 1,
@@ -70,7 +70,7 @@ const Statistics = () => {
             id: 2,
             name: "Completed",
             icon: icons.completed,
-            color: 'orange',
+            color: COLORS.COMPLETED1,
             expenses: [
                 {
                     id: 5,

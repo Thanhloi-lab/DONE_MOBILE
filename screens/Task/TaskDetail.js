@@ -25,12 +25,12 @@ const TaskDetail = () => {
                             }}
 
                         />
-                        <Text style={{ color: COLORS.darkGray1, ...FONTS.body3, lineHeight:30 }}>
+                        <Text style={{ color: COLORS.darkGray1, ...FONTS.body3, lineHeight: 30 }}>
                             UNCOMPLETED
                         </Text>
                     </View>
 
-                    
+
                 </View>
                 <View style={{ marginVertical: 20, marginHorizontal: 14 }}>
                     <View style={{
@@ -45,7 +45,7 @@ const TaskDetail = () => {
                         borderRadius: SIZES.radius,
                         marginBottom: 30,
                         backgroundColor: COLORS.primary1,
-                        marginTop:20,
+                        marginTop: 20,
                     }}>
                         <View style={{
                             flexDirection: 'row',
@@ -229,7 +229,7 @@ const TaskDetail = () => {
                     </View>
                 </View>
 
-                <View style={{ justifyContent: 'center', alignItems: 'center', marginBottom:30}}>
+                <View style={{ justifyContent: 'center', alignItems: 'center', marginBottom: 30 }}>
                     <TouchableOpacity>
                         <View style={{
                             backgroundColor: COLORS.COMPLETED1,
