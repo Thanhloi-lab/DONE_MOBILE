@@ -156,7 +156,7 @@ const CustomDrawerContent = ({ navigation, selectedTab }) => {
                     />
 
                     <CustomDrawerItem
-                        label={constants.screens.management}
+                        label={constants.screens.project}
                         icon={icons.management}
                         isFocused={selectedTab == constants.screens.management}
                         onPress={() => {
@@ -204,6 +204,7 @@ const CustomDrawerContent = ({ navigation, selectedTab }) => {
                     <CustomDrawerItem
                         label='Help center'
                         icon={icons.help}
+                        onPress={() => (navigation.navigate("HelpCenter"))}
                     />
                 </View>
 

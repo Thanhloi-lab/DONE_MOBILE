@@ -7,6 +7,8 @@ import TaskDetail from "./Task/Detail";
 import Project from "./Project";
 import GroupDetail from "./GroupDetail";
 import ProjectDetail from "./ProjectDetail";
+import HelpCenter from "./HelpCenter";
+
 import { Profile, EditPersonal, EditContact } from '../screens/Profile'
 import { Setting, ChangePassword } from '../screens/SettingScreen'
 
@@ -30,4 +32,5 @@ export {
   Profile,
   EditPersonal,
   EditContact,
+  HelpCenter
 };
