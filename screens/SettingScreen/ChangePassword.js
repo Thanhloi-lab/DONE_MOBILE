@@ -24,7 +24,7 @@ import React from "react";
 import { COLORS, FONTS, SIZES, icons, dummyData } from '../../constants'
 
 
-import { useState, useLayoutEffect } from "react";
+import { useState, useLayoutEffect, useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { validate } from "../../util/validation";
 
@@ -45,12 +45,14 @@ const ChangePassword = ({ navigation }) => {
 
     const [show, setShow] = useState("");
     const [error, setError] = useState("");
-    const [hidePass, setHidePass] = useState(true)
+    const [hidePass, setHidePass] = useState("")
 
     const dispatch = useDispatch();
 
     useLayoutEffect(() => {
-        currentPasswordError || newPasswordError || confirmPasswordError ? setError(true) : setError(false)
+        currentPasswordError ? setError(1) : setError("");
+        newPasswordError ? setError(2) : setError("");
+        confirmPasswordError ? setError(3) : setError("");
     }, [currentPasswordError, newPasswordError, confirmPasswordError])
 
     return (
@@ -111,7 +113,7 @@ const ChangePassword = ({ navigation }) => {
                                     />
 
                                     {show === 1 && (
-                                        <View style={{ marginLeft: 250, marginBottom: 15, flex: 1, justifyContent: "flex-start", alignItems: "center", flexDirection: "row" }}>
+                                        <View style={[styles.icon, { justifyContent: "flex-end", marginLeft: "40%" }]}>
                                             <TouchableOpacity onPress={() => {
                                                 setCurrentPassword(""); setCurrentPasswordError(!validate("", "password"));
                                                 setShow(""); setError(1);
@@ -119,18 +121,18 @@ const ChangePassword = ({ navigation }) => {
                                                 <Image source={icons.close1} style={{
                                                     width: 20,
                                                     height: 20,
-                                                    marginLeft: 35
+                                                    marginLeft: "0%"
                                                 }}
                                                 />
                                             </TouchableOpacity>
 
                                             <TouchableOpacity onPress={() => {
-                                                hidePass ? setHidePass(false) : setHidePass(true)
+                                                hidePass === 1 ? setHidePass('') : setHidePass(1)
                                             }}>
-                                                <Image source={hidePass ? icons.eye : icons.disable_eye} style={{
+                                                <Image source={hidePass ? icons.disable_eye : icons.eye} style={{
                                                     width: 20,
                                                     height: 20,
-                                                    marginLeft: 15
+                                                    marginLeft: "20%"
                                                 }}
                                                 />
                                             </TouchableOpacity>
@@ -140,7 +142,7 @@ const ChangePassword = ({ navigation }) => {
                                 <TextInput
                                     style={styles.input}
                                     value={currentPassword}
-                                    secureTextEntry={hidePass}
+                                    secureTextEntry={hidePass === 1 ? false : true}
                                     onChangeText={(value) => {
                                         setCurrentPasswordError(!validate(value, "password"));
                                         setCurrentPassword(value);
@@ -171,7 +173,7 @@ const ChangePassword = ({ navigation }) => {
                                         }}
                                     />
                                     {show === 2 && (
-                                        <View style={{ marginLeft: 250, marginBottom: 15, flex: 1, justifyContent: "flex-start", alignItems: "center", flexDirection: "row" }}>
+                                        <View style={[styles.icon, { justifyContent: "flex-end", marginLeft: "40%" }]}>
                                             <TouchableOpacity onPress={() => {
                                                 setNewPassword(""); setNewPasswordError(!validate("", "password"));
                                                 setShow(""); setError(2);
@@ -179,18 +181,18 @@ const ChangePassword = ({ navigation }) => {
                                                 <Image source={icons.close1} style={{
                                                     width: 20,
                                                     height: 20,
-                                                    marginLeft: 35
+
                                                 }}
                                                 />
                                             </TouchableOpacity>
 
                                             <TouchableOpacity onPress={() => {
-                                                hidePass ? setHidePass(false) : setHidePass(true)
+                                                hidePass === 2 ? setHidePass('') : setHidePass(2)
                                             }}>
-                                                <Image source={hidePass ? icons.eye : icons.disable_eye} style={{
+                                                <Image source={hidePass ? icons.disable_eye : icons.eye} style={{
                                                     width: 20,
                                                     height: 20,
-                                                    marginLeft: 15
+                                                    marginLeft: "20%"
                                                 }}
                                                 />
                                             </TouchableOpacity>
@@ -200,7 +202,7 @@ const ChangePassword = ({ navigation }) => {
                                 <TextInput
                                     style={styles.input}
                                     value={newPassword}
-                                    secureTextEntry={hidePass}
+                                    secureTextEntry={hidePass === 2 ? false : true}
                                     onChangeText={(value) => {
                                         setNewPasswordError(!validate(value, "password"));
                                         setNewPassword(value);
@@ -231,7 +233,7 @@ const ChangePassword = ({ navigation }) => {
                                         }}
                                     />
                                     {show === 3 && (
-                                        <View style={{ marginLeft: 250, marginBottom: 15, flex: 1, justifyContent: "flex-start", alignItems: "center", flexDirection: "row" }}>
+                                        <View style={[styles.icon, { justifyContent: "flex-end", marginLeft: "40%" }]}>
                                             <TouchableOpacity onPress={() => {
                                                 setConfirmPassword(""); setConfirmPasswordError(!validate("", "confirm-password"));
                                                 setShow(""); setError(3);
@@ -239,17 +241,17 @@ const ChangePassword = ({ navigation }) => {
                                                 <Image source={icons.close1} style={{
                                                     width: 20,
                                                     height: 20,
-                                                    marginLeft: 35
+
                                                 }}
                                                 />
                                             </TouchableOpacity>
                                             <TouchableOpacity onPress={() => {
-                                                hidePass ? setHidePass(false) : setHidePass(true)
+                                                hidePass === 3 ? setHidePass('') : setHidePass(3)
                                             }}>
-                                                <Image source={hidePass ? icons.eye : icons.disable_eye} style={{
+                                                <Image source={hidePass ? icons.disable_eye : icons.eye} style={{
                                                     width: 20,
                                                     height: 20,
-                                                    marginLeft: 15
+                                                    marginLeft: "20%"
                                                 }}
                                                 />
                                             </TouchableOpacity>
@@ -262,7 +264,7 @@ const ChangePassword = ({ navigation }) => {
                                 <TextInput
                                     style={styles.input}
                                     value={confirmPassword}
-                                    secureTextEntry={hidePass}
+                                    secureTextEntry={hidePass === 3 ? false : true}
                                     onChangeText={(value) => {
 
                                         setConfirmPassword(value);
@@ -332,8 +334,8 @@ const styles = StyleSheet.create({
         height: '100%',
         width: '90%',
         justifyContent: "flex-start",
-        paddingRight: 70,
-        paddingLeft: 0
+        marginRight: 70,
+        marginLeft: 40
     },
     inputContainer: {
         height: 50,
