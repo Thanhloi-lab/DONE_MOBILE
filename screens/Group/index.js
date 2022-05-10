@@ -5,8 +5,13 @@ import {
   Image,
   FlatList,
   TouchableOpacity,
+  StyleSheet,
+  Modal,
+  KeyboardAvoidingView,
+  Pressable,
 } from "react-native";
 import React from "react";
+import { useState } from "react";
 import { FONTS, COLORS, SIZES, icons, dummyData } from "../../constants";
 import {
   HorizontalGroupCard,
@@ -151,14 +156,55 @@ const Group = ({ navigation }) => {
     );
   }
 
+  const [modalVisible, setModalVisible] = useState(false);
+
   return (
     <View
       style={{
         flex: 1,
       }}
     >
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <KeyboardAvoidingView>
+              <TextInput placeholder="Name group..." />
+            </KeyboardAvoidingView>
+            <Pressable
+              style={[styles.buttonModal, styles.buttonClose, { marginTop: 10 }]}
+              onPress={() => setModalVisible(!modalVisible)}
+            >
+              <Text style={styles.textStyle}>Create group</Text>
+            </Pressable>
+            <Pressable
+              style={[styles.buttonModal, styles.buttonClose, { backgroundColor: "black", }]}
+              onPress={() => setModalVisible(!modalVisible)}
+            >
+              <Text style={styles.textStyle}>Cancel</Text>
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
       {/* search */}
       {renderSearch()}
+
+      <View>
+        <TouchableOpacity style={styles.button} onPress={() => setModalVisible(true)}>
+          <View>
+            <Text style={FONTS.h4}>
+              CREATE YOUR GROUP
+            </Text>
+          </View>
+
+        </TouchableOpacity>
+      </View>
 
       <View
         style={{
@@ -249,5 +295,76 @@ const Group = ({ navigation }) => {
     </View>
   );
 };
+
+
+const styles = StyleSheet.create({
+  button: {
+    fontSize: 15,
+    backgroundColor: "linen",
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 15,
+    height: 40,
+    borderWidth: 2,
+    borderColor: "yellow",
+    margin: 10,
+    marginRight: "20%",
+    marginLeft: "20%",
+
+    shadowColor: "navy",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.29,
+    shadowRadius: 4.65,
+    elevation: 7,
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22,
+  },
+  modalView: {
+    borderWidth: 3,
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  buttonModal: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+  },
+  buttonOpen: {
+    backgroundColor: "#F194FF",
+  },
+  buttonClose: {
+    backgroundColor: "#2196F3",
+    marginBottom: 10,
+  },
+  textStyle: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center",
+  },
+
+});
+
 
 export default Group;

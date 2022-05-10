@@ -31,10 +31,10 @@ const GroupDetail = (props) => {
                 <View style={styles.centeredView}>
                     <View style={styles.modalView}>
                         <KeyboardAvoidingView>
-                            <TextInput placeholder="Name..." />
+                            <TextInput placeholder="Name edit group/create project..." />
                         </KeyboardAvoidingView>
                         <Pressable
-                            style={[styles.button, styles.buttonClose]}
+                            style={[styles.button, styles.buttonClose, { marginTop: 10 }]}
                             onPress={() => setModalVisible(!modalVisible)}
                         >
                             <Text style={styles.textStyle}>Create project</Text>
@@ -43,10 +43,23 @@ const GroupDetail = (props) => {
                             style={[styles.button, styles.buttonClose]}
                             onPress={() => setModalVisible(!modalVisible)}
                         >
-                            <Text style={styles.textStyle}>Add group member</Text>
+                            <Text style={styles.textStyle}>Edit group's name</Text>
                         </Pressable>
                         <Pressable
-                            style={[styles.button, styles.buttonClose]}
+                            style={[styles.button, styles.buttonClose, { backgroundColor: "green", }]}
+                            onPress={() => setModalVisible(!modalVisible)}
+                        >
+                            <Text style={styles.textStyle}>Add group member</Text>
+                        </Pressable>
+
+                        <Pressable
+                            style={[styles.button, styles.buttonClose, { backgroundColor: "red", }]}
+                            onPress={() => setModalVisible(!modalVisible)}
+                        >
+                            <Text style={styles.textStyle}>Delete this group</Text>
+                        </Pressable>
+                        <Pressable
+                            style={[styles.button, styles.buttonClose, { backgroundColor: "black", }]}
                             onPress={() => setModalVisible(!modalVisible)}
                         >
                             <Text style={styles.textStyle}>Cancel</Text>
