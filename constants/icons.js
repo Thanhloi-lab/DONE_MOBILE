@@ -62,6 +62,10 @@ const customerservice = require("../assets/icons/customer-service.png");
 const sendemail = require("../assets/icons/send-email.png");
 const facebook = require("../assets/icons/facebook.png");
 const smartphone = require("../assets/icons/smartphone.png");
+const taskname = require("../assets/icons/taskname.png");
+const content = require("../assets/icons/content.png");
+const deadline = require("../assets/icons/deadline.png");
+
 export default {
     password,
     email,
@@ -127,4 +131,7 @@ export default {
     sendemail,
     facebook,
     smartphone,
+    taskname,
+    content,
+    deadline,
 }

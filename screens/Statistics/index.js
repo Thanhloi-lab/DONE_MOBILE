@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import {
     SafeAreaView,
     StyleSheet,
@@ -11,7 +11,9 @@ import {
     TouchableOpacity,
     FlatList,
     Animated,
-    Platform
+    Platform,
+    Modal,
+    Pressable,
 } from 'react-native';
 import { VictoryPie } from 'victory-native';
 
@@ -20,7 +22,7 @@ import { Svg } from 'react-native-svg';
 import { COLORS, FONTS, SIZES, icons, images } from '../../constants';
 
 const Statistics = () => {
-
+    const [modalVisible, setModalVisible] = useState(false);
     // dummy data
     const confirmStatus = "C"
     const pendingStatus = "P"
@@ -198,7 +200,7 @@ const Statistics = () => {
                             borderWidth: 3,
                             borderColor: COLORS.secondary
                         }}
-                        onPress={() => setViewMode("chart")}
+                        onPress={() => setModalVisible(true)}
                     >
                         <Text style={{ color: "white", ...FONTS.h4 }}>
                             PRINT FILE
@@ -615,6 +617,38 @@ const Statistics = () => {
 
     return (
         <View style={{ flex: 1, backgroundColor: COLORS.lightGray2 }}>
+
+
+
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => {
+                    setModalVisible(!modalVisible);
+                }}
+            >
+                <View style={styles.centeredView}>
+                    <View style={styles.modalView}>
+                        <Text style={FONTS.h3}>Are you want to print statistic file?</Text>
+                        <Pressable
+                            style={[styles.buttonModal, styles.buttonClose, { backgroundColor: "green", marginTop: 10 }]}
+                            onPress={() => setModalVisible(!modalVisible)}
+                        >
+                            <Text style={styles.textStyle}>YES FOR SURE</Text>
+                        </Pressable>
+
+                        <Pressable
+                            style={[styles.buttonModal, styles.buttonClose, { backgroundColor: "blue", }]}
+                            onPress={() => setModalVisible(!modalVisible)}
+                        >
+                            <Text style={styles.textStyle}>Cancel</Text>
+                        </Pressable>
+                    </View>
+                </View>
+            </Modal>
+
+
             {/* Nav bar section */}
             {/* {renderNavBar()} */}
 
@@ -671,6 +705,49 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.29,
         shadowRadius: 4.65,
         elevation: 7,
+    },
+    centeredView: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop: 22,
+    },
+    modalView: {
+        margin: 20,
+        backgroundColor: "white",
+        borderRadius: 20,
+        padding: 35,
+        borderWidth: 3,
+        alignItems: "center",
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
+    },
+    buttonModal: {
+        borderRadius: 20,
+        padding: 10,
+        elevation: 2,
+    },
+    buttonOpen: {
+        backgroundColor: "#F194FF",
+    },
+    buttonClose: {
+        backgroundColor: "#2196F3",
+        marginBottom: 10,
+    },
+    textStyle: {
+        color: "white",
+        fontWeight: "bold",
+        textAlign: "center",
+    },
+    modalText: {
+        marginBottom: 15,
+        textAlign: "center",
     },
 })
 

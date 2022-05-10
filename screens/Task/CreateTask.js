@@ -31,19 +31,18 @@ import { useDispatch, useSelector } from "react-redux";
 
 
 const CreateTask = ({ navigation }) => {
-    const [name, setName] = useState(dummyData.myProfile?.name)
+    const [name, setName] = useState()
     const [nameError, setNameError] = useState(false);
-    const [gender, setGender] = useState(dummyData.myProfile?.gender);
-    const [genderError, setGenderError] = useState(false);
-    const [birth, setBirth] = useState(dummyData.myProfile?.birth);
-    const [birthError, setBirthError] = useState(false);
-    const [address, setAddress] = useState(dummyData.myProfile?.address);
-    const [addressError, setAddressError] = useState(false);
-    const [status, setStatus] = useState(dummyData.myProfile?.status);
-    const [statusError, setStatusError] = useState(false);
+    const [deadline, setDeadline] = useState();
+    const [deadlineError, setDeadlineError] = useState(false);
+    const [content, setContent] = useState();
+    const [contentError, setContentError] = useState(false);
+
 
     const [error, setError] = useState("");
     const [show, setShow] = useState("");
+
+
     const [date, setDate] = useState(new Date());
 
     const dispatch = useDispatch();
@@ -54,13 +53,13 @@ const CreateTask = ({ navigation }) => {
         setDate(currentDate);
         let tempDate = new Date(currentDate);
         let fDate = tempDate.getDate() + '/' + (tempDate.getMonth() + 1) + '/' + tempDate.getFullYear();
-        setBirth(fDate)
+        setDeadline(fDate)
     }
 
 
     useLayoutEffect(() => {
-        nameError || addressError ? setError(true) : setError(false)
-    }, [nameError, addressError])
+        nameError || contentError ? setError(true) : setError(false)
+    }, [nameError, contentError])
 
 
     return (
@@ -100,7 +99,7 @@ const CreateTask = ({ navigation }) => {
                         alignItems: "center",
                         width: "80%"
                     }}>
-                        <Text style={{ color: '#fff', fontSize: 20, fontWeight: 'bold' }}>Edit Personal Infomation</Text>
+                        <Text style={{ color: '#fff', fontSize: 20, fontWeight: 'bold' }}>Create Task</Text>
                     </View>
 
                 </View>
@@ -112,11 +111,11 @@ const CreateTask = ({ navigation }) => {
                             <View >
                                 <View style={[styles.inputContainer, show === 1 && { borderWidth: 1, borderColor: "lightgreen" }]}>
                                     <View style={styles.icon}>
-                                        <Image source={icons.user1}
+                                        <Image source={icons.taskname}
                                             style={{
-                                                width: 20,
-                                                height: 20,
-                                                tintColor: "red"
+                                                width: 25,
+                                                height: 25,
+
                                             }}
                                         />
                                         {show === 1 && (<View style={[styles.icon, { justifyContent: "flex-end", marginLeft: "10%" }]}>
@@ -143,7 +142,7 @@ const CreateTask = ({ navigation }) => {
 
                                         }}
                                         onPressIn={() => { if (name !== '') setShow(1); }}
-                                        placeholder="Name"
+                                        placeholder="Task Name"
 
                                     />
                                 </View>
@@ -157,36 +156,14 @@ const CreateTask = ({ navigation }) => {
 
 
 
-                                <View style={styles.inputContainer}>
-                                    <View style={styles.icon}>
-                                        <Image source={icons.gender}
-                                            style={{
-                                                width: 20,
-                                                height: 20,
-                                                tintColor: "red"
-                                            }}
-                                        />
-                                    </View>
-                                    <Picker
-                                        selectedValue={gender}
-                                        style={styles.input}
-                                        onValueChange={(itemValue) => setGender(itemValue)}
-                                    >
-
-                                        <Picker.Item label="Male" value="Male" />
-                                        <Picker.Item label="Female" value="Female" />
-                                        <Picker.Item label="Another" value="Another" />
-                                    </Picker>
-                                </View>
-
 
                                 <View style={styles.inputContainer}>
                                     <View style={styles.icon}>
-                                        <Image source={icons.birthday}
+                                        <Image source={icons.deadline}
                                             style={{
-                                                width: 20,
-                                                height: 20,
-                                                tintColor: "red"
+                                                width: 25,
+                                                height: 25,
+
                                             }}
                                         />
 
@@ -195,7 +172,7 @@ const CreateTask = ({ navigation }) => {
                                         onPress={() => { setShow(3) }}
                                         style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
                                     >
-                                        {birth}
+                                        {deadline ? deadline : "           choose task deadline"}
                                     </Text>
 
 
@@ -210,18 +187,17 @@ const CreateTask = ({ navigation }) => {
                                     />)
                                 }
 
-                                <View style={[styles.inputContainer, show === 4 && { borderWidth: 1, borderColor: "lightgreen" }]}>
+                                <View style={[styles.inputContainer, { height: 150 }, show === 4 && { borderWidth: 1, borderColor: "lightgreen" }]}>
                                     <View style={styles.icon}>
-                                        <Image source={icons.place}
+                                        <Image source={icons.content}
                                             style={{
-                                                width: 20,
-                                                height: 20,
-                                                tintColor: "red"
+                                                width: 25,
+                                                height: 25,
                                             }}
                                         />
                                         {show === 4 && (<View style={[styles.icon, { justifyContent: "flex-end", marginLeft: "10%" }]}>
                                             <TouchableOpacity onPress={() => {
-                                                setAddress(''); setAddressError(!validate("", "address"));
+                                                setContent(''); setContentError(!validate("", "content"));
                                                 setShow('');
                                             }}>
                                                 <Image source={icons.close1} style={{
@@ -234,49 +210,28 @@ const CreateTask = ({ navigation }) => {
                                         }
                                     </View>
                                     <TextInput
-                                        style={styles.input}
-                                        value={address}
+                                        style={[styles.input]}
+                                        value={content}
+                                        multiline={true}
                                         onChangeText={(value) => {
-                                            setAddressError(!validate(value, "address"));
-                                            setAddress(value);
+                                            setContentError(!validate(value, "content"));
+                                            setContent(value);
                                             value !== '' ? setShow(4) : setShow('');
 
                                         }}
-                                        onPressIn={() => { if (address !== '') setShow(4); }}
+                                        onPressIn={() => { if (content !== '') setShow(4); }}
 
-                                        placeholder="Address"
+                                        placeholder="Write your content"
                                     />
                                 </View>
-                                {addressError && (
+                                {contentError && (
                                     <View style={styles.errorContainer}>
                                         <Text style={styles.errorText}>
-                                            Valid address is required: *city
+                                            Valid content is required: not null
                                         </Text>
                                     </View>
                                 )}
 
-
-
-                                <View style={styles.inputContainer}>
-                                    <View style={styles.icon}>
-                                        <Image source={icons.status}
-                                            style={{
-                                                width: 20,
-                                                height: 20,
-                                                tintColor: "red"
-                                            }}
-                                        />
-                                    </View>
-                                    <Picker
-                                        selectedValue={status}
-                                        style={styles.input}
-                                        onValueChange={(itemValue, itemIndex) => setStatus(itemValue)}
-                                    >
-                                        <Picker.Item label="Active" value="Active" />
-                                        <Picker.Item label="Deactivate" value="Deactivate" />
-
-                                    </Picker>
-                                </View>
 
 
                                 <TouchableOpacity style={styles.button} onPress={() => navigation.goBack()}>
