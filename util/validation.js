@@ -5,6 +5,11 @@ export function validate(input, type) {
         return false;
       }
       break;
+    case "content":
+      if (input.trim() == "" || input.trim() == null) {
+        return false;
+      }
+      break;
     case "address":
       if (input.trim() == "" || input.trim() == null) {
         return false;

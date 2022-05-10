@@ -41,7 +41,7 @@ const ProjectDetail = (props) => {
                         </Pressable>
                         <Pressable
                             style={[styles.button, styles.buttonClose, { backgroundColor: "green", }]}
-                            onPress={() => setModalVisible(!modalVisible)}
+                            onPress={() => { setModalVisible(!modalVisible), props.navigation.navigate("CreateTask") }}
                         >
                             <Text style={styles.textStyle}>Create task</Text>
                         </Pressable>
