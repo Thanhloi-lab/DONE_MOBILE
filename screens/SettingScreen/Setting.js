@@ -50,7 +50,7 @@ const Setting = ({ navigation }) => {
                     </TouchableOpacity>
                     <View style={{
                         alignItems: "center",
-                        width: 300
+                        width: "80%"
                     }}>
                         <Text style={{ color: '#fff', fontSize: 20, fontWeight: 'bold' }}>Setting</Text>
                     </View>
