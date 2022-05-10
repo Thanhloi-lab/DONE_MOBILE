@@ -11,6 +11,7 @@ import {
 import React from "react";
 import { COLORS, FONTS, SIZES, icons } from '../../constants'
 import { LinearGradient } from "expo-linear-gradient";
+import { useCallback } from "react";
 
 
 const HelpCenter = ({ navigation }) => {
@@ -26,6 +27,25 @@ const HelpCenter = ({ navigation }) => {
 
         Linking.openURL(phoneNumber);
     };
+
+    const message = "hello bros!!!"
+    const number = '0765167276';
+
+    const openUrl = async (url) => {
+        const isSupported = await Linking.canOpenURL(url);
+        if (isSupported) {
+            await Linking.openURL(url);
+        } else {
+            Alert.alert(`Don't know how to open this url: ${url}`);
+        }
+    }
+
+    const sendTextMessage = useCallback(async (phNumber, message) => {
+        const separator = Platform.OS === 'ios' ? '&' : '?'
+        const url = `sms:${number}${separator}body=${message}`
+        await Linking.openURL(url)
+    }, [])
+
     return (
         <LinearGradient
             colors={[COLORS.primary, COLORS.primary2]}
@@ -76,6 +96,28 @@ const HelpCenter = ({ navigation }) => {
                             <Text style={{ color: "black", fontSize: 15, ...FONTS.h4, marginLeft: "5%" }}>Contact <Text style={{ color: "blue" }}>Mr.Loi Cao</Text> {'\n'}for more information. {'\n'}Phone number: <Text style={{ color: "green" }}>0394 653 441</Text></Text>
                         </View>
                     </TouchableOpacity>
+
+                    <TouchableOpacity style={styles.button} onPress={() => sendTextMessage(number, message)}>
+
+                        <View style={styles.viewContainer}>
+                            <Image source={icons.smartphone} style={styles.imageStyle} />
+                            <Text style={{ color: "black", fontSize: 15, ...FONTS.h4, marginLeft: "5%" }}>Contact <Text style={{ color: "blue" }}>Mr.Do Khang</Text> {'\n'}for more information. {'\n'}SMS number: <Text style={{ color: "green" }}>0765 167 276</Text></Text>
+                        </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.button} onPress={() => { Linking.openURL(`fb://facewebmodal/f?href=https://www.facebook.com/thanhhienm4`) }}>
+
+                        <View style={styles.viewContainer}>
+                            <Image source={icons.facebook} style={styles.imageStyle} />
+                            <Text style={{ color: "black", fontSize: 15, ...FONTS.h4, marginLeft: "5%" }}>Contact <Text style={{ color: "blue" }}>Mr.Hien Nguyen</Text> {'\n'}for more information. {'\n'}FB: <Text style={{ color: "green" }}>facebook.com/thanhhienm4</Text></Text>
+                        </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.button} onPress={() => { Linking.openURL(`mailto:support@me.com?subject=testing&body=${message}`) }}>
+
+                        <View style={styles.viewContainer}>
+                            <Image source={icons.sendemail} style={styles.imageStyle} />
+                            <Text style={{ color: "black", fontSize: 15, ...FONTS.h4, marginLeft: "5%" }}>Contact <Text style={{ color: "blue" }}>Mr.Duy Nguyen</Text> {'\n'}for more information. {'\n'}Mail: <Text style={{ color: "green" }}>ntdtestmail@gmail.com</Text></Text>
+                        </View>
+                    </TouchableOpacity>
                 </View>
             </View>
 
@@ -106,7 +148,7 @@ const styles = StyleSheet.create({
     },
     button: {
         fontSize: 15,
-        backgroundColor: "ivory",
+        backgroundColor: "lightcyan",
         alignItems: "center",
         justifyContent: "center",
         borderRadius: 15,
@@ -124,15 +166,13 @@ const styles = StyleSheet.create({
     viewContainer: {
         flex: 1,
         flexDirection: "row",
-        justifyContent: "center",
+        justifyContent: "flex-start",
         alignItems: "center"
 
     },
     imageStyle: {
         height: 50,
         width: 50,
-        tintColor: "red",
-
     }
 });
 

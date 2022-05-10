@@ -28,7 +28,6 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "description": "done app",
-    "githubUrl": "https://github.com/Thanhloi-lab/DONE_MOBILE"
+    "description": ""
   }
 }
