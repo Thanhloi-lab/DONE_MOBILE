@@ -10,9 +10,11 @@ import {
     ImageBackground,
     ScrollView,
     KeyboardAvoidingView,
-    Picker
+
 } from "react-native";
 
+
+import { Picker } from '@react-native-picker/picker'
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 import React from "react";
@@ -117,7 +119,7 @@ const EditPersonal = ({ navigation }) => {
                                                 tintColor: "red"
                                             }}
                                         />
-                                        {show === 1 &&
+                                        {show === 1 && (<View style={[styles.icon, { justifyContent: "flex-end", marginLeft: "10%" }]}>
                                             <TouchableOpacity onPress={() => {
                                                 setName(""); setNameError(!validate("", "name"));
                                                 setShow("");
@@ -125,10 +127,10 @@ const EditPersonal = ({ navigation }) => {
                                                 <Image source={icons.close1} style={{
                                                     width: 20,
                                                     height: 20,
-                                                    marginLeft: 320
+
                                                 }}
                                                 />
-                                            </TouchableOpacity>
+                                            </TouchableOpacity></View>)
                                         }
                                     </View>
                                     <TextInput
@@ -168,7 +170,7 @@ const EditPersonal = ({ navigation }) => {
                                     <Picker
                                         selectedValue={gender}
                                         style={styles.input}
-                                        onValueChange={(itemValue, itemIndex) => setGender(itemValue)}
+                                        onValueChange={(itemValue) => setGender(itemValue)}
                                     >
 
                                         <Picker.Item label="Male" value="Male" />
@@ -217,7 +219,7 @@ const EditPersonal = ({ navigation }) => {
                                                 tintColor: "red"
                                             }}
                                         />
-                                        {show === 4 &&
+                                        {show === 4 && (<View style={[styles.icon, { justifyContent: "flex-end", marginLeft: "10%" }]}>
                                             <TouchableOpacity onPress={() => {
                                                 setAddress(''); setAddressError(!validate("", "address"));
                                                 setShow('');
@@ -228,7 +230,7 @@ const EditPersonal = ({ navigation }) => {
                                                     marginLeft: 320
                                                 }}
                                                 />
-                                            </TouchableOpacity>
+                                            </TouchableOpacity></View>)
                                         }
                                     </View>
                                     <TextInput
@@ -326,15 +328,13 @@ const styles = StyleSheet.create({
     },
     input: {
         height: '100%',
-        width: '100%',
-        paddingRight: 30,
-        paddingLeft: 5
+        width: '90%',
     },
     inputContainer: {
         height: 50,
         fontSize: 15,
         paddingLeft: 68,
-        paddingRight: 30,
+        paddingRight: 50,
         borderRadius: 25,
         color: "#ccc",
         backgroundColor: "#f7f7f7",

@@ -106,7 +106,7 @@ const EditContact = ({ navigation }) => {
                                             tintColor: "red"
                                         }}
                                     />
-                                    {show === 1 &&
+                                    {show === 1 && (<View style={[styles.icon, { justifyContent: "flex-end", marginLeft: "10%" }]}>
                                         <TouchableOpacity onPress={() => {
                                             setEmail(""); setEmailError(!validate("", "email"));
                                             setShow(""); setError(1);
@@ -114,10 +114,10 @@ const EditContact = ({ navigation }) => {
                                             <Image source={icons.close1} style={{
                                                 width: 20,
                                                 height: 20,
-                                                marginLeft: 320
+
                                             }}
                                             />
-                                        </TouchableOpacity>
+                                        </TouchableOpacity></View>)
                                     }
                                 </View>
                                 <TextInput
@@ -152,7 +152,7 @@ const EditContact = ({ navigation }) => {
                                             tintColor: "red"
                                         }}
                                     />
-                                    {show === 2 &&
+                                    {show === 2 && (<View style={[styles.icon, { justifyContent: "flex-end", marginLeft: "10%" }]}>
                                         <TouchableOpacity onPress={() => {
                                             setPhone(""); setPhoneError(!validate("", "phone"));
                                             setShow(""); setError(2);
@@ -160,10 +160,10 @@ const EditContact = ({ navigation }) => {
                                             <Image source={icons.close1} style={{
                                                 width: 20,
                                                 height: 20,
-                                                marginLeft: 320
+
                                             }}
                                             />
-                                        </TouchableOpacity>
+                                        </TouchableOpacity></View>)
                                     }
                                 </View>
                                 <TextInput
@@ -234,15 +234,13 @@ const styles = StyleSheet.create({
     },
     input: {
         height: '100%',
-        width: '100%',
-        paddingRight: 30,
-        paddingLeft: 5
+        width: '90%',
     },
     inputContainer: {
         height: 50,
         fontSize: 15,
         paddingLeft: 68,
-        paddingRight: 30,
+        paddingRight: 50,
         borderRadius: 25,
         color: "#ccc",
         backgroundColor: "#f7f7f7",
