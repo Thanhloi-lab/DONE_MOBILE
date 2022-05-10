@@ -43,12 +43,18 @@ const GroupDetail = (props) => {
                             style={[styles.button, styles.buttonClose]}
                             onPress={() => setModalVisible(!modalVisible)}
                         >
+                            <Text style={styles.textStyle}>Add group member</Text>
+                        </Pressable>
+                        <Pressable
+                            style={[styles.button, styles.buttonClose]}
+                            onPress={() => setModalVisible(!modalVisible)}
+                        >
                             <Text style={styles.textStyle}>Cancel</Text>
                         </Pressable>
                     </View>
                 </View>
             </Modal>
-            <View>
+            <View style={modalVisible && { opacity: 0.2 }}>
                 <View style={{ marginHorizontal: 10, paddingVertical: 10, position: 'relative', }}>
 
                     <View
@@ -89,7 +95,7 @@ const GroupDetail = (props) => {
                                 flexDirection: "row",
                                 justifyContent: "center",
                                 alignItems: "center",
-                                
+
                             }}
                             onPress={() => setModalVisible(true)}
                         >
@@ -157,6 +163,7 @@ const styles = StyleSheet.create({
         backgroundColor: "white",
         borderRadius: 20,
         padding: 35,
+        borderWidth: 3,
         alignItems: "center",
         shadowColor: "#000",
         shadowOffset: {

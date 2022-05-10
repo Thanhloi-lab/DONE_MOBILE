@@ -43,14 +43,20 @@ const ProjectDetail = (props) => {
                             style={[styles.button, styles.buttonClose]}
                             onPress={() => setModalVisible(!modalVisible)}
                         >
+                            <Text style={styles.textStyle}>Add project member</Text>
+                        </Pressable>
+                        <Pressable
+                            style={[styles.button, styles.buttonClose]}
+                            onPress={() => setModalVisible(!modalVisible)}
+                        >
                             <Text style={styles.textStyle}>Cancel</Text>
                         </Pressable>
                     </View>
                 </View>
             </Modal>
-            <View>
-                <View style={{ marginHorizontal: 10, paddingVertical: 10, position:'relative' }}>
-                    
+            <View style={modalVisible && { opacity: 0.2 }}>
+                <View style={{ marginHorizontal: 10, paddingVertical: 10, position: 'relative' }}>
+
                     <View
                         style={{
                             backgroundColor: COLORS.primary1,
@@ -74,16 +80,17 @@ const ProjectDetail = (props) => {
                         <Text>Creator: {projects[0].nameUserCreateProject}</Text>
                     </View>
 
-                    <View style={{position:'absolute', top:0, right:0, elevation:8}}>
+                    <View style={{ position: 'absolute', top: 0, right: 0, elevation: 8 }}>
                         <TouchableOpacity
                             style={{
                                 borderRadius: 50,
                                 width: 40,
                                 height: 40,
                                 backgroundColor: COLORS.primary,
-                                flexDirection: "row",
+                                flexDirection: "column",
                                 justifyContent: "center",
                                 alignItems: "center",
+
                             }}
                             onPress={() => setModalVisible(true)}
                         >
@@ -93,6 +100,7 @@ const ProjectDetail = (props) => {
                                     color: "white",
                                     textAlign: "center",
                                     textAlignVertical: "center",
+
                                 }}
                             >
                                 +
@@ -133,6 +141,7 @@ const styles = StyleSheet.create({
         marginTop: 22,
     },
     modalView: {
+        borderWidth: 3,
         margin: 20,
         backgroundColor: "white",
         borderRadius: 20,

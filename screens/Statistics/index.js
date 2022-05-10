@@ -15,7 +15,7 @@ import {
 } from 'react-native';
 import { VictoryPie } from 'victory-native';
 
-import {Svg} from 'react-native-svg';
+import { Svg } from 'react-native-svg';
 
 import { COLORS, FONTS, SIZES, icons, images } from '../../constants';
 
@@ -28,65 +28,65 @@ const Statistics = () => {
     let categoriesData = [
         {
             id: 1,
-            name: "Education",
-            icon: icons.education,
+            name: "Uncompleted",
+            icon: icons.unCompleted,
             color: COLORS.COMPLETED1,
             expenses: [
                 {
                     id: 1,
-                    title: "Tuition Fee",
-                    description: "Tuition fee",
-                    location: "ByProgrammers' tuition center",
-                    total: 100.00,
+                    title: "Project Tuition Fee",
+                    group: "Group abc",
+                    user: "someone",
+                    total: 2,
                     status: pendingStatus
                 },
                 {
                     id: 2,
-                    title: "Arduino",
-                    description: "Hardward",
-                    location: "ByProgrammers' tuition center",
-                    total: 30.00,
+                    title: "Project Arduino",
+                    group: "Group Hardward",
+                    user: "ByProgrammers' tuition center",
+                    total: 4,
                     status: pendingStatus
                 },
                 {
                     id: 3,
-                    title: "Javascript Books",
-                    description: "Javascript books",
-                    location: "ByProgrammers' Book Store",
-                    total: 20.00,
+                    title: "Project Javascript Books",
+                    group: "Group Javascript books",
+                    user: "ByProgrammers' Book Store",
+                    total: 3,
                     status: confirmStatus
                 },
                 {
                     id: 4,
-                    title: "PHP Books",
-                    description: "PHP books",
-                    location: "ByProgrammers' Book Store",
-                    total: 20.00,
+                    title: "Project PHP Books",
+                    group: "Group PHP books",
+                    user: "ByProgrammers' Book Store",
+                    total: 1,
                     status: confirmStatus
                 }
             ],
         },
         {
             id: 2,
-            name: "Nutrition",
-            icon: icons.food,
+            name: "Completed",
+            icon: icons.completed,
             color: 'orange',
             expenses: [
                 {
                     id: 5,
-                    title: "Vitamins",
-                    description: "Vitamin",
-                    location: "ByProgrammers' Pharmacy",
-                    total: 25.00,
+                    title: "Project Vitamins",
+                    group: "Group Vitamin",
+                    user: "ByProgrammers' Pharmacy",
+                    total: 7,
                     status: pendingStatus,
                 },
 
                 {
                     id: 6,
-                    title: "Protein powder",
-                    description: "Protein",
-                    location: "ByProgrammers' Pharmacy",
-                    total: 50.00,
+                    title: "Project Protein powder",
+                    group: "Group Protein",
+                    user: "ByProgrammers' Pharmacy",
+                    total: 16,
                     status: confirmStatus,
                 },
 
@@ -94,132 +94,84 @@ const Statistics = () => {
         },
         {
             id: 3,
-            name: "Child",
-            icon: icons.baby_car,
+            name: "Bug",
+            icon: icons.bug,
             color: COLORS.primary,
             expenses: [
                 {
                     id: 7,
-                    title: "Toys",
-                    description: "toys",
-                    location: "ByProgrammers' Toy Store",
-                    total: 25.00,
+                    title: "Project Toys",
+                    group: "Group toys",
+                    user: "ByProgrammers' Toy Store",
+                    total: 8,
                     status: confirmStatus,
                 },
                 {
                     id: 8,
-                    title: "Baby Car Seat",
-                    description: "Baby Car Seat",
-                    location: "ByProgrammers' Baby Care Store",
-                    total: 100.00,
+                    title: "Project Baby Car Seat",
+                    group: "Group Baby Car Seat",
+                    user: "ByProgrammers' Baby Care Store",
+                    total: 7,
                     status: pendingStatus,
                 },
                 {
                     id: 9,
-                    title: "Pampers",
-                    description: "Pampers",
-                    location: "ByProgrammers' Supermarket",
-                    total: 100.00,
+                    title: "Project Pampers",
+                    group: "Group Pampers",
+                    user: "ByProgrammers' Supermarket",
+                    total: 2,
                     status: pendingStatus,
                 },
                 {
                     id: 10,
-                    title: "Baby T-Shirt",
-                    description: "T-Shirt",
-                    location: "ByProgrammers' Fashion Store",
-                    total: 20.00,
+                    title: "Project T-Shirt",
+                    group: "Group T-Shirt",
+                    user: "ByProgrammers' Fashion Store",
+                    total: 3,
                     status: pendingStatus,
                 },
             ],
         },
         {
             id: 4,
-            name: "Beauty & Care",
-            icon: icons.healthcare,
+            name: "Expired",
+            icon: icons.expired,
             color: 'blue',
             expenses: [
                 {
                     id: 11,
-                    title: "Skin Care product",
-                    description: "skin care",
-                    location: "ByProgrammers' Pharmacy",
-                    total: 10.00,
+                    title: "Project Skin Care product",
+                    group: "Group skin care",
+                    user: "ByProgrammers' Pharmacy",
+                    total: 9,
                     status: pendingStatus,
                 },
                 {
                     id: 12,
-                    title: "Lotion",
-                    description: "Lotion",
-                    location: "ByProgrammers' Pharmacy",
-                    total: 50.00,
+                    title: "Project Lotion",
+                    group: "Group Lotion",
+                    user: "ByProgrammers' Pharmacy",
+                    total: 9,
                     status: confirmStatus,
                 },
                 {
                     id: 13,
-                    title: "Face Mask",
-                    description: "Face Mask",
-                    location: "ByProgrammers' Pharmacy",
-                    total: 50.00,
+                    title: "Project Face Mask",
+                    group: "Group Face Mask",
+                    user: "ByProgrammers' Pharmacy",
+                    total: 7,
                     status: pendingStatus,
                 },
                 {
                     id: 14,
-                    title: "Sunscreen cream",
-                    description: "Sunscreen cream",
-                    location: "ByProgrammers' Pharmacy",
-                    total: 50.00,
+                    title: "Project Sunscreen cream",
+                    group: "Group Sunscreen cream",
+                    user: "ByProgrammers' Pharmacy",
+                    total: 5,
                     status: pendingStatus,
                 },
             ],
         },
-        {
-            id: 5,
-            name: "Sports",
-            icon: icons.sports_icon,
-            color: 'green',
-            expenses: [
-                {
-                    id: 15,
-                    title: "Gym Membership",
-                    description: "Monthly Fee",
-                    location: "ByProgrammers' Gym",
-                    total: 45.00,
-                    status: pendingStatus,
-                },
-                {
-                    id: 16,
-                    title: "Gloves",
-                    description: "Gym Equipment",
-                    location: "ByProgrammers' Gym",
-                    total: 15.00,
-                    status: confirmStatus,
-                },
-            ],
-        },
-        {
-            id: 6,
-            name: "Clothing",
-            icon: icons.cloth_icon,
-            color: COLORS.red,
-            expenses: [
-                {
-                    id: 17,
-                    title: "T-Shirt",
-                    description: "Plain Color T-Shirt",
-                    location: "ByProgrammers' Mall",
-                    total: 20.00,
-                    status: pendingStatus,
-                },
-                {
-                    id: 18,
-                    title: "Jeans",
-                    description: "Blue Jeans",
-                    location: "ByProgrammers' Mall",
-                    total: 50.00,
-                    status: confirmStatus,
-                },
-            ],
-        }
     ]
 
     const categoryListHeightAnimationValue = useRef(new Animated.Value(115)).current;
@@ -229,92 +181,29 @@ const Statistics = () => {
     const [selectedCategory, setSelectedCategory] = React.useState(null)
     const [showMoreToggle, setShowMoreToggle] = React.useState(false)
 
-    function renderNavBar() {
-        return (
-            <View
-                style={{
-                    flexDirection: 'row',
-                    height: 80,
-                    justifyContent: 'space-between',
-                    alignItems: 'flex-end',
-                    paddingHorizontal: SIZES.padding,
-                    backgroundColor: COLORS.COMPLETED,
-                }}
-            >
-                <TouchableOpacity
-                    style={{ justifyContent: 'center', width: 50, }}
-                    onPress={() => console.log('Go Back')}
-                >
-                    <Image
-                        source={icons.back_arrow}
-                        style={{
-                            width: 30,
-                            height: 30,
-                            tintColor: COLORS.primary
-                        }}
-                    />
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                    style={{ justifyContent: 'center', alignItems: 'flex-end', width: 50 }}
-                    onPress={() => console.log('More')}
-                >
-                    <Image
-                        source={icons.more}
-                        style={{
-                            width: 30,
-                            height: 30,
-                            tintColor: COLORS.primary
-                        }}
-                    />
-                </TouchableOpacity>
-            </View>
-        )
-    }
-
-    function renderHeader() {
-        return (
-            <View style={{ paddingHorizontal: SIZES.padding, paddingVertical: SIZES.padding, backgroundColor: COLORS.white }}>
-                <View>
-                    <Text style={{ color: COLORS.primary, ...FONTS.h2 }}>My Expenses</Text>
-                    <Text style={{ ...FONTS.h3, color: COLORS.darkgray }}>Summary (private)</Text>
-                </View>
-
-                <View style={{ flexDirection: 'row', marginTop: SIZES.padding, alignItems: 'center' }}>
-                    <View style={{
-                        backgroundColor: COLORS.lightGray,
-                        height: 50,
-                        width: 50,
-                        borderRadius: 25,
-                        justifyContent: 'center',
-                        alignItems: 'center'
-                    }}>
-                        <Image
-                            source={icons.calendar}
-                            style={{
-                                width: 20,
-                                height: 20,
-                                tintColor: COLORS.lightBlue
-                            }}
-                        />
-                    </View>
-
-                    <View style={{ marginLeft: SIZES.padding }}>
-                        <Text style={{ color: COLORS.primary, ...FONTS.h3 }}>11 Nov, 2020</Text>
-                        <Text style={{ ...FONTS.body3, color: COLORS.darkgray }}>18% more than last month</Text>
-                    </View>
-                </View>
-            </View>
-        )
-    }
 
     function renderCategoryHeaderSection() {
         return (
             <View style={{ flexDirection: 'row', padding: SIZES.padding, justifyContent: 'space-between', alignItems: 'center' }}>
                 {/* Title */}
                 <View>
-                    <Text style={{ color: COLORS.primary, ...FONTS.h3 }}>CATEGORIES</Text>
-                    <Text style={{ color: COLORS.darkgray, ...FONTS.body4 }}>{categories.length} Total</Text>
+                    <TouchableOpacity
+                        style={{
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            backgroundColor: COLORS.green,
+                            height: 50,
+                            width: 110,
+                            borderRadius: 25,
+                            borderWidth: 3,
+                            borderColor: COLORS.secondary
+                        }}
+                        onPress={() => setViewMode("chart")}
+                    >
+                        <Text style={{ color: "white", ...FONTS.h4 }}>
+                            PRINT FILE
+                        </Text>
+                    </TouchableOpacity>
                 </View>
 
                 {/* Button */}
@@ -323,10 +212,12 @@ const Statistics = () => {
                         style={{
                             alignItems: 'center',
                             justifyContent: 'center',
-                            backgroundColor: viewMode == "chart" ? COLORS.secondary : null,
+                            backgroundColor: viewMode == "chart" ? COLORS.secondary : COLORS.white,
                             height: 50,
                             width: 50,
-                            borderRadius: 25
+                            borderRadius: 25,
+                            borderWidth: 2,
+                            borderColor: "black"
                         }}
                         onPress={() => setViewMode("chart")}
                     >
@@ -336,7 +227,7 @@ const Statistics = () => {
                             style={{
                                 width: 20,
                                 height: 20,
-                                tintColor: viewMode == "chart" ? COLORS.white : COLORS.darkgray,
+                                tintColor: viewMode == "chart" ? COLORS.white : COLORS.black,
                             }}
                         />
                     </TouchableOpacity>
@@ -345,11 +236,13 @@ const Statistics = () => {
                         style={{
                             alignItems: 'center',
                             justifyContent: 'center',
-                            backgroundColor: viewMode == "list" ? COLORS.secondary : null,
+                            backgroundColor: viewMode == "list" ? COLORS.secondary : COLORS.white,
                             height: 50,
                             width: 50,
                             borderRadius: 25,
-                            marginLeft: SIZES.base
+                            marginLeft: SIZES.base,
+                            borderWidth: 2,
+                            borderColor: "black"
                         }}
                         onPress={() => setViewMode("list")}
                     >
@@ -359,7 +252,7 @@ const Statistics = () => {
                             style={{
                                 width: 20,
                                 height: 20,
-                                tintColor: viewMode == "list" ? COLORS.white : COLORS.darkgray,
+                                tintColor: viewMode == "list" ? COLORS.white : COLORS.black,
                             }}
                         />
                     </TouchableOpacity>
@@ -388,7 +281,6 @@ const Statistics = () => {
                     style={{
                         width: 20,
                         height: 20,
-                        tintColor: item.color
                     }}
                 />
                 <Text style={{ marginLeft: SIZES.base, color: COLORS.primary, ...FONTS.h4 }}>{item.name}</Text>
@@ -406,36 +298,6 @@ const Statistics = () => {
                     />
                 </Animated.View>
 
-                <TouchableOpacity
-                    style={{
-                        flexDirection: 'row',
-                        marginVertical: SIZES.base,
-                        justifyContent: 'center'
-                    }}
-                    onPress={() => {
-                        if (showMoreToggle) {
-                            Animated.timing(categoryListHeightAnimationValue, {
-                                toValue: 115,
-                                duration: 500,
-                                useNativeDriver: false
-                            }).start()
-                        } else {
-                            Animated.timing(categoryListHeightAnimationValue, {
-                                toValue: 172.5,
-                                duration: 500,
-                                useNativeDriver: false
-                            }).start()
-                        }
-
-                        setShowMoreToggle(!showMoreToggle)
-                    }}
-                >
-                    <Text style={{ ...FONTS.body4 }}>{showMoreToggle ? "LESS" : "MORE"}</Text>
-                    <Image
-                        source={showMoreToggle ? icons.up_arrow : icons.down_arrow}
-                        style={{ marginLeft: 5, width: 15, height: 15, alignSelf: 'center' }}
-                    />
-                </TouchableOpacity>
             </View>
         )
     }
@@ -444,7 +306,7 @@ const Statistics = () => {
         return (
             <View style={{ height: 80, backgroundColor: COLORS.lightGray2, padding: SIZES.padding }}>
                 {/* Title */}
-                <Text style={{ ...FONTS.h3, color: COLORS.primary }}>INCOMING EXPENSES</Text>
+                <Text style={{ ...FONTS.h3, color: COLORS.primary }}>DETAILS</Text>
                 <Text style={{ ...FONTS.body4, color: COLORS.darkgray }}>12 Total</Text>
             </View>
         )
@@ -482,7 +344,7 @@ const Statistics = () => {
                             style={{
                                 width: 30,
                                 height: 30,
-                                tintColor: selectedCategory.color
+
                             }}
                         />
                     </View>
@@ -490,27 +352,27 @@ const Statistics = () => {
                     <Text style={{ ...FONTS.h3, color: selectedCategory.color, }}>{selectedCategory.name}</Text>
                 </View>
 
-                {/* Expense Description */}
+                {/* Expense group */}
                 <View style={{ paddingHorizontal: SIZES.padding }}>
-                    {/* Title and description */}
+                    {/* Title and group */}
                     <Text style={{ ...FONTS.h2, }}>{item.title}</Text>
-                    <Text style={{ ...FONTS.body3, flexWrap: 'wrap', color: COLORS.darkgray }}>
-                        {item.description}
+                    <Text style={{ ...FONTS.body3, flexWrap: 'wrap', color: COLORS.black }}>
+                        {item.group}
                     </Text>
 
-                    {/* Location */}
-                    <Text style={{ marginTop: SIZES.padding, ...FONTS.h4, }}>Location</Text>
+                    {/* user */}
+                    <Text style={{ marginTop: SIZES.padding, ...FONTS.h4, }}>User</Text>
                     <View style={{ flexDirection: 'row' }}>
                         <Image
                             source={icons.pin}
                             style={{
                                 width: 20,
                                 height: 20,
-                                tintColor: COLORS.darkgray,
+                                tintColor: COLORS.black,
                                 marginRight: 5
                             }}
                         />
-                        <Text style={{ marginBottom: SIZES.base, color: COLORS.darkgray, ...FONTS.body4 }}>{item.location}</Text>
+                        <Text style={{ marginBottom: SIZES.base, color: COLORS.black, ...FONTS.body4 }}>{item.user}</Text>
                     </View>
                 </View>
 
@@ -525,7 +387,7 @@ const Statistics = () => {
                         backgroundColor: selectedCategory.color,
                     }}
                 >
-                    <Text style={{ color: COLORS.white, ...FONTS.body3 }}>CONFIRM {item.total.toFixed(2)} USD</Text>
+                    <Text style={{ color: COLORS.white, ...FONTS.body3 }}>SPEND {item.total} DAYS</Text>
                 </View>
             </View>
         )
@@ -607,12 +469,11 @@ const Statistics = () => {
 
         console.log("Check Chart")
 
-        if(Platform.OS == 'ios')
-        {
+        if (Platform.OS == 'ios') {
             return (
-                <View  style={{ alignItems: 'center', justifyContent: 'center' }}>
+                <View style={{ alignItems: 'center', justifyContent: 'center' }}>
                     <VictoryPie
-                        
+
                         data={chartData}
                         labels={(datum) => `${datum.y}`}
                         radius={({ datum }) => (selectedCategory && selectedCategory.name == datum.name) ? SIZES.width * 0.4 : SIZES.width * 0.4 - 10}
@@ -641,23 +502,22 @@ const Statistics = () => {
                                 }
                             }
                         }]}
-    
+
                     />
-    
+
                     <View style={{ position: 'absolute', top: '42%', left: "42%" }}>
-                        <Text style={{ ...FONTS.h1, textAlign: 'center' }}>{totalExpenseCount}</Text>
-                        <Text style={{ ...FONTS.body3, textAlign: 'center' }}>Expenses</Text>
+                        <Text style={{ ...FONTS.h1, textAlign: 'center' }}>{totalExpenseCount - 1}</Text>
+                        <Text style={{ ...FONTS.body3, textAlign: 'center' }}>Status</Text>
                     </View>
                 </View>
-    
+
             )
         }
-        else
-        {
+        else {
             // Android workaround by wrapping VictoryPie with SVG
             return (
-                <View  style={{ alignItems: 'center', justifyContent: 'center' }}>
-                    <Svg width={SIZES.width} height={SIZES.width} style={{width: "100%", height: "auto"}}>
+                <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+                    <Svg width={SIZES.width} height={SIZES.width} style={{ width: "100%", height: "auto" }}>
 
                         <VictoryPie
                             standalone={false} // Android workaround
@@ -689,17 +549,17 @@ const Statistics = () => {
                                     }
                                 }
                             }]}
-        
+
                         />
                     </Svg>
                     <View style={{ position: 'absolute', top: '42%', left: "42%" }}>
-                        <Text style={{ ...FONTS.h1, textAlign: 'center' }}>{totalExpenseCount}</Text>
-                        <Text style={{ ...FONTS.body3, textAlign: 'center' }}>Expenses</Text>
+                        <Text style={{ ...FONTS.h1, textAlign: 'center' }}>{totalExpenseCount - 1}</Text>
+                        <Text style={{ ...FONTS.body3, textAlign: 'center' }}>Status</Text>
                     </View>
                 </View>
             )
         }
-        
+
     }
 
     function renderExpenseSummary() {
@@ -710,7 +570,7 @@ const Statistics = () => {
                 style={{
                     flexDirection: 'row',
                     height: 40,
-                    margin:5,
+                    margin: 5,
                     paddingHorizontal: SIZES.radius,
                     borderRadius: 10,
                     backgroundColor: (selectedCategory && selectedCategory.name == item.name) ? item.color : COLORS.white
@@ -736,13 +596,13 @@ const Statistics = () => {
 
                 {/* Expenses */}
                 <View style={{ justifyContent: 'center' }}>
-                    <Text style={{ color: (selectedCategory && selectedCategory.name == item.name) ? COLORS.white : COLORS.primary, ...FONTS.h3 }}>{item.y} USD - {item.label}</Text>
+                    <Text style={{ color: (selectedCategory && selectedCategory.name == item.name) ? COLORS.white : COLORS.primary, ...FONTS.h3 }}>{item.y} DAYS - {item.label}</Text>
                 </View>
             </TouchableOpacity>
         )
 
         return (
-            <View style={{ padding: SIZES.padding, marginBottom: 200}}>
+            <View style={{ padding: SIZES.padding, marginBottom: 200 }}>
                 <FlatList
                     data={data}
                     renderItem={renderItem}
@@ -794,7 +654,24 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
         elevation: 3,
-    }
+    },
+    button: {
+        fontSize: 15,
+        backgroundColor: "green",
+        alignItems: "center",
+        justifyContent: "center",
+        borderRadius: 100,
+        height: 60,
+        marginTop: 20,
+        shadowColor: "navy",
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.29,
+        shadowRadius: 4.65,
+        elevation: 7,
+    },
 })
 
 export default Statistics;
