@@ -3,7 +3,7 @@ import { StyleSheet, ActivityIndicator, View, Text, Pressable } from "react-nati
 import CustomDrawer from "./navigation/CustomDrawer";
 import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
-import { Group, GroupDetail, ProjectDetail, TaskDetail, Profile, Setting, EditPersonal, EditContact, ChangePassword } from "./screens";
+import { Group, GroupDetail, ProjectDetail, TaskDetail, Profile, Setting, EditPersonal, EditContact, ChangePassword, HelpCenter } from "./screens";
 import RootStackScreen from "./navigation/RootStackScreen";
 import { COLORS, dummyData, SIZES } from "./constants";
 
@@ -120,6 +120,7 @@ export default function Wrapper() {
                     <Stack.Screen name="EditContact" component={EditContact} />
                     <Stack.Screen name="Setting" component={Setting} />
                     <Stack.Screen name="ChangePassword" component={ChangePassword} />
+                    <Stack.Screen name="HelpCenter" component={HelpCenter} />
                 </Stack.Navigator>
             ) : (
                 <RootStackScreen />
