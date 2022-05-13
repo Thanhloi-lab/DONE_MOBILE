@@ -9,6 +9,8 @@ import GroupDetail from "./GroupDetail";
 import ProjectDetail from "./ProjectDetail";
 import HelpCenter from "./HelpCenter";
 
+import AddMember from "./AddMember";
+
 import { Profile, EditPersonal, EditContact } from '../screens/Profile'
 import { Setting, ChangePassword } from '../screens/SettingScreen'
 
@@ -34,4 +36,5 @@ export {
   EditContact,
   HelpCenter,
   CreateTask,
+  AddMember,
 };

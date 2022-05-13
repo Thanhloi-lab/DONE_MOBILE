@@ -33,7 +33,7 @@ const Section = ({ title, onPress, children }) => {
     )
 }
 
-const Home = ({navigation}) => {
+const Home = ({ navigation }) => {
     const [selectedStatus, setSelectedStatus] = React.useState(1);
 
     const [listTask, setListTask] = React.useState([]);
@@ -44,7 +44,7 @@ const Home = ({navigation}) => {
 
     function handleChangeStatus(statusId) {
         //retrieve recommend list
-        let selectedTaskWithSTatus= dummyData.allTask.filter(a => a.statusId == statusId)
+        let selectedTaskWithSTatus = dummyData.allTask.filter(a => a.statusId == statusId)
         //set 
         setListTask(selectedTaskWithSTatus);
         // console.log(selectedTaskWithSTatus)
@@ -140,7 +140,7 @@ const Home = ({navigation}) => {
 
     return (
         <View
-            style={{ flex: 1}}
+            style={{ flex: 1 }}
         >
             {/* search */}
             {renderSearch()}
@@ -163,10 +163,10 @@ const Home = ({navigation}) => {
                     return (
                         <HorizontalTaskCard
                             containerStyle={{
-                                justifyContent:'center',
+                                justifyContent: 'center',
                                 marginHorizontal: SIZES.padding,
                                 marginBottom: index == listTask.length - 1 ? 200 : SIZES.radius,
-                                
+
                             }}
                             imageStyle={{
                                 borderRadius: SIZES.radius,
@@ -174,14 +174,14 @@ const Home = ({navigation}) => {
                                 height: 150,
                                 width: 150
                             }}
-                            
+
                             item={item}
                             onPress={() => {
                                 console.log("NAVIGATE")
-                                navigation.navigate("Detail")
+                                navigation.navigate("TaskDetail")
                             }}
                         />
-                        
+
                     )
                 }}
             />

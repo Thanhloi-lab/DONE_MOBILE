@@ -9,6 +9,7 @@ import {
     Keyboard,
     ImageBackground,
     ScrollView,
+    Alert,
 } from "react-native";
 
 import {
@@ -80,6 +81,19 @@ const Profile = ({ navigation }) => {
 
     };
 
+
+
+    const handlePress = async () => {
+        fetch('http://192.168.1.4:50003/api/Users/getUser?Mail=loicao123%40gmail.com')
+            .then((response) => response.json())
+            .then((responseJson) => {
+
+            })
+            .catch((error) => {
+                console.error(error);
+
+            });
+    }
 
 
     const renderInner = () => (
@@ -162,6 +176,7 @@ const Profile = ({ navigation }) => {
                     </View>
 
                 </View>
+
                 <Animated.View style={{
 
                     opacity: Animated.add(0.1, Animated.multiply(fall, 1.0)),

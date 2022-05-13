@@ -13,54 +13,62 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import { COLORS, FONTS, SIZES, icons } from '../../constants'
+import BottomSheet from 'reanimated-bottom-sheet';
+import Animated from 'react-native-reanimated';
+
 
 const TaskDetail = () => {
 
-    const [modalVisible, setModalVisible] = useState(false);
+    const renderInner = () => (
+        <View style={styles.panel}>
+
+            <TouchableOpacity style={[styles.panelButton, { backgroundColor: "dodgerblue" }]} >
+                <Image source={icons.editName} style={{ width: 30, height: 30, marginRight: 10 }} />
+                <Text style={styles.panelButtonTitle}>Edit task</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={[styles.panelButton, { backgroundColor: "mediumseagreen" }]} >
+                <Image source={icons.adduser} style={{ width: 30, height: 30, marginRight: 10 }} />
+                <Text style={styles.panelButtonTitle}>Add task's member</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={[styles.panelButton, { backgroundColor: "crimson" }]}  >
+                <Image source={icons.deleteColor} style={{ width: 30, height: 30, marginRight: 10 }} />
+                <Text style={styles.panelButtonTitle}>Delete this task</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+                style={[styles.panelButton, { backgroundColor: "darkgray" }]}
+                onPress={() => bs.current.snapTo(1)}>
+                <Text style={styles.panelButtonTitle}>Cancel</Text>
+            </TouchableOpacity>
+        </View>
+    );
+
+    const renderHeader = () => (
+        <View style={styles.header}>
+            <View style={styles.panelHeader}>
+                <View style={styles.panelHandle} />
+            </View>
+        </View>
+    );
+
+    const bs = React.createRef();
+    const fall = new Animated.Value(1);
 
     return (
         <SafeAreaView style={{ height: '100%', }}>
 
-            <Modal
-                animationType="slide"
-                transparent={true}
-                visible={modalVisible}
-                onRequestClose={() => {
-                    setModalVisible(!modalVisible);
-                }}
-            >
-                <View style={styles.centeredView}>
-                    <View style={styles.modalView}>
+            <BottomSheet
+                ref={bs}
+                snapPoints={[350, 0]}
+                renderContent={renderInner}
+                renderHeader={renderHeader}
+                initialSnap={1}
+                callbackNode={fall}
+                enabledGestureInteraction={true}
+            />
+            <Animated.View style={{
 
-                        <Pressable
-                            style={[styles.button, styles.buttonClose]}
-                            onPress={() => setModalVisible(!modalVisible)}
-                        >
-                            <Text style={styles.textStyle}>Edit this task</Text>
-                        </Pressable>
-                        <Pressable
-                            style={[styles.button, styles.buttonClose, { backgroundColor: "green", }]}
-                            onPress={() => setModalVisible(!modalVisible)}
-                        >
-                            <Text style={styles.textStyle}>Add task member</Text>
-                        </Pressable>
-
-                        <Pressable
-                            style={[styles.button, styles.buttonClose, { backgroundColor: "red", }]}
-                            onPress={() => setModalVisible(!modalVisible)}
-                        >
-                            <Text style={styles.textStyle}>Delete this task</Text>
-                        </Pressable>
-                        <Pressable
-                            style={[styles.button, styles.buttonClose, { backgroundColor: "black", }]}
-                            onPress={() => setModalVisible(!modalVisible)}
-                        >
-                            <Text style={styles.textStyle}>Cancel</Text>
-                        </Pressable>
-                    </View>
-                </View>
-            </Modal>
-            <View style={modalVisible && { opacity: 0.2 }}>
+                opacity: Animated.add(0.1, Animated.multiply(fall, 1.0)),
+            }}>
                 <View style={{ marginHorizontal: 10, paddingVertical: 10, position: 'relative', }}>
 
                     <View
@@ -103,7 +111,7 @@ const TaskDetail = () => {
                                 alignItems: "center",
 
                             }}
-                            onPress={() => setModalVisible(true)}
+                            onPress={() => bs.current.snapTo(0)}
                         >
                             <Text
                                 style={{
@@ -380,7 +388,7 @@ const TaskDetail = () => {
                         </TouchableOpacity>
                     </View>
                 </ScrollView>
-            </View>
+            </Animated.View>
         </SafeAreaView>
 
     )
@@ -429,6 +437,62 @@ const styles = StyleSheet.create({
     modalText: {
         marginBottom: 15,
         textAlign: "center",
+    },
+    panel: {
+        padding: 20,
+        backgroundColor: '#FFFFFF',
+        paddingTop: 20,
+        // borderTopLeftRadius: 20,
+        // borderTopRightRadius: 20,
+        // shadowColor: '#000000',
+        // shadowOffset: {width: 0, height: 0},
+        // shadowRadius: 5,
+        // shadowOpacity: 0.4,
+    },
+    header: {
+        backgroundColor: '#FFFFFF',
+        shadowColor: '#333333',
+        shadowOffset: { width: -1, height: -3 },
+        shadowRadius: 2,
+        shadowOpacity: 0.4,
+        // elevation: 5,
+        paddingTop: 20,
+        borderTopLeftRadius: 20,
+        borderTopRightRadius: 20,
+    },
+    panelHeader: {
+        alignItems: 'center',
+    },
+    panelHandle: {
+        width: 40,
+        height: 8,
+        borderRadius: 4,
+        backgroundColor: '#00000040',
+        marginBottom: 10,
+    },
+    panelTitle: {
+        fontSize: 27,
+        height: 35,
+    },
+    panelSubtitle: {
+        fontSize: 14,
+        color: 'gray',
+        height: 30,
+        marginBottom: 10,
+    },
+    panelButton: {
+        padding: 13,
+        borderRadius: 10,
+        backgroundColor: '#FF6347',
+        alignItems: 'center',
+        marginVertical: 7,
+        flexDirection: "row",
+        justifyContent: "center"
+    },
+    panelButtonTitle: {
+        fontSize: 17,
+        fontWeight: 'bold',
+        color: 'white',
     },
 });
 
