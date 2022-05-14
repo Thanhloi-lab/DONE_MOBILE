@@ -1,9 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-const tasksSlice = createSlice({
-    name: 'task',
+const jobsSlice = createSlice({
+    name: 'job',
     initialState: {
         allTask: [],
+        allGroup:[], 
         // idTask: "",
         // idGroup: "",
         // idProject: "",
@@ -30,8 +31,10 @@ const tasksSlice = createSlice({
         setTask: (state, action) => {
             state.allTask = action.payload;
         },
-        
+        setGroup:(state, action)=>{
+            state.allGroup = action.payload;
+        }
     }
 });
 
-export default tasksSlice;
+export default jobsSlice;

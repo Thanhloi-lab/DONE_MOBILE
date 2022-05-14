@@ -229,7 +229,6 @@ const Project = ({ navigation }) => {
                     return (
                         <HorizontalProjectCard
                             containerStyle={{
-                                height: 130,
                                 justifyContent: "center",
                                 marginHorizontal: SIZES.padding,
                                 marginBottom:

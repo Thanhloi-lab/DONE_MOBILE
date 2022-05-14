@@ -9,6 +9,7 @@ import {
     KeyboardAvoidingView,
     TextInput,
     Image,
+    Platform
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { COLORS, dummyData, FONTS, icons, SIZES } from "../../constants";
@@ -16,18 +17,25 @@ import { HorizontalGroupCard, HorizontalProjectCard } from "../../components";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import BottomSheet from 'reanimated-bottom-sheet';
 import Animated from 'react-native-reanimated';
+import { editGroup } from "../../apis/GroupApi";
 
 const GroupDetail = (props) => {
     const [projects, setProjects] = useState(dummyData.allTask);
     const [modalVisible, setModalVisible] = useState(false);
+    const [groupName, setGroupName] = React.useState("");
+    const keyboardVerticalOffset = Platform.OS === 'ios' ? 40 : 0
 
     const groupId = props.route.params.groupId;
+
     const handlePress = () => {
         console.log("aaaaaa");
 
         props.navigation.navigate("AddMember", { groupId: props.route.params.groupId })
 
     }
+
+    const bs = React.createRef();
+    const fall = new Animated.Value(1);
 
     const renderInner = () => (
         <View style={styles.panel}>
@@ -40,7 +48,12 @@ const GroupDetail = (props) => {
                 <Text style={styles.panelButtonTitle}>Create project</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={[styles.panelButton, { backgroundColor: "lightsalmon" }]} onPress={console.log("aaa")}>
+            <TouchableOpacity style={[styles.panelButton, { backgroundColor: "lightsalmon" }]}
+                onPress={()=>{
+                    console.log("dm mở modal lên")
+                    setModalVisible(true);
+                    bs.current.snapTo(1);
+                }}>
                 <Image source={icons.editName} style={{ width: 30, height: 30, marginRight: 10 }} />
                 <Text style={styles.panelButtonTitle}>Edit group name</Text>
             </TouchableOpacity>
@@ -68,11 +81,86 @@ const GroupDetail = (props) => {
         </View>
     );
 
-    const bs = React.createRef();
-    const fall = new Animated.Value(1);
+    function handleEditGroup(groupName){
+        
+        var data = {
+            NameGroup:groupName,
+            IdUser:myId,
+            IdGroup:groupId
+        }
+        var result = editGroup(data);
+        result.then(data=>{
+            // handleReload()
+        })
+        .catch(err=>{
+            Alert("Tạo nhóm thất bại, thử lại sau");
+        })
+        
+    }
+
+    const modalEditGroupName = () => {
+        return (
+            <Modal
+                style={styles.modalContent}
+                animationType="slide"
+                transparent={true}
+                visible={modalVisible}
+
+                onRequestClose={() => {
+                    setModalVisible(!modalVisible);
+                }}
+            >
+                <View style={{ ...styles.centeredView, width: '100%' }}>
+                    <View style={{ ...styles.modalView, width: '100%' }}>
+                        <KeyboardAvoidingView behavior="height" keyboardVerticalOffset={keyboardVerticalOffset}>
+                            <View style={styles.inputContainer}>
+                                <TextInput
+                                    style={styles.input}
+                                    value={groupName}
+                                    onChangeText={(value) => {
+                                        setGroupName(value);
+                                    }}
+                                    placeholder="Group name...."
+                                />
+                            </View>
+                        </KeyboardAvoidingView>
+
+                        <View style={{
+                            flexDirection: 'row',
+                            justifyContent: 'space-around',
+                            alignItems: 'center',
+                            marginTop: 20
+                        }}>
+                            <TouchableOpacity
+                                style={[styles.buttonModal, styles.buttonClose, { marginRight: 50, marginLeft: 30, width: 120 }]}
+                                onPress={() => {
+                                    handleEditGroup(groupName);
+                                    console.log('edit');
+                                }}
+                            >
+                                <Text style={styles.textStyle}>Edit group</Text>
+                            </TouchableOpacity>
+
+                            <TouchableOpacity
+                                style={[styles.buttonModal, styles.buttonClose, { backgroundColor: "black", marginHorizontal: 50, width: 120 }]}
+                                onPress={() => setModalVisible(!modalVisible)}
+                            >
+                                <Text style={styles.textStyle}>Cancel</Text>
+                            </TouchableOpacity>
+                        </View>
+
+                    </View>
+                </View>
+            </Modal>
+        )
+    }
+
+    
 
     return (
         <View >
+            {modalEditGroupName()}
+
             <BottomSheet
                 ref={bs}
                 snapPoints={[690, 0]}
@@ -128,7 +216,9 @@ const GroupDetail = (props) => {
                                 alignItems: "center",
 
                             }}
-                            onPress={() => { setModalVisible(true), bs.current.snapTo(0) }}
+                            onPress={() => {
+                                bs.current.snapTo(0)
+                            }}
                         >
                             <Text
                                 style={{
@@ -194,7 +284,8 @@ const styles = StyleSheet.create({
         backgroundColor: "white",
         borderRadius: 20,
         padding: 35,
-        borderWidth: 3,
+        borderWidth: 1,
+        borderColor: "#ccc",
         alignItems: "center",
         shadowColor: "#000",
         shadowOffset: {
@@ -282,6 +373,49 @@ const styles = StyleSheet.create({
         fontSize: 17,
         fontWeight: 'bold',
         color: 'white',
+    },
+    input: {
+        height: '100%',
+        width: '100%'
+    },
+    inputContainer: {
+        height: 50,
+        fontSize: 15,
+        paddingLeft: 30,
+        paddingRight: 30,
+        borderRadius: 25,
+        color: "#ccc",
+        backgroundColor: "#f7f7f7",
+        marginBottom: 10,
+        position: "relative",
+        flexDirection: "row",
+
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.23,
+        shadowRadius: 2.62,
+
+        elevation: 4,
+    },
+    buttonOpen: {
+        backgroundColor: "#F194FF",
+    },
+    buttonClose: {
+        backgroundColor: "#2196F3",
+        marginBottom: 10,
+    },
+    textStyle: {
+        color: "white",
+        fontWeight: "bold",
+        textAlign: "center",
+    },
+    buttonModal: {
+        borderRadius: 20,
+        padding: 10,
+        elevation: 2,
     },
 });
 

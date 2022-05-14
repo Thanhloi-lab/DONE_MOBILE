@@ -4,8 +4,9 @@ import { FONTS, COLORS, SIZES, icons, dummyData } from '../../constants';
 import { HorizontalTaskCard, VerticalFoodCard } from '../../components';
 
 import { useSelector, useDispatch } from "react-redux";
-import tasksSlice from "../../stores/Task/taskSlice";
+import jobsSlice from "../../stores/Job/jobsSlice";
 import { allTaskOfUser } from "../../apis/TaskApi";
+import { allUserGroup } from "../../apis/GroupApi";
 
 const Section = ({ title, onPress, children }) => {
     return (
@@ -42,13 +43,20 @@ const Home = ({ navigation }) => {
     const [selectedStatus, setSelectedStatus] = React.useState(1);
     const [listTask, setListTask] = React.useState([]);
     const myId = useSelector((state) => state.authentication.id);
-    const allTask =  useSelector((state) => state.task.allTask);
+    const allTask =  useSelector((state) => state.jobs.allTask);
 
     React.useEffect(() => {
         allTaskOfUser(myId).then(data => {
-            dispatch(tasksSlice.actions.setTask(data));
+            dispatch(jobsSlice.actions.setTask(data));
         })
             .catch(err => console.error(err))
+
+        allUserGroup(myId).then(data => {
+            console.log(data);
+            dispatch(jobsSlice.actions.setGroup(data));
+        })
+            .catch(err => console.error(err))
+
 
         handleChangeStatus(selectedStatus);
     }, [])

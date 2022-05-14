@@ -14,7 +14,7 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import BottomSheet from 'reanimated-bottom-sheet';
 import Animated from 'react-native-reanimated';
 import { useDispatch, useSelector } from "react-redux";
-import tasksSlice from "../../stores/Task/taskSlice";
+import jobsSlice from "../../stores/Job/jobsSlice";
 import { allTaskOfUser } from "../../apis/TaskApi";
 import { getTaskByProjectId } from '../../redux/selectors'
 
@@ -31,7 +31,7 @@ const ProjectDetail = (props) => {
 
     React.useEffect(() => {
         allTaskOfUser(myId).then(data => {
-            dispatch(tasksSlice.actions.setTask(data));
+            dispatch(jobsSlice.actions.setTask(data));
         })
             .catch(err => console.error(err))
     }, []);
@@ -115,7 +115,7 @@ const ProjectDetail = (props) => {
                         <Text>Creator: {projects.length > 0 && projects[0].nameUserCreateProject}</Text>
                     </View>
                     {
-                        true&&
+                        userId === myId &&
 
                         <View style={{ position: 'absolute', top: 0, right: 0, elevation: 8 }}>
                             <TouchableOpacity

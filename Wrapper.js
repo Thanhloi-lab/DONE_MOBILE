@@ -29,6 +29,7 @@ export default function Wrapper() {
                 <Stack.Navigator
                     screenOptions={{
                         headerShown: false,
+                        tabBarHideOnKeyboard: true
                     }}
                     initialRouteName={"Home"}
                 >

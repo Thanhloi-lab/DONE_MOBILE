@@ -36,7 +36,7 @@ const Login = ({ navigation }) => {
         >
 
             <TouchableWithoutFeedback onPress={() => { Keyboard.dismiss() }}>
-                <KeyboardAvoidingView behavior="padding">
+                <KeyboardAvoidingView behavior="height">
                     <View style={{ width: '100%', height: '100%' }}>
                         <View style={{
                             height: 260,
