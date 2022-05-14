@@ -3,7 +3,7 @@ import { StyleSheet, ActivityIndicator, View, Text, Pressable } from "react-nati
 import CustomDrawer from "./navigation/CustomDrawer";
 import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
-import { CreateTask, Group, GroupDetail, ProjectDetail, TaskDetail, Profile, Setting, EditPersonal, EditContact, ChangePassword, HelpCenter } from "./screens";
+import { CreateTask, Group, AddMember, GroupDetail, ProjectDetail, TaskDetail, Profile, Setting, EditPersonal, EditContact, ChangePassword, HelpCenter } from "./screens";
 import RootStackScreen from "./navigation/RootStackScreen";
 import { COLORS, dummyData, SIZES } from "./constants";
 
@@ -115,6 +115,7 @@ export default function Wrapper() {
                             headerTitleAlign: "center"
                         }}
                     />
+
                     <Stack.Screen name="Profile" component={Profile} />
                     <Stack.Screen name="EditPersonal" component={EditPersonal} />
                     <Stack.Screen name="EditContact" component={EditContact} />
@@ -122,6 +123,7 @@ export default function Wrapper() {
                     <Stack.Screen name="ChangePassword" component={ChangePassword} />
                     <Stack.Screen name="HelpCenter" component={HelpCenter} />
                     <Stack.Screen name="CreateTask" component={CreateTask} />
+                    <Stack.Screen name="AddMember" component={AddMember} />
                 </Stack.Navigator>
             ) : (
                 <RootStackScreen />

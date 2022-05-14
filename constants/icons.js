@@ -65,6 +65,11 @@ const smartphone = require("../assets/icons/smartphone.png");
 const taskname = require("../assets/icons/taskname.png");
 const content = require("../assets/icons/content.png");
 const deadline = require("../assets/icons/deadline.png");
+const adduser = require("../assets/icons/add-user.png");
+const add = require("../assets/icons/add.png");
+const deleteColor = require("../assets/icons/delete.png");
+const editName = require("../assets/icons/editname.png");
+const print = require("../assets/icons/print.png");
 
 export default {
     password,
@@ -134,4 +139,9 @@ export default {
     taskname,
     content,
     deadline,
+    adduser,
+    add,
+    editName,
+    deleteColor,
+    print,
 }

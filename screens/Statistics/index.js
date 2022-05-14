@@ -14,12 +14,13 @@ import {
     Platform,
     Modal,
     Pressable,
+
 } from 'react-native';
 import { VictoryPie } from 'victory-native';
 
 import { Svg } from 'react-native-svg';
 
-import { COLORS, FONTS, SIZES, icons, images } from '../../constants';
+import { COLORS, FONTS, SIZES, icons } from '../../constants';
 
 const Statistics = () => {
     const [modalVisible, setModalVisible] = useState(false);
@@ -630,20 +631,25 @@ const Statistics = () => {
             >
                 <View style={styles.centeredView}>
                     <View style={styles.modalView}>
-                        <Text style={FONTS.h3}>Are you want to print statistic file?</Text>
-                        <Pressable
-                            style={[styles.buttonModal, styles.buttonClose, { backgroundColor: "green", marginTop: 10 }]}
-                            onPress={() => setModalVisible(!modalVisible)}
-                        >
-                            <Text style={styles.textStyle}>YES FOR SURE</Text>
-                        </Pressable>
+                        <View style={{ flexDirection: "row" }}>
+                            <Image source={icons.print} style={{ height: 50, width: 50, marginRight: 10 }} />
+                            <Text style={FONTS.h3}>Are you sure want to print statistics file?</Text>
+                        </View>
+                        <View style={{ flexDirection: "row" }}>
+                            <TouchableOpacity
+                                style={[styles.buttonModal, styles.buttonClose, { backgroundColor: "limegreen", marginTop: 10, marginRight: 10 }]}
+                                onPress={() => setModalVisible(!modalVisible)}
+                            >
+                                <Text style={styles.textStyle}>Yes for sure</Text>
+                            </TouchableOpacity>
 
-                        <Pressable
-                            style={[styles.buttonModal, styles.buttonClose, { backgroundColor: "blue", }]}
-                            onPress={() => setModalVisible(!modalVisible)}
-                        >
-                            <Text style={styles.textStyle}>Cancel</Text>
-                        </Pressable>
+                            <TouchableOpacity
+                                style={[styles.buttonModal, styles.buttonClose, { backgroundColor: "royalblue", marginTop: 10 }]}
+                                onPress={() => setModalVisible(!modalVisible)}
+                            >
+                                <Text style={styles.textStyle}>Cancel</Text>
+                            </TouchableOpacity>
+                        </View>
                     </View>
                 </View>
             </Modal>
@@ -717,7 +723,7 @@ const styles = StyleSheet.create({
         backgroundColor: "white",
         borderRadius: 20,
         padding: 35,
-        borderWidth: 3,
+
         alignItems: "center",
         shadowColor: "#000",
         shadowOffset: {

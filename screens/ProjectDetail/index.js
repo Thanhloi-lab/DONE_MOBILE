@@ -8,65 +8,83 @@ import {
     Pressable,
     KeyboardAvoidingView,
     TextInput,
+    Image,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { COLORS, dummyData, SIZES } from "../../constants";
+import { COLORS, dummyData, SIZES, FONTS, icons } from "../../constants";
 import { HorizontalTaskCard } from "../../components";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import BottomSheet from 'reanimated-bottom-sheet';
+import Animated from 'react-native-reanimated';
+import { useDispatch, useSelector } from "react-redux";
+import tasksSlice from "../../stores/Task/task";
+import { allTaskOfUser } from "../../apis/TaskApi";
+
 const ProjectDetail = (props) => {
     const [projects, setProjects] = useState(dummyData.allTask);
-    const [modalVisible, setModalVisible] = useState(false);
+    console.log(allTaskOfUser())
+    // React.useEffect(() => {
+    //     dispatch(tasksSlice.actions.setTask(allTaskOfUser()));
+    // }, []);
 
+
+
+    const renderInner = () => (
+        <View style={styles.panel}>
+            <KeyboardAvoidingView style={{ justifyContent: "center", alignItems: "center", paddingBottom: 10 }}>
+                <TextInput style={FONTS.h2} placeholder="Name project..." />
+            </KeyboardAvoidingView>
+
+            <TouchableOpacity style={[styles.panelButton, { backgroundColor: "lightsalmon" }]} >
+                <Image source={icons.editName} style={{ width: 30, height: 30, marginRight: 10 }} />
+                <Text style={styles.panelButtonTitle}>Edit project's name</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={[styles.panelButton, { backgroundColor: "lightsalmon" }]} >
+                <Image source={icons.add} style={{ width: 30, height: 30, marginRight: 10 }} />
+                <Text style={styles.panelButtonTitle}>Create task</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={[styles.panelButton, { backgroundColor: "lightsalmon" }]} >
+                <Image source={icons.adduser} style={{ width: 30, height: 30, marginRight: 10 }} />
+                <Text style={styles.panelButtonTitle}>Add project's member</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={[styles.panelButton, { backgroundColor: "lightsalmon" }]}  >
+                <Image source={icons.deleteColor} style={{ width: 30, height: 30, marginRight: 10 }} />
+                <Text style={styles.panelButtonTitle}>Delete this project</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+                style={[styles.panelButton, { backgroundColor: "darkgray" }]}
+                onPress={() => bs.current.snapTo(1)}>
+                <Text style={styles.panelButtonTitle}>Cancel</Text>
+            </TouchableOpacity>
+        </View>
+    );
+
+    const renderHeader = () => (
+        <View style={styles.header}>
+            <View style={styles.panelHeader}>
+                <View style={styles.panelHandle} />
+            </View>
+        </View>
+    );
+
+    const bs = React.createRef();
+    const fall = new Animated.Value(1);
     const projectId = props.route.params.projectId;
     return (
         <>
-            <Modal
-                animationType="slide"
-                transparent={true}
-                visible={modalVisible}
-                onRequestClose={() => {
-                    setModalVisible(!modalVisible);
-                }}
-            >
-                <View style={styles.centeredView}>
-                    <View style={styles.modalView}>
-                        <KeyboardAvoidingView>
-                            <TextInput placeholder="Name edit project..." />
-                        </KeyboardAvoidingView>
-                        <Pressable
-                            style={[styles.button, styles.buttonClose, { marginTop: 10 }]}
-                            onPress={() => setModalVisible(!modalVisible)}
-                        >
-                            <Text style={styles.textStyle}>Edit project's name</Text>
-                        </Pressable>
-                        <Pressable
-                            style={[styles.button, styles.buttonClose, { backgroundColor: "green", }]}
-                            onPress={() => { setModalVisible(!modalVisible), props.navigation.navigate("CreateTask") }}
-                        >
-                            <Text style={styles.textStyle}>Create task</Text>
-                        </Pressable>
-                        <Pressable
-                            style={[styles.button, styles.buttonClose, { backgroundColor: "green", }]}
-                            onPress={() => setModalVisible(!modalVisible)}
-                        >
-                            <Text style={styles.textStyle}>Add project member</Text>
-                        </Pressable>
-                        <Pressable
-                            style={[styles.button, styles.buttonClose, { backgroundColor: "red", }]}
-                            onPress={() => setModalVisible(!modalVisible)}
-                        >
-                            <Text style={styles.textStyle}>Delete this project</Text>
-                        </Pressable>
-                        <Pressable
-                            style={[styles.button, styles.buttonClose, { backgroundColor: "black", }]}
-                            onPress={() => setModalVisible(!modalVisible)}
-                        >
-                            <Text style={styles.textStyle}>Cancel</Text>
-                        </Pressable>
-                    </View>
-                </View>
-            </Modal>
-            <View style={modalVisible && { opacity: 0.2 }}>
+            <BottomSheet
+                ref={bs}
+                snapPoints={[600, 0]}
+                renderContent={renderInner}
+                renderHeader={renderHeader}
+                initialSnap={1}
+                callbackNode={fall}
+                enabledGestureInteraction={true}
+            />
+            <Animated.View style={{
+
+                opacity: Animated.add(0.1, Animated.multiply(fall, 1.0)),
+            }}>
                 <View style={{ marginHorizontal: 10, paddingVertical: 10, position: 'relative' }}>
 
                     <View
@@ -104,7 +122,7 @@ const ProjectDetail = (props) => {
                                 alignItems: "center",
 
                             }}
-                            onPress={() => setModalVisible(true)}
+                            onPress={() => bs.current.snapTo(0)}
                         >
                             <Text
                                 style={{
@@ -140,7 +158,7 @@ const ProjectDetail = (props) => {
                         );
                     }}
                 />
-            </View>
+            </Animated.View>
         </>
     );
 };
@@ -188,6 +206,63 @@ const styles = StyleSheet.create({
     modalText: {
         marginBottom: 15,
         textAlign: "center",
+    },
+    panel: {
+        padding: 20,
+        backgroundColor: '#FFFFFF',
+        paddingTop: 20,
+        paddingBottom: 200
+        // borderTopLeftRadius: 20,
+        // borderTopRightRadius: 20,
+        // shadowColor: '#000000',
+        // shadowOffset: {width: 0, height: 0},
+        // shadowRadius: 5,
+        // shadowOpacity: 0.4,
+    },
+    header: {
+        backgroundColor: '#FFFFFF',
+        shadowColor: '#333333',
+        shadowOffset: { width: -1, height: -3 },
+        shadowRadius: 2,
+        shadowOpacity: 0.4,
+        // elevation: 5,
+        paddingTop: 20,
+        borderTopLeftRadius: 20,
+        borderTopRightRadius: 20,
+    },
+    panelHeader: {
+        alignItems: 'center',
+    },
+    panelHandle: {
+        width: 40,
+        height: 8,
+        borderRadius: 4,
+        backgroundColor: '#00000040',
+        marginBottom: 10,
+    },
+    panelTitle: {
+        fontSize: 27,
+        height: 35,
+    },
+    panelSubtitle: {
+        fontSize: 14,
+        color: 'gray',
+        height: 30,
+        marginBottom: 10,
+    },
+    panelButton: {
+        padding: 13,
+        borderRadius: 10,
+        backgroundColor: '#FF6347',
+        alignItems: 'center',
+        marginVertical: 7,
+        flexDirection: "row",
+        justifyContent: "center"
+    },
+    panelButtonTitle: {
+        fontSize: 17,
+        fontWeight: 'bold',
+        color: 'white',
     },
 });
 

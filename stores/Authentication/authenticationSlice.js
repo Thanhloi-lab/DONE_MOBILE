@@ -1,17 +1,21 @@
-import {createSlice} from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 
 const authenticationSlice = createSlice({
-    name:'authentication',
-    initialState:{
-        token:"",
+    name: 'authentication',
+    initialState: {
+        token: "",
+        mail: "Hello1@gmail.com",
+        id: "2",
+
     },
-    reducers:{
-        setToken: (state, action) =>{
+    reducers: {
+        setToken: (state, action) => {
             state.token = action.payload.token;
         },
-        deleteToken:(state, action)=>{
+        deleteToken: (state, action) => {
             state.token = "";
-        }
+        },
+
     }
 });
 

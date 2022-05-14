@@ -177,18 +177,22 @@ const Group = ({ navigation }) => {
             <KeyboardAvoidingView>
               <TextInput placeholder="Name group..." />
             </KeyboardAvoidingView>
-            <Pressable
+
+            <TouchableOpacity
               style={[styles.buttonModal, styles.buttonClose, { marginTop: 10 }]}
               onPress={() => setModalVisible(!modalVisible)}
             >
+
               <Text style={styles.textStyle}>Create group</Text>
-            </Pressable>
-            <Pressable
+
+            </TouchableOpacity>
+
+            <TouchableOpacity
               style={[styles.buttonModal, styles.buttonClose, { backgroundColor: "black", }]}
               onPress={() => setModalVisible(!modalVisible)}
             >
               <Text style={styles.textStyle}>Cancel</Text>
-            </Pressable>
+            </TouchableOpacity>
           </View>
         </View>
       </Modal>
@@ -305,8 +309,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     borderRadius: 15,
     height: 40,
-    borderWidth: 2,
-    borderColor: "yellow",
+
     margin: 10,
     marginRight: "20%",
     marginLeft: "20%",

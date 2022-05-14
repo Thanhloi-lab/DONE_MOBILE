@@ -9,6 +9,7 @@ import {
     Keyboard,
     ImageBackground,
     ScrollView,
+    Alert,
 } from "react-native";
 
 import {
@@ -31,6 +32,8 @@ import BottomSheet from 'reanimated-bottom-sheet';
 import Animated from 'react-native-reanimated';
 import * as ImagePicker from 'expo-image-picker';
 
+
+import { getUserInfo } from "../../apis/UserApi";
 
 
 const Profile = ({ navigation }) => {
@@ -112,6 +115,10 @@ const Profile = ({ navigation }) => {
 
     const bs = React.createRef();
     const fall = new Animated.Value(1);
+
+
+
+
     return (
         <LinearGradient
             colors={[COLORS.primary, COLORS.primary2]}
@@ -162,6 +169,7 @@ const Profile = ({ navigation }) => {
                     </View>
 
                 </View>
+
                 <Animated.View style={{
 
                     opacity: Animated.add(0.1, Animated.multiply(fall, 1.0)),
