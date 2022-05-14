@@ -30,6 +30,7 @@ const tasksSlice = createSlice({
         setTask: (state, action) => {
             state.allTask = action.payload;
         },
+        
     }
 });
 

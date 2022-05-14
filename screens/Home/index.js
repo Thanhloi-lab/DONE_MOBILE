@@ -3,6 +3,10 @@ import React from "react";
 import { FONTS, COLORS, SIZES, icons, dummyData } from '../../constants';
 import { HorizontalTaskCard, VerticalFoodCard } from '../../components';
 
+import { useSelector, useDispatch } from "react-redux";
+import tasksSlice from "../../stores/Task/taskSlice";
+import { allTaskOfUser } from "../../apis/TaskApi";
+
 const Section = ({ title, onPress, children }) => {
     return (
         <View>
@@ -34,17 +38,24 @@ const Section = ({ title, onPress, children }) => {
 }
 
 const Home = ({ navigation }) => {
+    const dispatch = useDispatch();
     const [selectedStatus, setSelectedStatus] = React.useState(1);
-
     const [listTask, setListTask] = React.useState([]);
+    const myId = useSelector((state) => state.authentication.id);
+    const allTask =  useSelector((state) => state.task.allTask);
 
     React.useEffect(() => {
+        allTaskOfUser(myId).then(data => {
+            dispatch(tasksSlice.actions.setTask(data));
+        })
+            .catch(err => console.error(err))
+
         handleChangeStatus(selectedStatus);
     }, [])
 
     function handleChangeStatus(statusId) {
         //retrieve recommend list
-        let selectedTaskWithSTatus = dummyData.allTask.filter(a => a.statusId == statusId)
+        let selectedTaskWithSTatus = allTask.filter(a => a.statusId == statusId)
         //set 
         setListTask(selectedTaskWithSTatus);
         // console.log(selectedTaskWithSTatus)
@@ -106,6 +117,12 @@ const Home = ({ navigation }) => {
                 data={dummyData.CATEGORY_STATUS}
                 keyExtractor={item1 => item1.id}
                 showsHorizontalScrollIndicator={false}
+                onScrollToIndexFailed={info => {
+                    const wait = new Promise(resolve => setTimeout(resolve, 500));
+                    wait.then(() => {
+                        flatList.current?.scrollToIndex({ index: info.index, animated: true });
+                    });
+                }}
                 contentContainerStyle={{
                     marginTop: 30,
                     marginBottom: 30,

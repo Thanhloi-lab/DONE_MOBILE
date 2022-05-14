@@ -5,13 +5,21 @@ import {
 
 export const getUserInfo = async (id) => {
 
-    fetch('http://192.168.1.4:50003/api/Users/getUser?Id=' + id)
-        .then((response) => response.json())
-        .then((responseJson) => {
-            console.log(responseJson)
+    // fetch()
+    //     .then((response) => response.json())
+    //     .then((responseJson) => {
+    //         console.log(responseJson)
 
-        })
-        .catch((error) => {
-            console.error(error);
-        });
+    //     })
+    //     .catch((error) => {
+    //         console.error(error);
+    //     });
+
+    fetch('http://192.168.1.4:50003/api/Users/getUser?Id=' + id)
+    .then((response) => response.json())
+    .then((json) => {
+        return json;
+    }).catch((error) => {
+        console.error(error);
+    });
 };

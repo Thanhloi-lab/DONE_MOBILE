@@ -3,31 +3,38 @@ import {
     View,
     Text,
     FlatList,
-    Modal,
     StyleSheet,
-    Pressable,
     KeyboardAvoidingView,
     TextInput,
     Image,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { COLORS, dummyData, SIZES, FONTS, icons } from "../../constants";
 import { HorizontalTaskCard } from "../../components";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import BottomSheet from 'reanimated-bottom-sheet';
 import Animated from 'react-native-reanimated';
 import { useDispatch, useSelector } from "react-redux";
-import tasksSlice from "../../stores/Task/task";
+import tasksSlice from "../../stores/Task/taskSlice";
 import { allTaskOfUser } from "../../apis/TaskApi";
+import { getTaskByProjectId } from '../../redux/selectors'
 
 const ProjectDetail = (props) => {
-    const [projects, setProjects] = useState(dummyData.allTask);
-    console.log(allTaskOfUser())
-    // React.useEffect(() => {
-    //     dispatch(tasksSlice.actions.setTask(allTaskOfUser()));
-    // }, []);
 
+    const dispatch = useDispatch();
 
+    const bs = React.createRef();
+    const fall = new Animated.Value(1);
+    const projectId = props.route.params.projectId;
+    const userId = props.route.params.userId;
+    const myId = useSelector((state) => state.authentication.id) ;
+    const projects = useSelector((state) => getTaskByProjectId(state, projectId));
+
+    React.useEffect(() => {
+        allTaskOfUser(myId).then(data => {
+            dispatch(tasksSlice.actions.setTask(data));
+        })
+            .catch(err => console.error(err))
+    }, []);
 
     const renderInner = () => (
         <View style={styles.panel}>
@@ -36,19 +43,19 @@ const ProjectDetail = (props) => {
             </KeyboardAvoidingView>
 
             <TouchableOpacity style={[styles.panelButton, { backgroundColor: "lightsalmon" }]} >
-                <Image source={icons.editName} style={{ width: 30, height: 30, marginRight: 10 }} />
+                <Image source={icons.editName} style={{ width: 20, height: 20, marginRight: 10 }} />
                 <Text style={styles.panelButtonTitle}>Edit project's name</Text>
             </TouchableOpacity>
             <TouchableOpacity style={[styles.panelButton, { backgroundColor: "lightsalmon" }]} >
-                <Image source={icons.add} style={{ width: 30, height: 30, marginRight: 10 }} />
+                <Image source={icons.add} style={{ width: 20, height: 20, marginRight: 10 }} />
                 <Text style={styles.panelButtonTitle}>Create task</Text>
             </TouchableOpacity>
             <TouchableOpacity style={[styles.panelButton, { backgroundColor: "lightsalmon" }]} >
-                <Image source={icons.adduser} style={{ width: 30, height: 30, marginRight: 10 }} />
+                <Image source={icons.adduser} style={{ width: 20, height: 20, marginRight: 10 }} />
                 <Text style={styles.panelButtonTitle}>Add project's member</Text>
             </TouchableOpacity>
             <TouchableOpacity style={[styles.panelButton, { backgroundColor: "lightsalmon" }]}  >
-                <Image source={icons.deleteColor} style={{ width: 30, height: 30, marginRight: 10 }} />
+                <Image source={icons.deleteColor} style={{ width: 20, height: 20, marginRight: 10 }} />
                 <Text style={styles.panelButtonTitle}>Delete this project</Text>
             </TouchableOpacity>
             <TouchableOpacity
@@ -67,11 +74,9 @@ const ProjectDetail = (props) => {
         </View>
     );
 
-    const bs = React.createRef();
-    const fall = new Animated.Value(1);
-    const projectId = props.route.params.projectId;
+
     return (
-        <>
+        <View>
             <BottomSheet
                 ref={bs}
                 snapPoints={[600, 0]}
@@ -83,7 +88,7 @@ const ProjectDetail = (props) => {
             />
             <Animated.View style={{
 
-                opacity: Animated.add(0.1, Animated.multiply(fall, 1.0)),
+                opacity: Animated.add(1, Animated.multiply(fall, 1.0)),
             }}>
                 <View style={{ marginHorizontal: 10, paddingVertical: 10, position: 'relative' }}>
 
@@ -105,38 +110,41 @@ const ProjectDetail = (props) => {
                         }}
                     >
                         <Text style={{ fontSize: SIZES.h2, fontWeight: "bold" }}>
-                            Project: {projects[0].nameProject}
+                            Project: {projects.length > 0 && projects[0].nameProject}
                         </Text>
-                        <Text>Creator: {projects[0].nameUserCreateProject}</Text>
+                        <Text>Creator: {projects.length > 0 && projects[0].nameUserCreateProject}</Text>
                     </View>
+                    {
+                        true&&
 
-                    <View style={{ position: 'absolute', top: 0, right: 0, elevation: 8 }}>
-                        <TouchableOpacity
-                            style={{
-                                borderRadius: 50,
-                                width: 40,
-                                height: 40,
-                                backgroundColor: COLORS.primary,
-                                flexDirection: "column",
-                                justifyContent: "center",
-                                alignItems: "center",
-
-                            }}
-                            onPress={() => bs.current.snapTo(0)}
-                        >
-                            <Text
+                        <View style={{ position: 'absolute', top: 0, right: 0, elevation: 8 }}>
+                            <TouchableOpacity
                                 style={{
-                                    fontSize: 30,
-                                    color: "white",
-                                    textAlign: "center",
-                                    textAlignVertical: "center",
-
+                                    borderRadius: 50,
+                                    width: 40,
+                                    height: 40,
+                                    backgroundColor: COLORS.primary,
+                                    flexDirection: "column",
+                                    justifyContent: "center",
+                                    alignItems: "center",
                                 }}
+                                onPress={() => bs.current.snapTo(0)}
                             >
-                                +
-                            </Text>
-                        </TouchableOpacity>
-                    </View>
+                                <Text
+                                    style={{
+                                        fontSize: 30,
+                                        color: "white",
+                                        textAlign: "center",
+                                        textAlignVertical: "center",
+
+                                    }}
+                                >
+                                    +
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
+                    }
+
                 </View>
                 <FlatList
                     // style={{ flex: 1 }}
@@ -159,7 +167,7 @@ const ProjectDetail = (props) => {
                     }}
                 />
             </Animated.View>
-        </>
+        </View>
     );
 };
 
