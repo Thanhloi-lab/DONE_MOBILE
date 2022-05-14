@@ -22,15 +22,15 @@ const TaskDetail = () => {
     const renderInner = () => (
         <View style={styles.panel}>
 
-            <TouchableOpacity style={[styles.panelButton, { backgroundColor: "dodgerblue" }]} >
+            <TouchableOpacity style={[styles.panelButton, { backgroundColor: "lightsalmon" }]} >
                 <Image source={icons.editName} style={{ width: 30, height: 30, marginRight: 10 }} />
                 <Text style={styles.panelButtonTitle}>Edit task</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={[styles.panelButton, { backgroundColor: "mediumseagreen" }]} >
+            <TouchableOpacity style={[styles.panelButton, { backgroundColor: "lightsalmon" }]} >
                 <Image source={icons.adduser} style={{ width: 30, height: 30, marginRight: 10 }} />
                 <Text style={styles.panelButtonTitle}>Add task's member</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={[styles.panelButton, { backgroundColor: "crimson" }]}  >
+            <TouchableOpacity style={[styles.panelButton, { backgroundColor: "lightsalmon" }]}  >
                 <Image source={icons.deleteColor} style={{ width: 30, height: 30, marginRight: 10 }} />
                 <Text style={styles.panelButtonTitle}>Delete this task</Text>
             </TouchableOpacity>
@@ -58,7 +58,7 @@ const TaskDetail = () => {
 
             <BottomSheet
                 ref={bs}
-                snapPoints={[350, 0]}
+                snapPoints={[600, 0]}
                 renderContent={renderInner}
                 renderHeader={renderHeader}
                 initialSnap={1}
@@ -442,6 +442,7 @@ const styles = StyleSheet.create({
         padding: 20,
         backgroundColor: '#FFFFFF',
         paddingTop: 20,
+        paddingBottom: 300,
         // borderTopLeftRadius: 20,
         // borderTopRightRadius: 20,
         // shadowColor: '#000000',

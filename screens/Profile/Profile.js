@@ -33,6 +33,8 @@ import Animated from 'react-native-reanimated';
 import * as ImagePicker from 'expo-image-picker';
 
 
+import { getUserInfo } from "../../apis/UserApi";
+
 
 const Profile = ({ navigation }) => {
     const [image, setImage] = useState(dummyData.myProfile?.profile_image);
@@ -83,19 +85,6 @@ const Profile = ({ navigation }) => {
 
 
 
-    const handlePress = async () => {
-        fetch('http://192.168.1.4:50003/api/Users/getUser?Mail=loicao123%40gmail.com')
-            .then((response) => response.json())
-            .then((responseJson) => {
-
-            })
-            .catch((error) => {
-                console.error(error);
-
-            });
-    }
-
-
     const renderInner = () => (
         <View style={styles.panel}>
             <View style={{ alignItems: 'center' }}>
@@ -126,6 +115,10 @@ const Profile = ({ navigation }) => {
 
     const bs = React.createRef();
     const fall = new Animated.Value(1);
+
+
+
+
     return (
         <LinearGradient
             colors={[COLORS.primary, COLORS.primary2]}

@@ -16,29 +16,38 @@ import { HorizontalTaskCard } from "../../components";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import BottomSheet from 'reanimated-bottom-sheet';
 import Animated from 'react-native-reanimated';
-
+import { useDispatch, useSelector } from "react-redux";
+import tasksSlice from "../../stores/Task/task";
+import { allTaskOfUser } from "../../apis/TaskApi";
 
 const ProjectDetail = (props) => {
     const [projects, setProjects] = useState(dummyData.allTask);
+    console.log(allTaskOfUser())
+    // React.useEffect(() => {
+    //     dispatch(tasksSlice.actions.setTask(allTaskOfUser()));
+    // }, []);
+
+
+
     const renderInner = () => (
         <View style={styles.panel}>
             <KeyboardAvoidingView style={{ justifyContent: "center", alignItems: "center", paddingBottom: 10 }}>
                 <TextInput style={FONTS.h2} placeholder="Name project..." />
             </KeyboardAvoidingView>
 
-            <TouchableOpacity style={[styles.panelButton, { backgroundColor: "dodgerblue" }]} >
+            <TouchableOpacity style={[styles.panelButton, { backgroundColor: "lightsalmon" }]} >
                 <Image source={icons.editName} style={{ width: 30, height: 30, marginRight: 10 }} />
                 <Text style={styles.panelButtonTitle}>Edit project's name</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={[styles.panelButton, { backgroundColor: "mediumseagreen" }]} >
+            <TouchableOpacity style={[styles.panelButton, { backgroundColor: "lightsalmon" }]} >
                 <Image source={icons.add} style={{ width: 30, height: 30, marginRight: 10 }} />
                 <Text style={styles.panelButtonTitle}>Create task</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={[styles.panelButton, { backgroundColor: "mediumseagreen" }]} >
+            <TouchableOpacity style={[styles.panelButton, { backgroundColor: "lightsalmon" }]} >
                 <Image source={icons.adduser} style={{ width: 30, height: 30, marginRight: 10 }} />
                 <Text style={styles.panelButtonTitle}>Add project's member</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={[styles.panelButton, { backgroundColor: "crimson" }]}  >
+            <TouchableOpacity style={[styles.panelButton, { backgroundColor: "lightsalmon" }]}  >
                 <Image source={icons.deleteColor} style={{ width: 30, height: 30, marginRight: 10 }} />
                 <Text style={styles.panelButtonTitle}>Delete this project</Text>
             </TouchableOpacity>
@@ -65,7 +74,7 @@ const ProjectDetail = (props) => {
         <>
             <BottomSheet
                 ref={bs}
-                snapPoints={[460, 0]}
+                snapPoints={[600, 0]}
                 renderContent={renderInner}
                 renderHeader={renderHeader}
                 initialSnap={1}
@@ -202,6 +211,7 @@ const styles = StyleSheet.create({
         padding: 20,
         backgroundColor: '#FFFFFF',
         paddingTop: 20,
+        paddingBottom: 200
         // borderTopLeftRadius: 20,
         // borderTopRightRadius: 20,
         // shadowColor: '#000000',

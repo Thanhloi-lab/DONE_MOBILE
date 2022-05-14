@@ -136,7 +136,7 @@ const AddMember = (props) => {
 
                         <View>
 
-                            {renderSearch}
+
 
 
                         </View>

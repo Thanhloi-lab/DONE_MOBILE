@@ -35,20 +35,20 @@ const GroupDetail = (props) => {
                 <TextInput style={FONTS.h2} placeholder="Name group/project..." />
             </KeyboardAvoidingView>
 
-            <TouchableOpacity style={[styles.panelButton, { backgroundColor: "dodgerblue" }]} >
+            <TouchableOpacity style={[styles.panelButton, { backgroundColor: "lightsalmon" }]} >
                 <Image source={icons.add} style={{ width: 30, height: 30, marginRight: 10 }} />
                 <Text style={styles.panelButtonTitle}>Create project</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={[styles.panelButton, { backgroundColor: "dodgerblue" }]} >
+            <TouchableOpacity style={[styles.panelButton, { backgroundColor: "lightsalmon" }]} onPress={console.log("aaa")}>
                 <Image source={icons.editName} style={{ width: 30, height: 30, marginRight: 10 }} />
                 <Text style={styles.panelButtonTitle}>Edit group name</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={[styles.panelButton, { backgroundColor: "mediumseagreen" }]} onPress={handlePress}>
+            <TouchableOpacity style={[styles.panelButton, { backgroundColor: "lightsalmon" }]} onPress={handlePress}>
                 <Image source={icons.adduser} style={{ width: 30, height: 30, marginRight: 10 }} />
                 <Text style={styles.panelButtonTitle}>Add group's member</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={[styles.panelButton, { backgroundColor: "crimson" }]}  >
+            <TouchableOpacity style={[styles.panelButton, { backgroundColor: "lightsalmon" }]}  >
                 <Image source={icons.deleteColor} style={{ width: 30, height: 30, marginRight: 10 }} />
                 <Text style={styles.panelButtonTitle}>Delete this group</Text>
             </TouchableOpacity>
@@ -75,7 +75,7 @@ const GroupDetail = (props) => {
         <View >
             <BottomSheet
                 ref={bs}
-                snapPoints={[550, 0]}
+                snapPoints={[690, 0]}
                 renderContent={renderInner}
                 renderHeader={renderHeader}
                 initialSnap={1}
@@ -230,6 +230,7 @@ const styles = StyleSheet.create({
         padding: 20,
         backgroundColor: '#FFFFFF',
         paddingTop: 20,
+        paddingBottom: 200
         // borderTopLeftRadius: 20,
         // borderTopRightRadius: 20,
         // shadowColor: '#000000',
