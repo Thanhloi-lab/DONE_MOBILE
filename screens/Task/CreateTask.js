@@ -37,6 +37,7 @@ const CreateTask = ({ navigation }) => {
     const [deadlineError, setDeadlineError] = useState(false);
     const [content, setContent] = useState();
     const [contentError, setContentError] = useState(false);
+    const [complete, setComplete] = useState(false);
 
 
     const [error, setError] = useState("");
@@ -49,12 +50,14 @@ const CreateTask = ({ navigation }) => {
 
     const onChange = (event, selectedDate) => {
         const currentDate = selectedDate || date;
-        setShow("");
+        setShow("")
         setDate(currentDate);
         let tempDate = new Date(currentDate);
-        let fDate = tempDate.getDate() + '/' + (tempDate.getMonth() + 1) + '/' + tempDate.getFullYear();
-        setDeadline(fDate)
+        let fDate = tempDate.getDate() + '-' + (tempDate.getMonth() + 1) + '-' + tempDate.getFullYear();
+        let fTime = tempDate.getHours() + ':' + tempDate.getMinutes();
+        setDeadline(fDate + ' ' + fTime)
     }
+
 
 
     useLayoutEffect(() => {
@@ -182,6 +185,15 @@ const CreateTask = ({ navigation }) => {
                                         value={date}
                                         mode={'date'}
                                         display='default'
+                                        onChange={onChange}
+                                    />)
+                                }
+                                {
+                                    show === 2 && (<DateTimePicker
+                                        value={date}
+                                        mode={'time'}
+                                        display='default'
+                                        is24Hour={true}
                                         onChange={onChange}
 
                                     />)

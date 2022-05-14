@@ -4,7 +4,8 @@ const jobsSlice = createSlice({
     name: 'job',
     initialState: {
         allTask: [],
-        allGroup:[], 
+        allGroup: [],
+        allProject: [],
         // idTask: "",
         // idGroup: "",
         // idProject: "",
@@ -31,8 +32,11 @@ const jobsSlice = createSlice({
         setTask: (state, action) => {
             state.allTask = action.payload;
         },
-        setGroup:(state, action)=>{
+        setGroup: (state, action) => {
             state.allGroup = action.payload;
+        },
+        setProject: (state, action) => {
+            state.allProject = action.payload;
         }
     }
 });

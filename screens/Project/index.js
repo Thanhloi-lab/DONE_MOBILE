@@ -5,10 +5,19 @@ import {
     Image,
     FlatList,
     TouchableOpacity,
+    StyleSheet,
+    Modal,
+    KeyboardAvoidingView,
+    Platform,
+    Alert
 } from "react-native";
 import React from "react";
 import { FONTS, COLORS, SIZES, icons, dummyData } from "../../constants";
 import { HorizontalProjectCard, VerticalFoodCard } from "../../components";
+import { useSelector, useDispatch } from "react-redux";
+import jobsSlice from "../../stores/Job/jobsSlice";
+import { allUserProject, createProject } from "../../apis/ProjectApi";
+import { allTaskOfUser } from "../../apis/TaskApi";
 
 const Section = ({ title, onPress, children }) => {
     return (
@@ -37,43 +46,47 @@ const Section = ({ title, onPress, children }) => {
 };
 
 const Project = ({ navigation }) => {
+    const dispatch = useDispatch();
     const [selectedStatus, setSelectedStatus] = React.useState("My Own Project");
-
+    const [projectName, setProjectName] = React.useState("");
     const [listProject, setListProject] = React.useState([]);
 
+    const projects = useSelector((state) => state.jobs.allProject);
+    const allTask = useSelector((state) => state.jobs.allTask);
+    const myId = useSelector((state) => state.authentication.id);
+
+    const keyboardVerticalOffset = Platform.OS === 'ios' ? 40 : 0
+
     React.useEffect(() => {
+        setListProject(projects)
         handleChangeStatus(selectedStatus);
     }, []);
+
+    function handleReload() {
+
+        allTaskOfUser(myId).then(data => {
+
+            dispatch(jobsSlice.actions.setTask(data));
+
+        })
+            .catch(err => console.error(err))
+
+
+        allUserProject(myId).then(data => {
+            dispatch(jobsSlice.actions.setProject(data));
+
+        })
+            .catch(err => console.error(err))
+    }
+
 
     function handleChangeStatus(status) {
         //retrieve recommend list
         if (status === "My Own Project") {
-            let selectedProjectWithSTatus = dummyData.allTask.filter(
-                (a) => a.userCreateProject === dummyData.myProfile.id
-            );
-            let projects = [];
-            selectedProjectWithSTatus.forEach((project) => {
-                let item = {
-                    idGroup: project.idGroup,
-                    idProject: project.idProject,
-                    mailUserCreateGroup: project.mailUserCreateGroup,
-                    mailUserCreateProject: project.mailUserCreateGroup,
-                    nameGroup: project.nameGroup,
-                    nameProject: project.nameProject,
-                    nameUserCreateGroup: project.nameUserCreateGroup,
-                    nameUserCreateProject: project.nameUserCreateProject,
-                    phoneUserCreateGroup: project.phoneUserCreateGroup,
-                    phoneUserCreateProject: project.phoneUserCreateProject,
-                    projectCreateDate: project.projectCreateDate,
-                    userCreateGroup: project.userCreateGroup,
-                    userCreateProject: project.userCreateProject,
-                };
-                projects.push(item);
-            });
             setListProject(projects);
         } else {
-            let selectedProjectWithSTatus = dummyData.allTask.filter(
-                (a) => a.userCreateProject !== dummyData.myProfile.id
+            let selectedProjectWithSTatus = allTask.filter(
+                (a) => a.userCreateProject !== myId
             );
             let projects = [];
             selectedProjectWithSTatus.forEach((project) => {
@@ -94,55 +107,83 @@ const Project = ({ navigation }) => {
                 };
                 projects.push(item);
             });
-            setListProject(projects);
+            function getUniqueListBy(arr, key) {
+                return [...new Map(arr.map(item => [item[key], item])).values()]
+            }
+            setListProject(getUniqueListBy(projects, "idProject"));
         }
     }
 
     function renderSearch() {
         return (
-            <View
-                style={{
-                    flexDirection: "row",
-                    height: 40,
-                    alignItems: "center",
-                    marginHorizontal: SIZES.padding,
-                    marginVertical: SIZES.base,
-                    paddingHorizontal: SIZES.radius,
-                    borderRadius: SIZES.radius,
-                    backgroundColor: COLORS.lightGray2,
-                }}
-            >
-                {/* Icon */}
-                <Image
-                    source={icons.search}
+            <View style={{ width: '100%', flexDirection: 'row', justifyContent: "center", alignItems: 'center' }}>
+                <View
                     style={{
-                        height: 20,
-                        width: 20,
-                        tintColor: COLORS.black,
+                        flexDirection: "row",
+                        height: 40,
+                        alignItems: "center",
+                        marginHorizontal: SIZES.padding,
+                        marginVertical: SIZES.base,
+                        paddingHorizontal: SIZES.radius,
+                        borderRadius: SIZES.radius,
+                        backgroundColor: COLORS.lightGray2,
+                        width: "80%",
                     }}
-                />
-
-                {/* Text input */}
-                <TextInput
-                    style={{
-                        flex: 1,
-                        marginLeft: SIZES.radius,
-                        ...FONTS.body3,
-                    }}
-                    placeholder="Search project...."
-                />
-
-                {/* Filter Button */}
-                <TouchableOpacity>
+                >
+                    {/* Icon */}
                     <Image
-                        source={icons.filter}
+                        source={icons.search}
                         style={{
                             height: 20,
                             width: 20,
                             tintColor: COLORS.black,
                         }}
                     />
-                </TouchableOpacity>
+
+                    {/* Text input */}
+                    <TextInput
+                        style={{
+                            flex: 1,
+                            marginLeft: SIZES.radius,
+                            ...FONTS.body3,
+                        }}
+                        placeholder="Search project...."
+                    />
+
+                    {/* Filter Button */}
+                    <TouchableOpacity>
+                        <Image
+                            source={icons.filter}
+                            style={{
+                                height: 20,
+                                width: 20,
+                                tintColor: COLORS.black,
+                            }}
+                        />
+                    </TouchableOpacity>
+                </View>
+                <View style={{
+                    flex: 1,
+                    height: 40,
+                    marginRight: 5,
+                    marginVertical: SIZES.base,
+                    paddingHorizontal: SIZES.radius,
+                    borderRadius: SIZES.radius,
+                    backgroundColor: COLORS.lightGray2,
+                    justifyContent: "center",
+                    alignItems: "center",
+                }}>
+                    <TouchableOpacity onPress={() => handleReload()}>
+                        <Image
+                            source={icons.reload}
+                            style={{
+                                height: 20,
+                                width: 20,
+                                tintColor: COLORS.black,
+                            }}
+                        />
+                    </TouchableOpacity>
+                </View>
             </View>
         );
     }
@@ -239,7 +280,7 @@ const Project = ({ navigation }) => {
                                 console.log("NAVIGATE");
                                 navigation.navigate("ProjectDetail", {
                                     projectId: item.idProject,
-                                    userId: item.userCreateProject
+
                                 });
                             }}
                         />

@@ -9,23 +9,29 @@ import {
     KeyboardAvoidingView,
     TextInput,
     Image,
-    Platform
+    Platform,
+    Alert,
+    TouchableOpacity,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { COLORS, dummyData, FONTS, icons, SIZES } from "../../constants";
 import { HorizontalGroupCard, HorizontalProjectCard } from "../../components";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import BottomSheet from 'reanimated-bottom-sheet';
 import Animated from 'react-native-reanimated';
 import { editGroup } from "../../apis/GroupApi";
+import { createProject } from "../../apis/ProjectApi";
+import { useSelector, useDispatch } from "react-redux";
 
 const GroupDetail = (props) => {
     const [projects, setProjects] = useState(dummyData.allTask);
     const [modalVisible, setModalVisible] = useState(false);
+    const [modalVisibleProject, setModalVisibleProject] = useState(false);
     const [groupName, setGroupName] = React.useState("");
+    const [projectName, setProjectName] = React.useState("");
     const keyboardVerticalOffset = Platform.OS === 'ios' ? 40 : 0
 
     const groupId = props.route.params.groupId;
+    const myId = useSelector((state) => state.authentication.id);
 
     const handlePress = () => {
         console.log("aaaaaa");
@@ -43,14 +49,17 @@ const GroupDetail = (props) => {
                 <TextInput style={FONTS.h2} placeholder="Name group/project..." />
             </KeyboardAvoidingView>
 
-            <TouchableOpacity style={[styles.panelButton, { backgroundColor: "lightsalmon" }]} >
+            <TouchableOpacity style={[styles.panelButton, { backgroundColor: "lightsalmon" }]}
+                onPress={() => {
+                    setModalVisibleProject(true);
+                    bs.current.snapTo(1);
+                }}>
                 <Image source={icons.add} style={{ width: 30, height: 30, marginRight: 10 }} />
                 <Text style={styles.panelButtonTitle}>Create project</Text>
             </TouchableOpacity>
 
             <TouchableOpacity style={[styles.panelButton, { backgroundColor: "lightsalmon" }]}
-                onPress={()=>{
-                    console.log("dm mở modal lên")
+                onPress={() => {
                     setModalVisible(true);
                     bs.current.snapTo(1);
                 }}>
@@ -81,21 +90,40 @@ const GroupDetail = (props) => {
         </View>
     );
 
-    function handleEditGroup(groupName){
-        
+    function handleEditGroup(groupName) {
         var data = {
-            NameGroup:groupName,
-            IdUser:myId,
-            IdGroup:groupId
+            GroupName: groupName,
+            IdUser: myId,
+            IdGroup: groupId
         }
         var result = editGroup(data);
-        result.then(data=>{
+        result.then(response => {
             // handleReload()
+            setGroupName("");
+            Alert.alert("Edit success")
         })
-        .catch(err=>{
-            Alert("Tạo nhóm thất bại, thử lại sau");
+            .catch(err => {
+                console.log(err)
+            })
+
+    }
+
+    function handleCreateProject(projectName) {
+        console.log(myId, projectName, groupId)
+        var data = {
+            IdGroup: groupId,
+            IdUser: myId,
+            NameProject: projectName,
+        }
+        var result = createProject(data);
+        result.then(reponse => {
+            setProjectName("");
+            Alert.alert("Create success")
         })
-        
+            .catch(err => {
+                Alert.alert(err.message());
+            })
+
     }
 
     const modalEditGroupName = () => {
@@ -134,11 +162,23 @@ const GroupDetail = (props) => {
                             <TouchableOpacity
                                 style={[styles.buttonModal, styles.buttonClose, { marginRight: 50, marginLeft: 30, width: 120 }]}
                                 onPress={() => {
-                                    handleEditGroup(groupName);
-                                    console.log('edit');
+                                    var NameGroup = groupName.trim();
+
+                                    if (NameGroup === "" || !NameGroup || NameGroup === null) {
+                                        Alert.alert(
+                                            "Thông báo",
+                                            "Không để trống tên nhóm");
+                                    } else {
+
+                                        handleEditGroup(groupName);
+                                        setModalVisible(!modalVisible)
+                                        console.log('edit');
+                                    }
                                 }}
                             >
+
                                 <Text style={styles.textStyle}>Edit group</Text>
+
                             </TouchableOpacity>
 
                             <TouchableOpacity
@@ -155,12 +195,80 @@ const GroupDetail = (props) => {
         )
     }
 
-    
+    const modalCreateProject = () => {
+        return (
+            <Modal
+                style={styles.modalContent}
+                animationType="slide"
+                transparent={true}
+                visible={modalVisibleProject}
+
+                onRequestClose={() => {
+                    setModalVisibleProject(!modalVisibleProject);
+                }}
+            >
+                <View style={{ ...styles.centeredView, width: '100%' }}>
+                    <View style={{ ...styles.modalView, width: '100%' }}>
+                        <KeyboardAvoidingView behavior="height" keyboardVerticalOffset={keyboardVerticalOffset}>
+                            <View style={styles.inputContainer}>
+                                <TextInput
+                                    style={styles.input}
+                                    value={projectName}
+                                    onChangeText={(value) => {
+                                        setProjectName(value);
+                                    }}
+                                    placeholder="Project name...."
+                                />
+                            </View>
+                        </KeyboardAvoidingView>
+
+                        <View style={{
+                            flexDirection: 'row',
+                            justifyContent: 'space-around',
+                            alignItems: 'center',
+                            marginTop: 20
+                        }}>
+                            <TouchableOpacity
+                                style={[styles.buttonModal, styles.buttonClose, { marginRight: 50, marginLeft: 30, width: 120 }]}
+                                onPress={() => {
+                                    var NameProject = projectName.trim();
+
+                                    if (NameProject === "" || !NameProject || NameProject === null) {
+                                        Alert.alert(
+                                            "Alert",
+                                            "Project name not null");
+                                    } else {
+                                        handleCreateProject(projectName);
+                                        setModalVisibleProject(!modalVisibleProject)
+                                        console.log('create');
+                                    }
+                                }}
+                            >
+
+                                <Text style={styles.textStyle}>Create project</Text>
+
+                            </TouchableOpacity>
+
+                            <TouchableOpacity
+                                style={[styles.buttonModal, styles.buttonClose, { backgroundColor: "black", marginHorizontal: 50, width: 120 }]}
+                                onPress={() => setModalVisibleProject(!modalVisibleProject)}
+                            >
+                                <Text style={styles.textStyle}>Cancel</Text>
+                            </TouchableOpacity>
+                        </View>
+
+                    </View>
+                </View>
+            </Modal>
+        )
+    }
+
+
 
     return (
         <View >
             {modalEditGroupName()}
-
+            {modalCreateProject()}
             <BottomSheet
                 ref={bs}
                 snapPoints={[690, 0]}
@@ -195,7 +303,7 @@ const GroupDetail = (props) => {
                         }}
                     >
                         <Text style={{ fontSize: SIZES.h2, fontWeight: "bold" }}>
-                            Group: {projects[0].nameGroup}
+                            Group: {props.groupName}
                         </Text>
                         <Text>Creator: {projects[0].nameUserCreateGroup}</Text>
                     </View>

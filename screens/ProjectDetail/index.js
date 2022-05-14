@@ -7,27 +7,35 @@ import {
     KeyboardAvoidingView,
     TextInput,
     Image,
+    Modal,
+    Alert,
+    Platform,
+    Pressable,
+    TouchableOpacity,
 } from "react-native";
 import { COLORS, dummyData, SIZES, FONTS, icons } from "../../constants";
 import { HorizontalTaskCard } from "../../components";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import BottomSheet from 'reanimated-bottom-sheet';
 import Animated from 'react-native-reanimated';
 import { useDispatch, useSelector } from "react-redux";
 import jobsSlice from "../../stores/Job/jobsSlice";
 import { allTaskOfUser } from "../../apis/TaskApi";
-import { getTaskByProjectId } from '../../redux/selectors'
+import { editProject } from "../../apis/ProjectApi";
+
 
 const ProjectDetail = (props) => {
 
     const dispatch = useDispatch();
-
+    const [modalVisible, setModalVisible] = useState(false);
     const bs = React.createRef();
     const fall = new Animated.Value(1);
     const projectId = props.route.params.projectId;
     const userId = props.route.params.userId;
-    const myId = useSelector((state) => state.authentication.id) ;
-    const projects = useSelector((state) => getTaskByProjectId(state, projectId));
+    const myId = useSelector((state) => state.authentication.id);
+    const allTask = useSelector((state) => state.jobs.allTask);
+    const projects = useSelector((state) => state.jobs.allProject);
+    const [projectName, setProjectName] = React.useState("");
+    const keyboardVerticalOffset = Platform.OS === 'ios' ? 40 : 0
 
     React.useEffect(() => {
         allTaskOfUser(myId).then(data => {
@@ -42,11 +50,15 @@ const ProjectDetail = (props) => {
                 <TextInput style={FONTS.h2} placeholder="Name project..." />
             </KeyboardAvoidingView>
 
-            <TouchableOpacity style={[styles.panelButton, { backgroundColor: "lightsalmon" }]} >
+            <TouchableOpacity style={[styles.panelButton, { backgroundColor: "lightsalmon" }]}
+                onPress={() => {
+                    setModalVisible(true);
+                    bs.current.snapTo(1);
+                }}>
                 <Image source={icons.editName} style={{ width: 20, height: 20, marginRight: 10 }} />
                 <Text style={styles.panelButtonTitle}>Edit project's name</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={[styles.panelButton, { backgroundColor: "lightsalmon" }]} >
+            <TouchableOpacity style={[styles.panelButton, { backgroundColor: "lightsalmon" }]} onPress={() => props.navigation.navigate("CreateTask")}>
                 <Image source={icons.add} style={{ width: 20, height: 20, marginRight: 10 }} />
                 <Text style={styles.panelButtonTitle}>Create task</Text>
             </TouchableOpacity>
@@ -74,9 +86,98 @@ const ProjectDetail = (props) => {
         </View>
     );
 
+    function handleEditProject(projectName) {
+        var data = {
+
+            IdUser: myId,
+            IdProject: projectId,
+            ProjectName: projectName
+        }
+        var result = editProject(data);
+        result.then(response => {
+            // handleReload()
+            setProjectName("");
+            Alert.alert("Edit success")
+        })
+            .catch(err => {
+                console.log(err)
+            })
+
+    }
+
+    const modalEditProjectName = () => {
+        return (
+            <Modal
+                style={styles.modalContent}
+                animationType="slide"
+                transparent={true}
+                visible={modalVisible}
+
+                onRequestClose={() => {
+                    setModalVisible(!modalVisible);
+                }}
+            >
+                <View style={{ ...styles.centeredView, width: '100%' }}>
+                    <View style={{ ...styles.modalView, width: '100%' }}>
+                        <KeyboardAvoidingView behavior="height" keyboardVerticalOffset={keyboardVerticalOffset}>
+                            <View style={styles.inputContainer}>
+                                <TextInput
+                                    style={styles.input}
+                                    value={projectName}
+                                    onChangeText={(value) => {
+                                        setProjectName(value);
+                                    }}
+                                    placeholder="Project name...."
+                                />
+                            </View>
+                        </KeyboardAvoidingView>
+
+                        <View style={{
+                            flexDirection: 'row',
+                            justifyContent: 'space-around',
+                            alignItems: 'center',
+                            marginTop: 20
+                        }}>
+                            <TouchableOpacity
+                                style={[styles.buttonModal, styles.buttonClose, { marginRight: 50, marginLeft: 30, width: 120 }]}
+                                onPress={() => {
+                                    var NameProject = projectName.trim();
+
+                                    if (NameProject === "" || !NameProject || NameProject === null) {
+                                        Alert.alert(
+                                            "Alert",
+                                            "Projet's name not null ");
+                                    } else {
+
+                                        handleEditProject(projectName);
+                                        setModalVisible(!modalVisible)
+                                        console.log('edit');
+                                    }
+                                }}
+                            >
+
+                                <Text style={styles.textStyle}>Edit project</Text>
+
+                            </TouchableOpacity>
+
+                            <TouchableOpacity
+                                style={[styles.buttonModal, styles.buttonClose, { backgroundColor: "black", marginHorizontal: 50, width: 120 }]}
+                                onPress={() => setModalVisible(!modalVisible)}
+                            >
+                                <Text style={styles.textStyle}>Cancel</Text>
+                            </TouchableOpacity>
+                        </View>
+
+                    </View>
+                </View>
+            </Modal>
+        )
+    }
+
 
     return (
         <View>
+            {modalEditProjectName()}
             <BottomSheet
                 ref={bs}
                 snapPoints={[600, 0]}
@@ -110,56 +211,60 @@ const ProjectDetail = (props) => {
                         }}
                     >
                         <Text style={{ fontSize: SIZES.h2, fontWeight: "bold" }}>
-                            Project: {projects.length > 0 && projects[0].nameProject}
+                            Project:
                         </Text>
-                        <Text>Creator: {projects.length > 0 && projects[0].nameUserCreateProject}</Text>
+                        <Text>Creator: </Text>
                     </View>
-                    {
-                        userId === myId &&
+                    <View style={{
+                        top: 0,
+                        right: 0,
+                        position: "absolute",
+                        elevation: 8,
+                    }}>
+                        <TouchableOpacity
+                            style={{
+                                borderRadius: 50,
+                                width: 40,
+                                height: 40,
+                                backgroundColor: COLORS.primary,
+                                flexDirection: "row",
+                                justifyContent: "center",
+                                alignItems: "center",
 
-                        <View style={{ position: 'absolute', top: 0, right: 0, elevation: 8 }}>
-                            <TouchableOpacity
+                            }}
+                            onPress={() => {
+                                bs.current.snapTo(0)
+                            }}
+                        >
+                            <Text
                                 style={{
-                                    borderRadius: 50,
-                                    width: 40,
-                                    height: 40,
-                                    backgroundColor: COLORS.primary,
-                                    flexDirection: "column",
-                                    justifyContent: "center",
-                                    alignItems: "center",
+                                    fontSize: 30,
+                                    color: "white",
+                                    textAlign: "center",
+                                    textAlignVertical: "center",
+                                    flex: 1
                                 }}
-                                onPress={() => bs.current.snapTo(0)}
                             >
-                                <Text
-                                    style={{
-                                        fontSize: 30,
-                                        color: "white",
-                                        textAlign: "center",
-                                        textAlignVertical: "center",
-
-                                    }}
-                                >
-                                    +
-                                </Text>
-                            </TouchableOpacity>
-                        </View>
-                    }
+                                +
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
 
                 </View>
                 <FlatList
-                    // style={{ flex: 1 }}
+                    //style={{ flex: 1 }}
                     vertical
-                    data={projects}
+                    data={allTask}
                     keyExtractor={(item) => item.idTask}
                     showsVerticalScrollIndicator={false}
                     renderItem={({ item, index }) => {
                         return (
                             <HorizontalTaskCard
                                 containerStyle={{
+                                    height: 130,
                                     justifyContent: "center",
                                     marginHorizontal: SIZES.padding,
-                                    marginBottom:
-                                        index == projects.length - 1 ? 200 : SIZES.radius,
+                                    marginBottom: index === projects.length - 1 ? 200 : SIZES.radius,
                                 }}
                                 item={item}
                             />
@@ -271,6 +376,49 @@ const styles = StyleSheet.create({
         fontSize: 17,
         fontWeight: 'bold',
         color: 'white',
+    },
+    input: {
+        height: '100%',
+        width: '100%'
+    },
+    inputContainer: {
+        height: 50,
+        fontSize: 15,
+        paddingLeft: 30,
+        paddingRight: 30,
+        borderRadius: 25,
+        color: "#ccc",
+        backgroundColor: "#f7f7f7",
+        marginBottom: 10,
+        position: "relative",
+        flexDirection: "row",
+
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.23,
+        shadowRadius: 2.62,
+
+        elevation: 4,
+    },
+    buttonOpen: {
+        backgroundColor: "#F194FF",
+    },
+    buttonClose: {
+        backgroundColor: "#2196F3",
+        marginBottom: 10,
+    },
+    textStyle: {
+        color: "white",
+        fontWeight: "bold",
+        textAlign: "center",
+    },
+    buttonModal: {
+        borderRadius: 20,
+        padding: 10,
+        elevation: 2,
     },
 });
 

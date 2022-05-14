@@ -12,7 +12,7 @@ export async function allTaskOfUser(id) {
     //         console.error(error);
     //     });
 
-    let response = await fetch(`http://192.168.0.103:50003/api/Tasks/allTaskOf?Id=${id}`);
+    let response = await fetch(`http://192.168.1.4:50003/api/Tasks/allTaskOf?Id=${id}`);
     let data = await response.json();
     return data;
 };

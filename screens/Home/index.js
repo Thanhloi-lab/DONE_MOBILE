@@ -7,6 +7,7 @@ import { useSelector, useDispatch } from "react-redux";
 import jobsSlice from "../../stores/Job/jobsSlice";
 import { allTaskOfUser } from "../../apis/TaskApi";
 import { allUserGroup } from "../../apis/GroupApi";
+import { allUserProject } from "../../apis/ProjectApi";
 
 const Section = ({ title, onPress, children }) => {
     return (
@@ -43,7 +44,7 @@ const Home = ({ navigation }) => {
     const [selectedStatus, setSelectedStatus] = React.useState(1);
     const [listTask, setListTask] = React.useState([]);
     const myId = useSelector((state) => state.authentication.id);
-    const allTask =  useSelector((state) => state.jobs.allTask);
+    const allTask = useSelector((state) => state.jobs.allTask);
 
     React.useEffect(() => {
         allTaskOfUser(myId).then(data => {
@@ -54,6 +55,12 @@ const Home = ({ navigation }) => {
         allUserGroup(myId).then(data => {
             console.log(data);
             dispatch(jobsSlice.actions.setGroup(data));
+        })
+            .catch(err => console.error(err))
+
+        allUserProject(myId).then(data => {
+            console.log(data);
+            dispatch(jobsSlice.actions.setProject(data));
         })
             .catch(err => console.error(err))
 

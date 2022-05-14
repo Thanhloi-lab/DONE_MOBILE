@@ -67,7 +67,7 @@ const Group = ({ navigation }) => {
         handleChangeStatus(selectedStatus);
     }, []);
 
-    function handleReload(){
+    function handleReload() {
         allTaskOfUser(myId).then(data => {
             dispatch(jobsSlice.actions.setTask(data));
         })
@@ -79,20 +79,20 @@ const Group = ({ navigation }) => {
             .catch(err => console.error(err))
     }
 
-    function handleCreateGroup(groupName){
-        
+    function handleCreateGroup(groupName) {
+
         var data = {
-            NameGroup:groupName,
-            IdUser:myId
+            NameGroup: groupName,
+            IdUser: myId
         }
         var result = createGroup(data);
-        result.then(data=>{
+        result.then(data => {
             handleReload()
         })
-        .catch(err=>{
-            Alert("Tạo nhóm thất bại, thử lại sau");
-        })
-        
+            .catch(err => {
+                Alert.alert(err);
+            })
+
     }
 
     function handleChangeStatus(status) {
@@ -191,7 +191,7 @@ const Group = ({ navigation }) => {
                     justifyContent: "center",
                     alignItems: "center",
                 }}>
-                    <TouchableOpacity onPress={() =>handleReload()}>
+                    <TouchableOpacity onPress={() => handleReload()}>
                         <Image
                             source={icons.reload}
                             style={{
@@ -243,28 +243,29 @@ const Group = ({ navigation }) => {
                             flexDirection: 'row',
                             justifyContent: 'space-around',
                             alignItems: 'center',
-                            marginTop:20
+                            marginTop: 20
                         }}>
                             <TouchableOpacity
-                                style={[styles.buttonModal, styles.buttonClose, { marginRight: 50, marginLeft:30, width:120 }]}
+                                style={[styles.buttonModal, styles.buttonClose, { marginRight: 50, marginLeft: 30, width: 120 }]}
                                 onPress={() => {
                                     var NameGroup = groupName.trim();
-                                    if(NameGroup==="" || !NameGroup){
+
+                                    if (NameGroup === "" || !NameGroup || NameGroup === null) {
                                         Alert.alert(
                                             "Thông báo",
                                             "Không để trống tên nhóm");
-                                    }else{
+                                    } else {
                                         handleCreateGroup(groupName);
                                         setModalVisible(!modalVisible);
                                     }
-                                    
+
                                 }}
                             >
                                 <Text style={styles.textStyle}>Create group</Text>
                             </TouchableOpacity>
 
                             <TouchableOpacity
-                                style={[styles.buttonModal, styles.buttonClose, { backgroundColor: "black", marginHorizontal: 50, width:120 }]}
+                                style={[styles.buttonModal, styles.buttonClose, { backgroundColor: "black", marginHorizontal: 50, width: 120 }]}
                                 onPress={() => setModalVisible(!modalVisible)}
                             >
                                 <Text style={styles.textStyle}>Cancel</Text>
