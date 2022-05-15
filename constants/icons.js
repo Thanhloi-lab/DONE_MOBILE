@@ -70,8 +70,10 @@ const add = require("../assets/icons/add.png");
 const deleteColor = require("../assets/icons/delete.png");
 const editName = require("../assets/icons/editname.png");
 const print = require("../assets/icons/print.png");
+const printer = require("../assets/icons/printer.png");
 
 export default {
+    printer,
     password,
     email,
     done_name,

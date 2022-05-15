@@ -29,14 +29,14 @@ import { Svg } from 'react-native-svg';
 
 import { COLORS, FONTS, SIZES, icons } from '../../constants';
 
-import {getTask} from "../../apis/UserApi"
+import { getTask } from "../../apis/UserApi"
 import { useSelector } from "react-redux";
 
 const TASK_STATUS = {
-    UNCOMPLETED:1,
-    COMPLETED:2,
-    BUG:3,
-    EXPIRED:4
+    UNCOMPLETED: 1,
+    COMPLETED: 2,
+    BUG: 3,
+    EXPIRED: 4
 }
 
 const Statistics = () => {
@@ -198,44 +198,44 @@ const Statistics = () => {
 
     const handleClick = async () => {
 
-        try{
-          // Check for Permission (check if permission is already given or not)
-          let isPermitedExternalStorage = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE);
-    
-          if(!isPermitedExternalStorage){
-    
-            // Ask for permission
-            const granted = await PermissionsAndroid.request(
-              PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
-              {
-                title: "Storage permission needed",
-                buttonNeutral: "Ask Me Later",
-                buttonNegative: "Cancel",
-                buttonPositive: "OK"
-              }
-            );
-    
-            
-            if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-              // Permission Granted (calling our exportDataToExcel function)
-              exportDataToExcel();
-              console.log("Permission granted");
+        try {
+            // Check for Permission (check if permission is already given or not)
+            let isPermitedExternalStorage = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE);
+
+            if (!isPermitedExternalStorage) {
+
+                // Ask for permission
+                const granted = await PermissionsAndroid.request(
+                    PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+                    {
+                        title: "Storage permission needed",
+                        buttonNeutral: "Ask Me Later",
+                        buttonNegative: "Cancel",
+                        buttonPositive: "OK"
+                    }
+                );
+
+
+                if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+                    // Permission Granted (calling our exportDataToExcel function)
+                    exportDataToExcel();
+                    console.log("Permission granted");
+                } else {
+                    // Permission denied
+                    console.log("Permission denied");
+                }
             } else {
-              // Permission denied
-              console.log("Permission denied");
+                // Already have Permission (calling our exportDataToExcel function)
+                await exportDataToExcel();
+                setModalVisible(!modalVisible)
             }
-          }else{
-             // Already have Permission (calling our exportDataToExcel function)
-           await  exportDataToExcel();
-           setModalVisible(!modalVisible)
-          }
-        }catch(e){
-          console.log('Error while checking permission');
-          console.log(e);
-          return
+        } catch (e) {
+            console.log('Error while checking permission');
+            console.log(e);
+            return
         }
-        
-      };
+
+    };
 
     const exportDataToExcel = async () => {
 
@@ -245,50 +245,50 @@ const Statistics = () => {
         var wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, "Cities");
         const wbout = XLSX.write(wb, {
-          type: 'base64',
-          bookType: "xlsx"
+            type: 'base64',
+            bookType: "xlsx"
         });
         const uri = FileSystem.cacheDirectory + 'cities.xlsx';
-            console.log(`Writing to ${JSON.stringify(uri)} with text:`);
-            await FileSystem.writeAsStringAsync(uri, wbout, {
+        console.log(`Writing to ${JSON.stringify(uri)} with text:`);
+        await FileSystem.writeAsStringAsync(uri, wbout, {
             encoding: FileSystem.EncodingType.Base64
-            });
+        });
 
-            const perm = await Permissions.askAsync(Permissions.MEDIA_LIBRARY);
-            if (perm.status != 'granted') {
-              return;
-            }
-            
-            try {
-              const asset = await MediaLibrary.createAssetAsync(uri);
-              const album = await MediaLibrary.getAlbumAsync('Download');
-              if (album == null) {
+        const perm = await Permissions.askAsync(Permissions.MEDIA_LIBRARY);
+        if (perm.status != 'granted') {
+            return;
+        }
+
+        try {
+            const asset = await MediaLibrary.createAssetAsync(uri);
+            const album = await MediaLibrary.getAlbumAsync('Download');
+            if (album == null) {
                 await MediaLibrary.createAlbumAsync('Download', asset, false);
-              } else {
+            } else {
                 await MediaLibrary.addAssetsToAlbumAsync([asset], album, false);
-              }
-            } catch (e) {
-              handleError(e);
             }
-      }
+        } catch (e) {
+            handleError(e);
+        }
+    }
 
     const [categories, setCategories] = React.useState(categoriesData)
     const [viewMode, setViewMode] = React.useState("chart")
     const [selectedCategory, setSelectedCategory] = React.useState(null)
     const [showMoreToggle, setShowMoreToggle] = React.useState(false)
     const id = useSelector((state) => state.authentication.id);
-    
+
     const [tasks, setTasks] = useState([])
     const [dataToPrint, setDataToPrint] = useState([])
 
     useEffect(() => {
         getTask(id)
-            .then((res)=>res.json())
-            .then(json=>{
+            .then((res) => res.json())
+            .then(json => {
                 setTasks(json)
             })
     }, [])
-    
+
 
     function renderCategoryHeaderSection() {
         return (
@@ -299,18 +299,28 @@ const Statistics = () => {
                         style={{
                             alignItems: 'center',
                             justifyContent: 'center',
-                            backgroundColor: COLORS.green,
-                            height: 50,
-                            width: 110,
+                            backgroundColor: COLORS.primary,
+                            height: 40,
+                            width: 80,
                             borderRadius: 25,
-                            borderWidth: 3,
-                            borderColor: COLORS.secondary
+                            borderWidth: 1,
+                            borderColor: '#ccc',
+                            shadowColor: "#000",
+                            shadowOffset: {
+                                width: 0,
+                                height: 2,
+                            },
+                            shadowOpacity: 0.23,
+                            shadowRadius: 2.62,
+
+                            elevation: 4,
                         }}
                         onPress={() => setModalVisible(true)}
                     >
-                        <Text style={{ color: "white", ...FONTS.h4 }}>
-                            PRINT FILE
-                        </Text>
+                        <View style={{flexDirection:'row', justifyContent: 'center', alignItems: 'center' }}>
+                            <Image source={icons.printer} style={{ width: 20, height: 20, tintColor: "white"}} />
+                            
+                        </View>
                     </TouchableOpacity>
                 </View>
 
@@ -564,51 +574,51 @@ const Statistics = () => {
         return finalChartData
     }
 
-    const getDataToPrint = (tasks) =>{
-        const completedTask = tasks.filter(task=>task.statusId===TASK_STATUS.COMPLETED).length
-        const uncompleteTask = tasks.filter(task=>task.statusId===TASK_STATUS.UNCOMPLETED).length
-        const bugTask = tasks.filter(task=>task.statusId===TASK_STATUS.BUG).length
-        const expiredTask = tasks.filter(task=>task.statusId===TASK_STATUS.EXPIRED).length
-       
-         let data =    [
-                {
-                    type: "Complete",
-                    percentage: `${(completedTask / tasks.length * 100).toFixed(0)}%`,
-                },
-                {
-                    type: "Uncomplete",
-                    percentage: `${(uncompleteTask / tasks.length * 100).toFixed(0)}%`,
-                },
-                {
-                    type: "Bug",
-                    percentage: `${(bugTask / tasks.length * 100).toFixed(0)}%`,
-                    
-                },
-                {
-                    type: "Expired",
-                    percentage: `${(expiredTask / tasks.length * 100).toFixed(0)}%`,
-                }
-            ]
-            const tasksData = tasks.map(task=>({
-                name:task.nameTask,
-                project: task.nameProject,
-                group: task.nameGroup,
-                "created date":task.taskCreateDate,
-                deadline:task.deadline,
-                status:task.statusName
-            }))
+    const getDataToPrint = (tasks) => {
+        const completedTask = tasks.filter(task => task.statusId === TASK_STATUS.COMPLETED).length
+        const uncompleteTask = tasks.filter(task => task.statusId === TASK_STATUS.UNCOMPLETED).length
+        const bugTask = tasks.filter(task => task.statusId === TASK_STATUS.BUG).length
+        const expiredTask = tasks.filter(task => task.statusId === TASK_STATUS.EXPIRED).length
+
+        let data = [
+            {
+                type: "Complete",
+                percentage: `${(completedTask / tasks.length * 100).toFixed(0)}%`,
+            },
+            {
+                type: "Uncomplete",
+                percentage: `${(uncompleteTask / tasks.length * 100).toFixed(0)}%`,
+            },
+            {
+                type: "Bug",
+                percentage: `${(bugTask / tasks.length * 100).toFixed(0)}%`,
+
+            },
+            {
+                type: "Expired",
+                percentage: `${(expiredTask / tasks.length * 100).toFixed(0)}%`,
+            }
+        ]
+        const tasksData = tasks.map(task => ({
+            name: task.nameTask,
+            project: task.nameProject,
+            group: task.nameGroup,
+            "created date": task.taskCreateDate,
+            deadline: task.deadline,
+            status: task.statusName
+        }))
         data = [...data, ...tasksData]
         return data
     }
- 
-    function processData(tasks) {
-        
-        const completedTask = tasks.filter(task=>task.statusId===TASK_STATUS.COMPLETED).length
-        const uncompleteTask = tasks.filter(task=>task.statusId===TASK_STATUS.UNCOMPLETED).length
-        const bugTask = tasks.filter(task=>task.statusId===TASK_STATUS.BUG).length
-        const expiredTask = tasks.filter(task=>task.statusId===TASK_STATUS.EXPIRED).length
 
-       
+    function processData(tasks) {
+
+        const completedTask = tasks.filter(task => task.statusId === TASK_STATUS.COMPLETED).length
+        const uncompleteTask = tasks.filter(task => task.statusId === TASK_STATUS.UNCOMPLETED).length
+        const bugTask = tasks.filter(task => task.statusId === TASK_STATUS.BUG).length
+        const expiredTask = tasks.filter(task => task.statusId === TASK_STATUS.EXPIRED).length
+
+
 
         const finalChartData = [
             {
@@ -652,7 +662,7 @@ const Statistics = () => {
     function renderChart() {
 
         let chartData = processData(tasks)
-        
+
         let colorScales = chartData.map((item) => item.color)
         let totalExpenseCount = tasks.length
 
@@ -741,7 +751,7 @@ const Statistics = () => {
                         />
                     </Svg>
                     <View style={{ position: 'absolute', top: '42%', left: "42%" }}>
-                        <Text style={{ ...FONTS.h1, textAlign: 'center' }}>{totalExpenseCount }</Text>
+                        <Text style={{ ...FONTS.h1, textAlign: 'center' }}>{totalExpenseCount}</Text>
                         <Text style={{ ...FONTS.body3, textAlign: 'center' }}>Tasks</Text>
                     </View>
                 </View>
