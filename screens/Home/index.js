@@ -208,7 +208,11 @@ const Home = ({ navigation }) => {
                             item={item}
                             onPress={() => {
                                 console.log("NAVIGATE")
-                                navigation.navigate("TaskDetail")
+                                console.log([item])
+                                navigation.navigate("TaskDetail", {
+                                    item: [item]
+
+                                })
                             }}
                         />
 

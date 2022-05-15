@@ -35,3 +35,4 @@ export async function getUserByGroupId(id) {
     let data = await response.json();
     return data;
 };
+

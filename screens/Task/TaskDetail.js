@@ -10,19 +10,129 @@ import {
     KeyboardAvoidingView,
     Pressable,
     TextInput,
+    Alert,
 } from "react-native";
 import React, { useState } from "react";
 import { COLORS, FONTS, SIZES, icons } from '../../constants'
 import BottomSheet from 'reanimated-bottom-sheet';
 import Animated from 'react-native-reanimated';
+import { useDispatch, useSelector } from "react-redux";
+import jobsSlice from "../../stores/Job/jobsSlice";
+import { allTaskOfUser, deleteTask } from "../../apis/TaskApi";
+
+const TaskDetail = (props) => {
+    // console.log([props])
+    const dispatch = useDispatch();
+    const projectId = props.route.params.item[0].idProject;
+    const taskId = props.route.params.item[0].idTask;
+    const userName = props.route.params.item[0].nameUserCreateProject;
+    const taskName = props.route.params.item[0].nameTask;
+    const taskDeadline = props.route.params.item[0].deadline;
+    const taskContent = props.route.params.item[0].content;
+    const taskStatus = props.route.params.item[0].statusId;
+    const myId = useSelector((state) => state.authentication.id);
+    const [modalDeleteTaskVisible, setModalDeleteTaskVisible] = useState(false);
+
+    function handleReload() {
+        allTaskOfUser(myId).then(data => {
+            dispatch(jobsSlice.actions.setTask(data));
+        })
+            .catch(err => console.error(err))
 
 
-const TaskDetail = () => {
+    }
+
+
+
+    function handleDeleteTask() {
+        var data = {
+            IdUser: myId,
+            IdSth: taskId
+        }
+
+        var result = deleteTask(data);
+        result.then(response => {
+            handleReload()
+            Alert.alert("delete success");
+            props.navigation.goBack()
+
+        })
+            .catch(err => {
+                console.log(err)
+            })
+    }
+
+    const modalDeleteProject = () => {
+        return (
+            <Modal
+                style={styles.modalContent}
+                animationType="slide"
+                transparent={true}
+                visible={modalDeleteTaskVisible}
+
+                onRequestClose={() => {
+                    setModalDeleteTaskVisible(!modalDeleteTaskVisible);
+                }}
+            >
+                <View style={{ ...styles.centeredView, width: '100%' }}>
+                    <View style={{ ...styles.modalView, width: '100%' }}>
+                        <View>
+                            <Text style={{ fontSize: 15 }}>Are you really want to delete this task?</Text>
+                        </View>
+
+                        <View style={{
+                            flexDirection: 'row',
+                            justifyContent: 'space-around',
+                            alignItems: 'center',
+                            marginTop: 20
+                        }}>
+                            <TouchableOpacity
+                                style={[styles.buttonModal, styles.buttonClose, {
+                                    marginRight: 50,
+                                    marginLeft: 30,
+                                    width: 120,
+                                    backgroundColor: COLORS.primary
+                                }]}
+                                onPress={() => {
+                                    handleDeleteTask();
+                                    setModalDeleteTaskVisible(!modalDeleteTaskVisible)
+                                }}
+                            >
+
+                                <Text style={styles.textStyle}>Delete</Text>
+
+                            </TouchableOpacity>
+
+                            <TouchableOpacity
+                                style={[styles.buttonModal, styles.buttonClose, { backgroundColor: "black", marginHorizontal: 50, width: 120 }]}
+                                onPress={() => setModalDeleteTaskVisible(!modalDeleteTaskVisible)}
+                            >
+                                <Text style={styles.textStyle}>Cancel</Text>
+                            </TouchableOpacity>
+                        </View>
+
+                    </View>
+                </View>
+            </Modal>
+        )
+    }
+
 
     const renderInner = () => (
         <View style={styles.panel}>
 
-            <TouchableOpacity style={[styles.panelButton, { backgroundColor: "lightsalmon" }]} >
+            <TouchableOpacity style={[styles.panelButton, { backgroundColor: "lightsalmon" }]} onPress={() => {
+                props.navigation.navigate("EditTask", {
+                    projectId: projectId,
+                    taskId: taskId,
+                    userName: userName,
+                    taskName: taskName,
+                    taskDeadline: taskDeadline,
+                    taskContent: taskContent,
+                    taskStatus: taskStatus,
+                })
+            }
+            }>
                 <Image source={icons.editName} style={{ width: 30, height: 30, marginRight: 10 }} />
                 <Text style={styles.panelButtonTitle}>Edit task</Text>
             </TouchableOpacity>
@@ -30,7 +140,11 @@ const TaskDetail = () => {
                 <Image source={icons.adduser} style={{ width: 30, height: 30, marginRight: 10 }} />
                 <Text style={styles.panelButtonTitle}>Add task's member</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={[styles.panelButton, { backgroundColor: "lightsalmon" }]}  >
+            <TouchableOpacity style={[styles.panelButton, { backgroundColor: "lightsalmon" }]}
+                onPress={() => {
+                    setModalDeleteTaskVisible(true);
+                    bs.current.snapTo(1);
+                }}>
                 <Image source={icons.deleteColor} style={{ width: 30, height: 30, marginRight: 10 }} />
                 <Text style={styles.panelButtonTitle}>Delete this task</Text>
             </TouchableOpacity>
@@ -55,7 +169,7 @@ const TaskDetail = () => {
 
     return (
         <SafeAreaView style={{ height: '100%', }}>
-
+            {modalDeleteProject()}
             <BottomSheet
                 ref={bs}
                 snapPoints={[600, 0]}
@@ -90,9 +204,9 @@ const TaskDetail = () => {
                         }}
                     >
                         <Text style={{ fontSize: SIZES.h2, fontWeight: "bold" }}>
-                            Task: temp
+                            Task: {taskName}
                         </Text>
-                        <Text>Creator: temp</Text>
+                        <Text>Creator:{userName} </Text>
                     </View>
                     <View style={{
                         top: 0,
@@ -128,7 +242,7 @@ const TaskDetail = () => {
                     </View>
 
                 </View>
-                <ScrollView style={{ flexDirection: 'column' }}>
+                <ScrollView style={{ flexDirection: 'column', marginBottom: 100 }}>
 
                     <View style={{ justifyContent: 'center', alignItems: 'center' }}>
 
@@ -180,7 +294,7 @@ const TaskDetail = () => {
                             }}
                             >
                                 <Text style={{ ...FONTS.h3, fontSize: 20, lineHeight: 20, color: COLORS.primary }}>My task: </Text>
-                                <Text style={{ ...FONTS.body3, fontSize: 20, lineHeight: 20, flexShrink: 1 }}>Task</Text>
+                                <Text style={{ ...FONTS.body3, fontSize: 20, lineHeight: 20, flexShrink: 1 }}>{props.route.params.item[0].nameTask}</Text>
                             </View>
                             <View style={{
                                 flexDirection: 'row',
@@ -189,7 +303,7 @@ const TaskDetail = () => {
                             }}
                             >
                                 <Text style={{ ...FONTS.h3, fontSize: 20, lineHeight: 20, color: COLORS.primary }}>Description: </Text>
-                                <Text style={{ ...FONTS.body3, fontSize: 20, lineHeight: 20, flexShrink: 1 }}>Description</Text>
+                                <Text style={{ ...FONTS.body3, fontSize: 20, lineHeight: 20, flexShrink: 1 }}>{props.route.params.item[0].content}</Text>
                             </View>
                             <View style={{
                                 flexDirection: 'row',
@@ -198,7 +312,7 @@ const TaskDetail = () => {
                             }}
                             >
                                 <Text style={{ ...FONTS.h3, fontSize: 20, lineHeight: 20, color: COLORS.primary }}>Created date: </Text>
-                                <Text style={{ ...FONTS.body3, fontSize: 20, lineHeight: 20, flexShrink: 1 }}>Created date</Text>
+                                <Text style={{ ...FONTS.body3, fontSize: 20, lineHeight: 20, flexShrink: 1 }}>{props.route.params.item[0].taskCreateDate}</Text>
                             </View>
                             <View style={{
                                 flexDirection: 'row',
@@ -207,7 +321,7 @@ const TaskDetail = () => {
                             }}
                             >
                                 <Text style={{ ...FONTS.h3, fontSize: 20, lineHeight: 20, color: COLORS.primary }}>Deadline: </Text>
-                                <Text style={{ ...FONTS.body3, fontSize: 20, lineHeight: 20, flexShrink: 1 }}>Deadline</Text>
+                                <Text style={{ ...FONTS.body3, fontSize: 20, lineHeight: 20, flexShrink: 1 }}>{props.route.params.item[0].deadline}</Text>
                             </View>
                             <View style={{
                                 flexDirection: 'row',
@@ -218,7 +332,7 @@ const TaskDetail = () => {
                             }}
                             >
                                 <Text style={{ ...FONTS.h3, fontSize: 20, lineHeight: 20, color: COLORS.primary }}>Updated date: </Text>
-                                <Text style={{ ...FONTS.body3, fontSize: 20, lineHeight: 20, flexShrink: 1 }}>Updated date</Text>
+                                <Text style={{ ...FONTS.body3, fontSize: 20, lineHeight: 20, flexShrink: 1 }}>{props.route.params.item[0].updateDate}</Text>
                             </View>
                         </View>
 
@@ -245,7 +359,7 @@ const TaskDetail = () => {
                             }}
                             >
                                 <Text style={{ ...FONTS.h3, fontSize: 20, lineHeight: 20, color: COLORS.primary }}>Project: </Text>
-                                <Text style={{ ...FONTS.body3, fontSize: 20, lineHeight: 20, flexShrink: 1 }}>Project</Text>
+                                <Text style={{ ...FONTS.body3, fontSize: 20, lineHeight: 20, flexShrink: 1 }}>{props.route.params.item[0].nameProject}</Text>
                             </View>
                             <View style={{
                                 flexDirection: 'row',
@@ -253,8 +367,8 @@ const TaskDetail = () => {
                                 paddingHorizontal: 10,
                             }}
                             >
-                                <Text style={{ ...FONTS.h3, fontSize: 20, lineHeight: 20, color: COLORS.primary }}>Description: </Text>
-                                <Text style={{ ...FONTS.body3, fontSize: 20, lineHeight: 20, flexShrink: 1 }}>Description</Text>
+                                <Text style={{ ...FONTS.h3, fontSize: 20, lineHeight: 20, color: COLORS.primary }}>MailUserProject: </Text>
+                                <Text style={{ ...FONTS.body3, fontSize: 20, lineHeight: 20, flexShrink: 1 }}>{props.route.params.item[0].mailUserCreateProject}</Text>
                             </View>
                             <View style={{
                                 flexDirection: 'row',
@@ -263,16 +377,7 @@ const TaskDetail = () => {
                             }}
                             >
                                 <Text style={{ ...FONTS.h3, fontSize: 20, lineHeight: 20, color: COLORS.primary }}>Created date: </Text>
-                                <Text style={{ ...FONTS.body3, fontSize: 20, lineHeight: 20, flexShrink: 1 }}>Created date</Text>
-                            </View>
-                            <View style={{
-                                flexDirection: 'row',
-                                paddingVertical: 12,
-                                paddingHorizontal: 10,
-                            }}
-                            >
-                                <Text style={{ ...FONTS.h3, fontSize: 20, lineHeight: 20, color: COLORS.primary }}>Deadline: </Text>
-                                <Text style={{ ...FONTS.body3, fontSize: 20, lineHeight: 20, flexShrink: 1 }}>Deadline</Text>
+                                <Text style={{ ...FONTS.body3, fontSize: 20, lineHeight: 20, flexShrink: 1 }}>{props.route.params.item[0].projectCreateDate}</Text>
                             </View>
                             <View style={{
                                 flexDirection: 'row',
@@ -282,9 +387,10 @@ const TaskDetail = () => {
                                 borderBottomRightRadius: SIZES.radius,
                             }}
                             >
-                                <Text style={{ ...FONTS.h3, fontSize: 20, lineHeight: 20, color: COLORS.primary }}>Updated date: </Text>
-                                <Text style={{ ...FONTS.body3, fontSize: 20, lineHeight: 20, flexShrink: 1 }}>Updated date</Text>
+                                <Text style={{ ...FONTS.h3, fontSize: 20, lineHeight: 20, color: COLORS.primary }}>NameUserProject: </Text>
+                                <Text style={{ ...FONTS.body3, fontSize: 20, lineHeight: 20, flexShrink: 1 }}>{props.route.params.item[0].nameUserCreateProject}</Text>
                             </View>
+
                         </View>
 
                         {/* GROUP */}
@@ -310,7 +416,7 @@ const TaskDetail = () => {
                             }}
                             >
                                 <Text style={{ ...FONTS.h3, fontSize: 20, lineHeight: 20, color: COLORS.primary }}>Group: </Text>
-                                <Text style={{ ...FONTS.body3, fontSize: 20, lineHeight: 20, flexShrink: 1 }}>Group</Text>
+                                <Text style={{ ...FONTS.body3, fontSize: 20, lineHeight: 20, flexShrink: 1 }}>{props.route.params.item[0].nameGroup}</Text>
                             </View>
                             <View style={{
                                 flexDirection: 'row',
@@ -318,8 +424,8 @@ const TaskDetail = () => {
                                 paddingHorizontal: 10,
                             }}
                             >
-                                <Text style={{ ...FONTS.h3, fontSize: 20, lineHeight: 20, color: COLORS.primary }}>Description: </Text>
-                                <Text style={{ ...FONTS.body3, fontSize: 20, lineHeight: 20, flexShrink: 1 }}>Description</Text>
+                                <Text style={{ ...FONTS.h3, fontSize: 20, lineHeight: 20, color: COLORS.primary }}>MailUserGroup: </Text>
+                                <Text style={{ ...FONTS.body3, fontSize: 20, lineHeight: 20, flexShrink: 1 }}>{props.route.params.item[0].mailUserCreateGroup}</Text>
                             </View>
                             <View style={{
                                 flexDirection: 'row',
@@ -327,17 +433,8 @@ const TaskDetail = () => {
                                 paddingHorizontal: 10,
                             }}
                             >
-                                <Text style={{ ...FONTS.h3, fontSize: 20, lineHeight: 20, color: COLORS.primary }}>Created date: </Text>
-                                <Text style={{ ...FONTS.body3, fontSize: 20, lineHeight: 20, flexShrink: 1 }}>Created date</Text>
-                            </View>
-                            <View style={{
-                                flexDirection: 'row',
-                                paddingVertical: 12,
-                                paddingHorizontal: 10,
-                            }}
-                            >
-                                <Text style={{ ...FONTS.h3, fontSize: 20, lineHeight: 20, color: COLORS.primary }}>Deadline: </Text>
-                                <Text style={{ ...FONTS.body3, fontSize: 20, lineHeight: 20, flexShrink: 1 }}>Deadline</Text>
+                                <Text style={{ ...FONTS.h3, fontSize: 20, lineHeight: 20, color: COLORS.primary }}>PhoneUserGroup: </Text>
+                                <Text style={{ ...FONTS.body3, fontSize: 20, lineHeight: 20, flexShrink: 1 }}>{props.route.params.item[0].phoneUserCreateGroup}</Text>
                             </View>
                             <View style={{
                                 flexDirection: 'row',
@@ -347,9 +444,10 @@ const TaskDetail = () => {
                                 borderBottomRightRadius: SIZES.radius,
                             }}
                             >
-                                <Text style={{ ...FONTS.h3, fontSize: 20, lineHeight: 20, color: COLORS.primary }}>Updated date: </Text>
-                                <Text style={{ ...FONTS.body3, fontSize: 20, lineHeight: 20, flexShrink: 1 }}>Updated date</Text>
+                                <Text style={{ ...FONTS.h3, fontSize: 20, lineHeight: 20, color: COLORS.primary }}>UserCreateGroup: </Text>
+                                <Text style={{ ...FONTS.body3, fontSize: 20, lineHeight: 20, flexShrink: 1 }}>{props.route.params.item[0].nameUserCreateGroup}</Text>
                             </View>
+
                         </View>
                     </View>
 
@@ -402,11 +500,11 @@ const styles = StyleSheet.create({
         marginTop: 22,
     },
     modalView: {
+        borderWidth: 3,
         margin: 20,
         backgroundColor: "white",
         borderRadius: 20,
         padding: 35,
-        borderWidth: 3,
         alignItems: "center",
         shadowColor: "#000",
         shadowOffset: {
@@ -494,6 +592,52 @@ const styles = StyleSheet.create({
         fontSize: 17,
         fontWeight: 'bold',
         color: 'white',
+    },
+    modalContent: {
+        height: '100%'
+    },
+    input: {
+        height: '100%',
+        width: '100%'
+    },
+    inputContainer: {
+        height: 50,
+        fontSize: 15,
+        paddingLeft: 30,
+        paddingRight: 30,
+        borderRadius: 25,
+        color: "#ccc",
+        backgroundColor: "#f7f7f7",
+        marginBottom: 10,
+        position: "relative",
+        flexDirection: "row",
+
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.23,
+        shadowRadius: 2.62,
+
+        elevation: 4,
+    },
+    buttonOpen: {
+        backgroundColor: "#F194FF",
+    },
+    buttonClose: {
+        backgroundColor: "#2196F3",
+        marginBottom: 10,
+    },
+    textStyle: {
+        color: "white",
+        fontWeight: "bold",
+        textAlign: "center",
+    },
+    buttonModal: {
+        borderRadius: 20,
+        padding: 10,
+        elevation: 2,
     },
 });
 

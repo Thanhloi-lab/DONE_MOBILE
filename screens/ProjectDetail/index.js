@@ -20,7 +20,7 @@ import Animated from 'react-native-reanimated';
 import { useDispatch, useSelector } from "react-redux";
 import jobsSlice from "../../stores/Job/jobsSlice";
 import { allTaskOfUser } from "../../apis/TaskApi";
-import { editProject } from "../../apis/ProjectApi";
+import { editProject, deleteProject, allUserProject } from "../../apis/ProjectApi";
 
 
 const ProjectDetail = (props) => {
@@ -35,6 +35,7 @@ const ProjectDetail = (props) => {
     const projects = useSelector((state) => state.jobs.allProject);
     const [projectName, setProjectName] = React.useState("");
     const idProject = props.route.params.projectId;
+    const [modalDeleteProjectVisible, setModalDeleteProjectVisible] = useState(false);
     const keyboardVerticalOffset = Platform.OS === 'ios' ? 40 : 0
 
     React.useEffect(() => {
@@ -51,6 +52,11 @@ const ProjectDetail = (props) => {
     function handleReload() {
         allTaskOfUser(myId).then(data => {
             dispatch(jobsSlice.actions.setTask(data));
+        })
+            .catch(err => console.error(err))
+
+        allUserProject(myId).then(data => {
+            dispatch(jobsSlice.actions.setProject(data));
         })
             .catch(err => console.error(err))
 
@@ -79,7 +85,10 @@ const ProjectDetail = (props) => {
                 <Image source={icons.adduser} style={{ width: 20, height: 20, marginRight: 10 }} />
                 <Text style={styles.panelButtonTitle}>Add project's member</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={[styles.panelButton, { backgroundColor: "lightsalmon" }]}  >
+            <TouchableOpacity style={[styles.panelButton, { backgroundColor: "lightsalmon" }]} onPress={() => {
+                setModalDeleteProjectVisible(true);
+                bs.current.snapTo(1);
+            }} >
                 <Image source={icons.deleteColor} style={{ width: 20, height: 20, marginRight: 10 }} />
                 <Text style={styles.panelButtonTitle}>Delete this project</Text>
             </TouchableOpacity>
@@ -108,14 +117,37 @@ const ProjectDetail = (props) => {
         }
         var result = editProject(data);
         result.then(response => {
-            // handleReload()
+
             setProjectName("");
+            handleReload()
             Alert.alert("Edit success")
         })
             .catch(err => {
                 console.log(err)
             })
 
+    }
+
+    function handleDeleteProject() {
+        var data = {
+            IdUser: myId,
+            IdSth: projectId
+        }
+
+        var result = deleteProject(data);
+        result.then(response => {
+
+            setProjectName("");
+            handleReload()
+            Alert.alert("delete success");
+
+            props.navigation.goBack()
+
+
+        })
+            .catch(err => {
+                console.log(err)
+            })
     }
 
     const modalEditProjectName = () => {
@@ -187,10 +219,65 @@ const ProjectDetail = (props) => {
         )
     }
 
+    const modalDeleteProject = () => {
+        return (
+            <Modal
+                style={styles.modalContent}
+                animationType="slide"
+                transparent={true}
+                visible={modalDeleteProjectVisible}
+
+                onRequestClose={() => {
+                    setModalDeleteProjectVisible(!modalDeleteProjectVisible);
+                }}
+            >
+                <View style={{ ...styles.centeredView, width: '100%' }}>
+                    <View style={{ ...styles.modalView, width: '100%' }}>
+                        <View>
+                            <Text style={{ fontSize: 15 }}>Delete project will delete all tasks in project. Are you really want to delete project?</Text>
+                        </View>
+
+                        <View style={{
+                            flexDirection: 'row',
+                            justifyContent: 'space-around',
+                            alignItems: 'center',
+                            marginTop: 20
+                        }}>
+                            <TouchableOpacity
+                                style={[styles.buttonModal, styles.buttonClose, {
+                                    marginRight: 50,
+                                    marginLeft: 30,
+                                    width: 120,
+                                    backgroundColor: COLORS.primary
+                                }]}
+                                onPress={() => {
+                                    handleDeleteProject();
+                                    setModalDeleteProjectVisible(!modalDeleteProjectVisible)
+                                }}
+                            >
+
+                                <Text style={styles.textStyle}>Delete</Text>
+
+                            </TouchableOpacity>
+
+                            <TouchableOpacity
+                                style={[styles.buttonModal, styles.buttonClose, { backgroundColor: "black", marginHorizontal: 50, width: 120 }]}
+                                onPress={() => setModalDeleteProjectVisible(!modalDeleteProjectVisible)}
+                            >
+                                <Text style={styles.textStyle}>Cancel</Text>
+                            </TouchableOpacity>
+                        </View>
+
+                    </View>
+                </View>
+            </Modal>
+        )
+    }
 
     return (
         <View>
             {modalEditProjectName()}
+            {modalDeleteProject()}
             <BottomSheet
                 ref={bs}
                 snapPoints={[600, 0]}
@@ -282,15 +369,8 @@ const ProjectDetail = (props) => {
                                 item={item}
                                 onPress={() => {
 
-                                    props.navigation.navigate("EditTask", {
-                                        projectId: item.idProject,
-                                        taskId: item.idTask,
-                                        userId: item.idUser,
-                                        taskName: item.nameTask,
-                                        taskDeadline: item.deadline,
-                                        taskContent: item.content,
-                                        taskStatus: item.statusId,
-
+                                    props.navigation.navigate("TaskDetail", {
+                                        item: [item]
                                     });
                                 }}
                             />
@@ -445,6 +525,9 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         padding: 10,
         elevation: 2,
+    },
+    modalContent: {
+        height: '100%'
     },
 });
 

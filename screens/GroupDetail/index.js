@@ -57,11 +57,38 @@ const GroupDetail = (props) => {
         })
             .catch(err => console.error(err))
 
+<<<<<<< HEAD
         getGroupById(groupId).then(data => {
             setGroup(data)
         })
             .catch(err => console.error(err))
     }
+=======
+    function handleReload() {
+        allTaskOfUser(myId).then(data => {
+            dispatch(jobsSlice.actions.setTask(data));
+
+        })
+            .catch(err => console.error(err))
+
+        allUserGroup(myId).then(data => {
+            dispatch(jobsSlice.actions.setGroup(data));
+
+        })
+            .catch(err => console.error(err))
+
+        allUserproject(myId).then(data => {
+            dispatch(jobsSlice.actions.setProject(data));
+            setProjects(data)
+        })
+            .catch(err => console.error(err))
+
+        handleChangeStatus(selectedStatus);
+    }
+
+    const bs = React.createRef();
+    const fall = new Animated.Value(1);
+>>>>>>> 45905d951eec3e21c253e6e78da8476c0f635554
 
     const renderInner = () => (
         <View style={styles.panel}>
@@ -134,6 +161,9 @@ const GroupDetail = (props) => {
             IdUser: myId,
             IdSth: groupId
         }
+
+
+
         var result = deleteGroup(data);
         result.then(response => {
             // handleReload()
@@ -162,8 +192,12 @@ const GroupDetail = (props) => {
         result.then(response => {
             // handleReload()
             setGroupName("");
+<<<<<<< HEAD
             handleReload();
             Alert.alert("Sửa thành công")
+=======
+            Alert.alert("Edit success")
+>>>>>>> 45905d951eec3e21c253e6e78da8476c0f635554
         })
             .catch(err => {
                 Alert.alert("Sửa thất bại")
@@ -182,6 +216,7 @@ const GroupDetail = (props) => {
             setProjectName("");
             handleReload();
             Alert.alert(response.objectResult)
+
         })
             .catch(err => {
                 Alert.alert(err);

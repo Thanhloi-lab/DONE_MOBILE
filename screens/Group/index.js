@@ -50,7 +50,7 @@ const Section = ({ title, onPress, children }) => {
     );
 };
 
-const Group = ({ navigation}) => {
+const Group = ({ navigation }) => {
     const dispatch = useDispatch();
     const [selectedStatus, setSelectedStatus] = React.useState("My Own Group");
     const [groupName, setGroupName] = React.useState("");
@@ -62,21 +62,21 @@ const Group = ({ navigation}) => {
 
     const keyboardVerticalOffset = Platform.OS === 'ios' ? 40 : 0
     React.useEffect(() => {
-        
+
         setListGroup(groups)
         handleChangeStatus(selectedStatus);
 
         const willFocusSubscription = navigation.addListener('focus', () => {
             handleReload();
         });
-        
+
         return willFocusSubscription;
     }, []);
 
     function handleReload() {
         allTaskOfUser(myId).then(data => {
             dispatch(jobsSlice.actions.setTask(data));
-            
+
         })
             .catch(err => console.error(err))
 
@@ -90,7 +90,7 @@ const Group = ({ navigation}) => {
     }
 
     function handleCreateGroup(groupName) {
-        
+
         var data = {
             
             NameGroup: groupName,
@@ -99,7 +99,7 @@ const Group = ({ navigation}) => {
         var result = createGroup(data);
         result.then(data => {
             handleReload();
-            Alert.alert(data.resultObject);
+            Alert.alert("create success");
         })
             .catch(err => {
                 Alert.alert(err);
