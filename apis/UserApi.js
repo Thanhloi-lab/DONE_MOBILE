@@ -121,7 +121,7 @@ export const getUserInfo = async (id) => {
     //     });
 
     fetch('http://192.168.0.103:50003/api/Users/getUser?Id=' + id)
-    .then((response) => response.json())
+    .then((response)  => response.json())
     .then((json) => {
         return json;
     }).catch((error) => {

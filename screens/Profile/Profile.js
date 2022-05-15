@@ -81,7 +81,7 @@ const Profile = ({ navigation }) => {
         });
 
         console.log(result);
-
+        console.log(test);
         if (!result.cancelled) {
             setImage(result.uri);
         }
