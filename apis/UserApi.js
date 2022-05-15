@@ -15,11 +15,11 @@ export const getUserInfo = async (id) => {
     //         console.error(error);
     //     });
 
-    fetch('http://192.168.0.103:50003/api/Users/getUser?Id=' + id)
-    .then((response) => response.json())
-    .then((json) => {
-        return json;
-    }).catch((error) => {
-        console.error(error);
-    });
+    fetch('http://192.168.1.4:50003/api/Users/getUser?Id=' + id)
+        .then((response) => response.json())
+        .then((json) => {
+            return json;
+        }).catch((error) => {
+            console.error(error);
+        });
 };

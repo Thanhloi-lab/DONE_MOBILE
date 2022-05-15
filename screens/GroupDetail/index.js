@@ -45,6 +45,28 @@ const GroupDetail = (props) => {
 
     }
 
+    function handleReload() {
+        allTaskOfUser(myId).then(data => {
+            dispatch(jobsSlice.actions.setTask(data));
+
+        })
+            .catch(err => console.error(err))
+
+        allUserGroup(myId).then(data => {
+            dispatch(jobsSlice.actions.setGroup(data));
+
+        })
+            .catch(err => console.error(err))
+
+        allUserproject(myId).then(data => {
+            dispatch(jobsSlice.actions.setProject(data));
+            setProjects(data)
+        })
+            .catch(err => console.error(err))
+
+        handleChangeStatus(selectedStatus);
+    }
+
     const bs = React.createRef();
     const fall = new Animated.Value(1);
 
@@ -109,13 +131,12 @@ const GroupDetail = (props) => {
             IdUser: myId,
             IdSth: groupId
         }
-        console.log('test delete');
+
         var result = deleteGroup(data);
         result.then(response => {
             // handleReload()
             setGroupName("");
-            console.log(response);
-            Alert.alert(response.resultObject);
+            Alert.alert("delete success");
 
             allUserGroup(myId).then(data => {
                 dispatch(jobsSlice.actions.setGroup(data));
@@ -139,7 +160,7 @@ const GroupDetail = (props) => {
         result.then(response => {
             // handleReload()
             setGroupName("");
-            Alert.alert(response.objectResult)
+            Alert.alert("Edit success")
         })
             .catch(err => {
                 console.log(err)
@@ -156,7 +177,8 @@ const GroupDetail = (props) => {
         var result = createProject(data);
         result.then(response => {
             setProjectName("");
-            Alert.alert(response.objectResult)
+            Alert.alert("create success")
+            //handleReload()
         })
             .catch(err => {
                 Alert.alert(err);

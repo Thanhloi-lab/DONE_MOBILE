@@ -27,7 +27,7 @@ import { validate } from "../../util/validation";
 import jobsSlice from "../../stores/Job/jobsSlice";
 
 import { useDispatch, useSelector } from "react-redux";
-import { allTaskOfUser, createTask, editTask } from "../../apis/TaskApi";
+import { allTaskOfUser, createTask, editTask, updateStatus } from "../../apis/TaskApi";
 
 
 
@@ -73,6 +73,7 @@ const EditTask = (props) => {
         setDeadline(fDate + 'T' + fTime + 'Z')
     }
 
+
     useLayoutEffect(() => {
         nameError || contentError ? setError(true) : setError(false)
     }, [nameError, contentError])
@@ -106,6 +107,21 @@ const EditTask = (props) => {
         })
             .catch(err => {
                 Alert.alert("You are not permitted to edit this")
+                console.log(err.message())
+            })
+
+    }
+
+    function handleUpdateStatus(statusId) {
+        var data = {
+            IdTask: taskId,
+            IdStatus: statusId,
+        }
+        var result = updateStatus(data);
+        result.then(response => {
+            handleReload()
+        })
+            .catch(err => {
                 console.log(err.message())
             })
 
@@ -322,10 +338,12 @@ const EditTask = (props) => {
                                         />
                                     </View>
                                     <Picker
+
                                         selectedValue={status}
                                         style={styles.input}
-                                        onValueChange={(itemValue) => setStatus(itemValue)}
+                                        onValueChange={(itemValue) => { setStatus(itemValue), console.log(status) }}
                                     >
+                                        <Picker.Item label="default" value="0" />
                                         <Picker.Item label="Uncompleted" value="1" />
                                         <Picker.Item label="Completed" value="2" />
                                         <Picker.Item label="Bug" value="3" />
@@ -351,7 +369,9 @@ const EditTask = (props) => {
                                     } else {
 
                                         handleEditTask(name, deadline, content)
-
+                                        if (status !== 0) {
+                                            handleUpdateStatus(status)
+                                        }
                                     }
 
                                 }}>
