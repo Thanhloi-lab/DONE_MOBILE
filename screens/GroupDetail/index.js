@@ -18,7 +18,7 @@ import { COLORS, dummyData, FONTS, icons, SIZES } from "../../constants";
 import { HorizontalGroupCard, HorizontalProjectCard, SelectItem } from "../../components";
 import BottomSheet from 'reanimated-bottom-sheet';
 import Animated from 'react-native-reanimated';
-import { editGroup, deleteGroup, allUserGroup, addGroupMembers, getGroupById } from "../../apis/GroupApi";
+import { editGroup, deleteGroup, allUserGroup, addGroupMembers, getGroupById, removeGroupMembers } from "../../apis/GroupApi";
 import { createProject, allProjectByGroupId } from "../../apis/ProjectApi";
 import { getUserByText, getUserByGroupId } from "../../apis/UserApi";
 import jobsSlice from "../../stores/Job/jobsSlice";
@@ -30,12 +30,15 @@ const GroupDetail = (props) => {
     const [projects, setProjects] = useState([]);
     const [group, setGroup] = useState({});
     const [searchText, setSearchText] = useState("");
+    const [userId, setUserId] = useState("");
+
 
     const [modalVisible, setModalVisible] = useState(false);
     const [modalVisibleProject, setModalVisibleProject] = useState(false);
     const [modalDeleteGroupVisible, setModalDeleteGroupVisible] = useState(false);
     const [modalAddGroupMemberVisible, setModalAddGroupMemberVisible] = useState(false);
     const [modalEditGroupMemberVisible, setModalEditGroupMemberVisible] = useState(false);
+    const [modalDeleteUserVisible, setModalDeleteUserVisible] = useState(false);
 
     const [groupName, setGroupName] = React.useState("");
     const [projectName, setProjectName] = React.useState("");
@@ -138,14 +141,20 @@ const GroupDetail = (props) => {
         result.then(response => {
             // handleReload()
             setGroupName("");
-            Alert.alert(response.resultObject);
+            if (response.isSuccessed) {
+                Alert.alert(response.resultObject);
+                allUserGroup(myId).then(data => {
+                    dispatch(jobsSlice.actions.setGroup(data));
+                })
+                    .catch(err => console.error(err))
 
-            allUserGroup(myId).then(data => {
-                dispatch(jobsSlice.actions.setGroup(data));
-            })
-                .catch(err => console.error(err))
+                props.navigation.goBack();
+            }
+            else {
+                Alert.alert(response.message);
+            }
 
-            props.navigation.goBack();
+
         })
             .catch(err => {
                 Alert.alert("Xóa thất bại");
@@ -163,7 +172,12 @@ const GroupDetail = (props) => {
             // handleReload()
             setGroupName("");
             handleReload();
-            Alert.alert("Sửa thành công")
+            if (response.isSuccessed) {
+                Alert.alert(response.resultObject);
+            }
+            else {
+                Alert.alert(response.message);
+            }
         })
             .catch(err => {
                 Alert.alert("Sửa thất bại")
@@ -181,7 +195,12 @@ const GroupDetail = (props) => {
         result.then(response => {
             setProjectName("");
             handleReload();
-            Alert.alert(response.objectResult)
+            if (response.isSuccessed) {
+                Alert.alert(response.resultObject);
+            }
+            else {
+                Alert.alert(response.message);
+            }
         })
             .catch(err => {
                 Alert.alert(err);
@@ -332,7 +351,7 @@ const GroupDetail = (props) => {
                 visible={modalDeleteGroupVisible}
 
                 onRequestClose={() => {
-                    setModalVisibleProject(!modalDeleteGroupVisible);
+                    setModalDeleteGroupVisible(!modalDeleteGroupVisible);
                 }}
             >
                 <View style={{ ...styles.centeredView, width: '100%' }}>
@@ -467,6 +486,7 @@ const GroupDetail = (props) => {
             .catch(err => {
                 Alert.alert("Thêm thất bại.");
             })
+        setSearchText("");
     }
 
     function handleLoadUser() {
@@ -480,7 +500,6 @@ const GroupDetail = (props) => {
             //         isSelected: false,
             //     })
             // });
-            console.log(data);
             setUsers(data)
         })
             .catch(err => console.error(err))
@@ -601,11 +620,16 @@ const GroupDetail = (props) => {
                             <FlatList
                                 vertical
                                 data={users}
-                                keyExtractor={(item) => item.isUser}
+                                keyExtractor={(item) => item.idUser}
                                 showsVerticalScrollIndicator={false}
                                 renderItem={({ item, index }) => {
                                     return (
-                                        <TouchableOpacity>
+                                        <TouchableOpacity
+                                            onLongPress={() => {
+                                                setUserId(item.idUser);
+                                                setModalDeleteUserVisible(true)
+                                            }}
+                                        >
                                             <View style={{
                                                 width: '100%',
                                                 backgroundColor: COLORS.lightGray2,
@@ -669,6 +693,86 @@ const GroupDetail = (props) => {
         )
     }
 
+    const modalDeleteUser = () => {
+        return (
+            <Modal
+                style={styles.modalContent}
+                animationType="slide"
+                transparent={true}
+                visible={modalDeleteUserVisible}
+
+                onRequestClose={() => {
+                    setModalDeleteUserVisible(!modalDeleteUserVisible);
+                }}
+            >
+                <View style={{ ...styles.centeredView, width: '100%' }}>
+                    <View style={{ ...styles.modalView, width: '100%' }}>
+                        <View>
+                            <Text style={{ fontSize: 15 }}>Are you really want to delete this user?</Text>
+                        </View>
+
+                        <View style={{
+                            flexDirection: 'row',
+                            justifyContent: 'space-around',
+                            alignItems: 'center',
+                            marginTop: 20
+                        }}>
+                            <TouchableOpacity
+                                style={[styles.buttonModal, styles.buttonClose, {
+                                    marginRight: 50,
+                                    marginLeft: 30,
+                                    width: 120,
+                                    backgroundColor: COLORS.primary
+                                }]}
+                                onPress={() => {
+                                    handleDeleteUser();
+                                    setModalDeleteUserVisible(!modalDeleteUserVisible)
+                                }}
+                            >
+
+                                <Text style={styles.textStyle}>Delete</Text>
+
+                            </TouchableOpacity>
+
+                            <TouchableOpacity
+                                style={[styles.buttonModal, styles.buttonClose, { backgroundColor: "black", marginHorizontal: 50, width: 120 }]}
+                                onPress={() => setModalDeleteUserVisible(!modalDeleteUserVisible)}
+                            >
+                                <Text style={styles.textStyle}>Cancel</Text>
+                            </TouchableOpacity>
+                        </View>
+
+                    </View>
+                </View>
+            </Modal>
+        )
+    }
+
+    const handleDeleteUser = () => {
+        var data = {
+            IdUser: myId,
+            IdSth: userId,
+            IdGroup: groupId
+        }
+        var result = removeGroupMembers(data);
+        result.then(response => {
+            // handleReload()
+            setUserId("");
+            if (response.isSuccessed) {
+                handleLoadUser();
+                Alert.alert(response.resultObject);
+            }
+            else {
+                Alert.alert(response.message);
+            }
+
+        })
+            .catch(err => {
+                console.log(err);
+                Alert.alert("Xóa thất bại");
+            })
+    }
+
     return (
         <View >
             {modalEditGroupName()}
@@ -676,6 +780,7 @@ const GroupDetail = (props) => {
             {modalDeleteGroup()}
             {modalAddMember()}
             {modalEditMember()}
+            {modalDeleteUser()}
 
             <BottomSheet
                 ref={bs}
