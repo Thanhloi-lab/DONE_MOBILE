@@ -50,7 +50,7 @@ const Section = ({ title, onPress, children }) => {
     );
 };
 
-const Group = ({ navigation }) => {
+const Group = ({ navigation}) => {
     const dispatch = useDispatch();
     const [selectedStatus, setSelectedStatus] = React.useState("My Own Group");
     const [groupName, setGroupName] = React.useState("");
@@ -61,38 +61,50 @@ const Group = ({ navigation }) => {
     const myId = useSelector((state) => state.authentication.id);
 
     const keyboardVerticalOffset = Platform.OS === 'ios' ? 40 : 0
-
+    console.log("reload");
     React.useEffect(() => {
+        
         setListGroup(groups)
         handleChangeStatus(selectedStatus);
+
+        const willFocusSubscription = navigation.addListener('focus', () => {
+            handleReload();
+        });
+        
+        return willFocusSubscription;
     }, []);
 
     function handleReload() {
         allTaskOfUser(myId).then(data => {
             dispatch(jobsSlice.actions.setTask(data));
+            
         })
             .catch(err => console.error(err))
 
         allUserGroup(myId).then(data => {
             dispatch(jobsSlice.actions.setGroup(data));
+            setListGroup(data)
         })
             .catch(err => console.error(err))
+
+        handleChangeStatus(selectedStatus);
     }
 
     function handleCreateGroup(groupName) {
-
+        
         var data = {
             NameGroup: groupName,
             IdUser: myId
         }
         var result = createGroup(data);
         result.then(data => {
-            handleReload()
+            handleReload();
+            Alert.alert(data.resultObject);
         })
             .catch(err => {
                 Alert.alert(err);
             })
-
+        setGroupName("")
     }
 
     function handleChangeStatus(status) {
@@ -266,7 +278,10 @@ const Group = ({ navigation }) => {
 
                             <TouchableOpacity
                                 style={[styles.buttonModal, styles.buttonClose, { backgroundColor: "black", marginHorizontal: 50, width: 120 }]}
-                                onPress={() => setModalVisible(!modalVisible)}
+                                onPress={() => {
+                                    setModalVisible(!modalVisible);
+                                    setGroupName("");
+                                }}
                             >
                                 <Text style={styles.textStyle}>Cancel</Text>
                             </TouchableOpacity>
