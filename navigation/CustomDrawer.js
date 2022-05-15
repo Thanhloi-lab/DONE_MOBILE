@@ -9,6 +9,7 @@ import { COLORS, FONTS, SIZES, icons, dummyData, constants } from '../constants'
 import tabsSlice from '../stores/tab/tabsSlice';
 import authenticationSlice from '../stores/Authentication/authenticationSlice';
 import { useSelector, useDispatch } from 'react-redux';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 const Drawer = createDrawerNavigator();
@@ -216,8 +217,9 @@ const CustomDrawerContent = ({ navigation, selectedTab }) => {
                     <CustomDrawerItem
                         label="Logout"
                         icon={icons.logout}
-                        onPress={() => {
+                        onPress={async () => {
                             dispatch(authenticationSlice.actions.deleteToken());
+                            await AsyncStorage.removeItem('token')
                         }}
                     />
                 </View>

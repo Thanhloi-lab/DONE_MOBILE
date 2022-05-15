@@ -2,36 +2,32 @@ import {
     StyleSheet,
     Text,
     View,
-    Image,
-    TextInput,
-    TouchableOpacity,
     TouchableWithoutFeedback,
+    TextInput,
+    Image,
+    TouchableOpacity,
     Keyboard,
     KeyboardAvoidingView,
     ToastAndroid
 } from "react-native";
+import { COLORS, FONTS, SIZES, icons, dummyData, constants } from '../../constants';
 import React from "react";
 import { useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
-import { COLORS, FONTS, SIZES, icons, dummyData, constants } from '../../constants';
-import { validate } from "../../util/validation";
-import { forgotPassword } from "../../apis/UserApi";
+import { sendVerifyCode, verifyEmail } from "../../apis/UserApi";
 
-const ForgetPassword = ({ navigation }) => {
+const SendCode = ({ navigation }) => {
     const [email, setEmail] = useState("");
-    const [emailError, setEmailError] = useState(false);
 
-    const onSubmit = async () =>{
-        const res = await forgotPassword(email)
-        if(res.status === 200){
+    const onSubmit = () =>{
+        sendVerifyCode(email)
+        .then(()=>{
             ToastAndroid.showWithGravity(
-                `Your old password have been sent to ${email}, please check your inbox`,
+                `Verification code have been sent to ${email}, please check your inbox`,
                 ToastAndroid.SHORT,
                 ToastAndroid.BOTTOM
               );
-            navigation.pop()
-        }
-
+            navigation.push("VerifyEmail",{email})})
     }
 
     return (
@@ -39,15 +35,16 @@ const ForgetPassword = ({ navigation }) => {
             colors={[COLORS.primary, COLORS.primary2]}
             style={styles.gradientContainer}
         >
-            <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+            <TouchableWithoutFeedback onPress={() => { Keyboard.dismiss() }}>
                 <KeyboardAvoidingView behavior="padding">
                     <View style={{ width: '100%', height: '100%' }}>
-                        <View style={{
-                            height: 260,
-                            width: '100%',
-                            alignItems: 'center',
-                            flex: 1
-                        }}>
+                        <View
+                            style={{
+                                height: 260,
+                                width: '100%',
+                                alignItems: 'center',
+                                flex: 1
+                            }}>
                             <Image
                                 source={icons.done_name}
                                 style={{
@@ -61,7 +58,7 @@ const ForgetPassword = ({ navigation }) => {
                         <View style={styles.container}>
                             <View style={{ alignItems: "center", marginBottom: 20 }}>
                                 <Text style={{ fontSize: 24, color: "#333333", fontWeight: "bold" }}>
-                                    Forgot Password
+                                    Verify email
                                 </Text>
                             </View>
                             <View style={styles.inputContainer}>
@@ -77,29 +74,17 @@ const ForgetPassword = ({ navigation }) => {
                                     style={styles.input}
                                     value={email}
                                     onChangeText={(value) => {
-                                        setEmailError(!validate(value, "email"));
                                         setEmail(value);
                                     }}
-                                    placeholder="Email"
+                                    placeholder="email"
                                 />
                             </View>
-                            {emailError && (
-                                <View style={styles.errorContainer}>
-                                    <Text style={styles.errorText}>
-                                        Valid email is required: ex@abc.zy
-                                    </Text>
-                                </View>
-                            )}
-
+                            
                             <TouchableOpacity style={styles.button} onPress={onSubmit}>
-                                <Text style={{ color: "white", fontSize: 15 }}>SEND CODE</Text>
+                                <Text style={{ color: "white", fontSize: 15 }}>Send verification mail</Text>
                             </TouchableOpacity>
 
-                            <View style={{ alignItems: "center", marginTop: 30 }}>
-                                <TouchableOpacity onPress={() => navigation.goBack()}>
-                                    <Text style={{ color: "#666666" }}>Go back to login</Text>
-                                </TouchableOpacity>
-                            </View>
+                           
                         </View>
                     </View>
                 </KeyboardAvoidingView>
@@ -118,7 +103,6 @@ const styles = StyleSheet.create({
     },
     container: {
         backgroundColor: "white",
-        minHeight: 350,
         width: "100%",
         padding: 20,
         paddingBottom: 70,
@@ -135,7 +119,11 @@ const styles = StyleSheet.create({
         paddingLeft: 68,
         paddingRight: 30,
         borderRadius: 25,
-        color: "#cccccc",
+        color: "#ccc",
+        backgroundColor: "#f7f7f7",
+        marginBottom: 10,
+        position: "relative",
+        flexDirection: "row",
 
         shadowColor: "#000",
         shadowOffset: {
@@ -146,11 +134,6 @@ const styles = StyleSheet.create({
         shadowRadius: 2.62,
 
         elevation: 4,
-
-        backgroundColor: "#f7f7f7",
-        marginBottom: 10,
-        position: "relative",
-        flexDirection: "row",
     },
     icon: {
         position: "absolute",
@@ -187,4 +170,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default ForgetPassword;
+export default SendCode;

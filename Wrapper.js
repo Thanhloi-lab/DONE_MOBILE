@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { StyleSheet, ActivityIndicator, View, Text, Pressable } from "react-native";
 import CustomDrawer from "./navigation/CustomDrawer";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -6,9 +6,11 @@ import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
 import { CreateTask, Group, EditTask, AddMember, GroupDetail, ProjectDetail, TaskDetail, Profile, Setting, EditPersonal, EditContact, ChangePassword, HelpCenter } from "./screens";
 import RootStackScreen from "./navigation/RootStackScreen";
 import { COLORS, dummyData, SIZES } from "./constants";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 //store
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import authenticationSlice from "./stores/Authentication/authenticationSlice";
 
 const theme = {
     ...DefaultTheme,
@@ -22,6 +24,27 @@ const Stack = createStackNavigator();
 
 export default function Wrapper() {
     const token = useSelector((state) => state.authentication.token);
+
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        const getToken = async () =>{
+
+            const token = await AsyncStorage.getItem('token')
+            const id = await AsyncStorage.getItem('id')
+
+            if(token !== null) {
+                dispatch(authenticationSlice.actions.setToken({token,id}))
+
+            }else{
+                console.log("null");
+            }
+ 
+        }
+        getToken()
+      
+    }, [])
+    
 
     return (
         <NavigationContainer style={{ flex: 1 }}>

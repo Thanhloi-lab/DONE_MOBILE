@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import {
     SafeAreaView,
     StyleSheet,
@@ -14,13 +14,30 @@ import {
     Platform,
     Modal,
     Pressable,
-
+    PermissionsAndroid
 } from 'react-native';
+
+// var RNFS = require("react-native-fs");
+import * as FileSystem from 'expo-file-system';
+import * as Permissions from 'expo-permissions';
+import * as MediaLibrary from 'expo-media-library';
+import XLSX from "xlsx"
+
 import { VictoryPie } from 'victory-native';
 
 import { Svg } from 'react-native-svg';
 
 import { COLORS, FONTS, SIZES, icons } from '../../constants';
+
+import {getTask} from "../../apis/UserApi"
+import { useSelector } from "react-redux";
+
+const TASK_STATUS = {
+    UNCOMPLETED:1,
+    COMPLETED:2,
+    BUG:3,
+    EXPIRED:4
+}
 
 const Statistics = () => {
     const [modalVisible, setModalVisible] = useState(false);
@@ -179,11 +196,99 @@ const Statistics = () => {
 
     const categoryListHeightAnimationValue = useRef(new Animated.Value(115)).current;
 
+    const handleClick = async () => {
+
+        try{
+          // Check for Permission (check if permission is already given or not)
+          let isPermitedExternalStorage = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE);
+    
+          if(!isPermitedExternalStorage){
+    
+            // Ask for permission
+            const granted = await PermissionsAndroid.request(
+              PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+              {
+                title: "Storage permission needed",
+                buttonNeutral: "Ask Me Later",
+                buttonNegative: "Cancel",
+                buttonPositive: "OK"
+              }
+            );
+    
+            
+            if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+              // Permission Granted (calling our exportDataToExcel function)
+              exportDataToExcel();
+              console.log("Permission granted");
+            } else {
+              // Permission denied
+              console.log("Permission denied");
+            }
+          }else{
+             // Already have Permission (calling our exportDataToExcel function)
+           await  exportDataToExcel();
+           setModalVisible(!modalVisible)
+          }
+        }catch(e){
+          console.log('Error while checking permission');
+          console.log(e);
+          return
+        }
+        
+      };
+
+    const exportDataToExcel = async () => {
+
+        var data = getDataToPrint(tasks)
+
+        var ws = XLSX.utils.json_to_sheet(data);
+        var wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Cities");
+        const wbout = XLSX.write(wb, {
+          type: 'base64',
+          bookType: "xlsx"
+        });
+        const uri = FileSystem.cacheDirectory + 'cities.xlsx';
+            console.log(`Writing to ${JSON.stringify(uri)} with text:`);
+            await FileSystem.writeAsStringAsync(uri, wbout, {
+            encoding: FileSystem.EncodingType.Base64
+            });
+
+            const perm = await Permissions.askAsync(Permissions.MEDIA_LIBRARY);
+            if (perm.status != 'granted') {
+              return;
+            }
+            
+            try {
+              const asset = await MediaLibrary.createAssetAsync(uri);
+              const album = await MediaLibrary.getAlbumAsync('Download');
+              if (album == null) {
+                await MediaLibrary.createAlbumAsync('Download', asset, false);
+              } else {
+                await MediaLibrary.addAssetsToAlbumAsync([asset], album, false);
+              }
+            } catch (e) {
+              handleError(e);
+            }
+      }
+
     const [categories, setCategories] = React.useState(categoriesData)
     const [viewMode, setViewMode] = React.useState("chart")
     const [selectedCategory, setSelectedCategory] = React.useState(null)
     const [showMoreToggle, setShowMoreToggle] = React.useState(false)
+    const id = useSelector((state) => state.authentication.id);
+    
+    const [tasks, setTasks] = useState([])
+    const [dataToPrint, setDataToPrint] = useState([])
 
+    useEffect(() => {
+        getTask(id)
+            .then((res)=>res.json())
+            .then(json=>{
+                setTasks(json)
+            })
+    }, [])
+    
 
     function renderCategoryHeaderSection() {
         return (
@@ -235,7 +340,7 @@ const Statistics = () => {
                         />
                     </TouchableOpacity>
 
-                    <TouchableOpacity
+                    {/* <TouchableOpacity
                         style={{
                             alignItems: 'center',
                             justifyContent: 'center',
@@ -258,7 +363,7 @@ const Statistics = () => {
                                 tintColor: viewMode == "list" ? COLORS.white : COLORS.black,
                             }}
                         />
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                 </View>
             </View>
         )
@@ -449,12 +554,92 @@ const Statistics = () => {
             return {
                 label: `${percentage}%`,
                 y: Number(item.y),
-                expenseCount: item.expenseCount,
+                expenseCount: 4,
                 color: item.color,
                 name: item.name,
                 id: item.id
             }
         })
+
+        return finalChartData
+    }
+
+    const getDataToPrint = (tasks) =>{
+        const completedTask = tasks.filter(task=>task.statusId===TASK_STATUS.COMPLETED).length
+        const uncompleteTask = tasks.filter(task=>task.statusId===TASK_STATUS.UNCOMPLETED).length
+        const bugTask = tasks.filter(task=>task.statusId===TASK_STATUS.BUG).length
+        const expiredTask = tasks.filter(task=>task.statusId===TASK_STATUS.EXPIRED).length
+       
+         let data =    [
+                {
+                    type: "Complete",
+                    percentage: `${(completedTask / tasks.length * 100).toFixed(0)}%`,
+                },
+                {
+                    type: "Uncomplete",
+                    percentage: `${(uncompleteTask / tasks.length * 100).toFixed(0)}%`,
+                },
+                {
+                    type: "Bug",
+                    percentage: `${(bugTask / tasks.length * 100).toFixed(0)}%`,
+                    
+                },
+                {
+                    type: "Expired",
+                    percentage: `${(expiredTask / tasks.length * 100).toFixed(0)}%`,
+                }
+            ]
+            const tasksData = tasks.map(task=>({
+                name:task.nameTask,
+                project: task.nameProject,
+                group: task.nameGroup,
+                "created date":task.taskCreateDate,
+                deadline:task.deadline,
+                status:task.statusName
+            }))
+        data = [...data, ...tasksData]
+        return data
+    }
+ 
+    function processData(tasks) {
+        
+        const completedTask = tasks.filter(task=>task.statusId===TASK_STATUS.COMPLETED).length
+        const uncompleteTask = tasks.filter(task=>task.statusId===TASK_STATUS.UNCOMPLETED).length
+        const bugTask = tasks.filter(task=>task.statusId===TASK_STATUS.BUG).length
+        const expiredTask = tasks.filter(task=>task.statusId===TASK_STATUS.EXPIRED).length
+
+       
+
+        const finalChartData = [
+            {
+                label: `${(completedTask / tasks.length * 100).toFixed(0)}%`,
+                y: completedTask,
+                color: "orange",
+                name: "Complete",
+                id: 2
+            },
+            {
+                label: `${(uncompleteTask / tasks.length * 100).toFixed(0)}%`,
+                y: uncompleteTask,
+                color: COLORS.COMPLETED1,
+                name: "Uncomplete",
+                id: 1
+            },
+            {
+                label: `${(bugTask / tasks.length * 100).toFixed(0)}%`,
+                y: bugTask,
+                color: COLORS.primary,
+                name: "Bug",
+                id: 3
+            },
+            {
+                label: `${(expiredTask / tasks.length * 100).toFixed(0)}%`,
+                y: expiredTask,
+                color: "blue",
+                name: "Expired",
+                id: 4
+            }
+        ]
 
         return finalChartData
     }
@@ -466,11 +651,11 @@ const Statistics = () => {
 
     function renderChart() {
 
-        let chartData = processCategoryDataToDisplay()
+        let chartData = processData(tasks)
+        
         let colorScales = chartData.map((item) => item.color)
-        let totalExpenseCount = chartData.reduce((a, b) => a + (b.expenseCount || 0), 0)
+        let totalExpenseCount = tasks.length
 
-        console.log("Check Chart")
 
         if (Platform.OS == 'ios') {
             return (
@@ -509,8 +694,8 @@ const Statistics = () => {
                     />
 
                     <View style={{ position: 'absolute', top: '42%', left: "42%" }}>
-                        <Text style={{ ...FONTS.h1, textAlign: 'center' }}>{totalExpenseCount - 1}</Text>
-                        <Text style={{ ...FONTS.body3, textAlign: 'center' }}>Status</Text>
+                        <Text style={{ ...FONTS.h1, textAlign: 'center' }}>{totalExpenseCount}</Text>
+                        <Text style={{ ...FONTS.body3, textAlign: 'center' }}>Task</Text>
                     </View>
                 </View>
 
@@ -556,8 +741,8 @@ const Statistics = () => {
                         />
                     </Svg>
                     <View style={{ position: 'absolute', top: '42%', left: "42%" }}>
-                        <Text style={{ ...FONTS.h1, textAlign: 'center' }}>{totalExpenseCount - 1}</Text>
-                        <Text style={{ ...FONTS.body3, textAlign: 'center' }}>Status</Text>
+                        <Text style={{ ...FONTS.h1, textAlign: 'center' }}>{totalExpenseCount }</Text>
+                        <Text style={{ ...FONTS.body3, textAlign: 'center' }}>Tasks</Text>
                     </View>
                 </View>
             )
@@ -566,7 +751,7 @@ const Statistics = () => {
     }
 
     function renderExpenseSummary() {
-        let data = processCategoryDataToDisplay()
+        let data = processData(tasks)
 
         const renderItem = ({ item }) => (
             <TouchableOpacity
@@ -599,7 +784,7 @@ const Statistics = () => {
 
                 {/* Expenses */}
                 <View style={{ justifyContent: 'center' }}>
-                    <Text style={{ color: (selectedCategory && selectedCategory.name == item.name) ? COLORS.white : COLORS.primary, ...FONTS.h3 }}>{item.y} DAYS - {item.label}</Text>
+                    <Text style={{ color: (selectedCategory && selectedCategory.name == item.name) ? COLORS.white : COLORS.primary, ...FONTS.h3 }}>{item.y} TASKS - {item.label}</Text>
                 </View>
             </TouchableOpacity>
         )
@@ -638,7 +823,7 @@ const Statistics = () => {
                         <View style={{ flexDirection: "row" }}>
                             <TouchableOpacity
                                 style={[styles.buttonModal, styles.buttonClose, { backgroundColor: "limegreen", marginTop: 10, marginRight: 10 }]}
-                                onPress={() => setModalVisible(!modalVisible)}
+                                onPress={handleClick}
                             >
                                 <Text style={styles.textStyle}>Yes for sure</Text>
                             </TouchableOpacity>

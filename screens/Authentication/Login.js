@@ -7,11 +7,13 @@ import {
     Image,
     TouchableOpacity,
     Keyboard,
-    KeyboardAvoidingView
+    KeyboardAvoidingView,
+    ToastAndroid,
+    
 } from "react-native";
 import { COLORS, FONTS, SIZES, icons, dummyData, constants } from '../../constants';
 import { done_name } from '../../constants/icons';
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { validate } from "../../util/validation";
@@ -19,6 +21,9 @@ import { validate } from "../../util/validation";
 
 import { useDispatch, useSelector } from "react-redux";
 import authenticationSlice from '../../stores/Authentication/authenticationSlice';
+import { getUserInfo, login } from "../../apis/UserApi";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 const Login = ({ navigation }) => {
 
@@ -28,6 +33,37 @@ const Login = ({ navigation }) => {
     const [passwordError, setPasswordError] = useState(false);
 
     const dispatch = useDispatch();
+
+    const onSubmit = async () =>{
+        try{
+
+            const response =  await login({email, password})
+            
+            
+            if(response.status === 200){
+                const json = await response.json()
+                dispatch(authenticationSlice.actions.setToken({token: json.token, id:json.idUser + ""}))
+                console.log("login", json.idUser + "");
+                await AsyncStorage.setItem('token', json.token)
+                await AsyncStorage.setItem('id', json.idUser + "")
+                
+            }
+            else{
+                ToastAndroid.showWithGravity(
+                    "Wrong email or password",
+                    ToastAndroid.SHORT,
+                    ToastAndroid.BOTTOM
+                    );
+                }
+        }
+        catch (err){
+            console.log(err);
+        }
+    }
+
+    useEffect(()=>{
+        
+        },[])
 
     return (
         <LinearGradient
@@ -118,7 +154,7 @@ const Login = ({ navigation }) => {
                             )}
 
 
-                            <TouchableOpacity style={styles.button} onPress={() => dispatch(authenticationSlice.actions.setToken('abc'))}>
+                            <TouchableOpacity style={styles.button} onPress={onSubmit}>
                                 <Text style={{ color: "white", fontSize: 15 }}>LOGIN</Text>
                             </TouchableOpacity>
                             <View
@@ -137,6 +173,11 @@ const Login = ({ navigation }) => {
                             <View style={{ alignItems: "center", marginTop: 20 }}>
                                 <TouchableOpacity onPress={() => { navigation.navigate("Register") }}>
                                     <Text style={{ color: "#666666" }}>Create your Account</Text>
+                                </TouchableOpacity>
+                            </View>
+                            <View style={{ alignItems: "center", marginTop: 20 }}>
+                                <TouchableOpacity onPress={() => { navigation.navigate("SendCode") }}>
+                                    <Text style={{ color: "#666666" }}>Send Verification code</Text>
                                 </TouchableOpacity>
                             </View>
                         </View>

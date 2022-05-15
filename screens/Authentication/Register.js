@@ -7,22 +7,36 @@ import {
     Image,
     TouchableOpacity,
     Keyboard,
-    KeyboardAvoidingView
+    KeyboardAvoidingView,
+    ToastAndroid
 } from "react-native";
 import { COLORS, FONTS, SIZES, icons, dummyData, constants } from '../../constants';
 import React from "react";
 import { useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { validate } from "../../util/validation";
+import { register } from "../../apis/UserApi";
 
 const Register = ({ navigation }) => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [emailError, setEmailError] = useState(false);
+    const [name, setName] = useState("")
+    const [phone, setPhone] = useState("")
     const [passwordError, setPasswordError] = useState(false);
     const [confirmPassword, setConfirmPassword] = useState("");
     const [confirmPasswordError, setConfirmPasswordError] = useState(false);
 
+    const onSubmit = () =>{
+        register({email, password, name, phone})
+        .then(()=>{
+            ToastAndroid.showWithGravity(
+                `Verification code have been sent to ${email}, please check your inbox`,
+                ToastAndroid.SHORT,
+                ToastAndroid.BOTTOM
+              );
+            navigation.push("VerifyEmail",{email:email})})
+    }
 
     return (
         <LinearGradient
@@ -81,6 +95,44 @@ const Register = ({ navigation }) => {
                                     </Text>
                                 </View>
                             )}
+                            <View style={styles.inputContainer}>
+                                <View style={styles.icon}>
+                                    <Image source={icons.password}
+                                        style={{
+                                            width: 20,
+                                            height: 20
+                                        }}
+                                    />
+                                </View>
+                                <TextInput
+                                    style={styles.input}
+                                    value={name}
+                                    onChangeText={(value) => {
+                                        setName(value);
+                                    }}
+                                    placeholder="Name"
+                                />
+
+                            </View>
+                            <View style={styles.inputContainer}>
+                                <View style={styles.icon}>
+                                    <Image source={icons.password}
+                                        style={{
+                                            width: 20,
+                                            height: 20
+                                        }}
+                                    />
+                                </View>
+                                <TextInput
+                                    style={styles.input}
+                                    value={phone}
+                                    onChangeText={(value) => {
+                                        setPhone(value);
+                                    }}
+                                    placeholder="Phone"
+                                />
+
+                            </View>
 
                             <View style={styles.inputContainer}>
                                 <View style={styles.icon}>
@@ -110,6 +162,8 @@ const Register = ({ navigation }) => {
                                     </Text>
                                 </View>
                             )}
+                            
+                            
                             <View style={styles.inputContainer}>
                                 <View style={styles.icon}>
                                     <Image source={icons.password}
@@ -138,7 +192,7 @@ const Register = ({ navigation }) => {
                                     <Text style={styles.errorText}>Confirm password is not match</Text>
                                 </View>
                             )}
-                            <TouchableOpacity style={styles.button}>
+                            <TouchableOpacity style={styles.button} onPress={onSubmit}>
                                 <Text style={{ color: "white", fontSize: 15 }}>REGISTER</Text>
                             </TouchableOpacity>
 
