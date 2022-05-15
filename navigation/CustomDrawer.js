@@ -10,6 +10,7 @@ import tabsSlice from '../stores/tab/tabsSlice';
 import authenticationSlice from '../stores/Authentication/authenticationSlice';
 import { useSelector, useDispatch } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { API_URL } from '../apis/UserApi';
 
 
 const Drawer = createDrawerNavigator();
@@ -55,6 +56,7 @@ const CustomDrawerItem = ({ label, icon, isFocused, onPress }) => {
 
 const CustomDrawerContent = ({ navigation, selectedTab }) => {
     const dispatch = useDispatch();
+    const info = useSelector(state=>state.authentication.info)
 
     return (
         <DrawerContentScrollView
@@ -107,7 +109,7 @@ const CustomDrawerContent = ({ navigation, selectedTab }) => {
                     onPress={() => (navigation.navigate("Profile"))}
                 >
                     <Image
-                        source={dummyData.myProfile?.profile_image}
+                        source={{uri: API_URL + "/"+  info.avatar}}
                         style={{
                             width: 45,
                             height: 45,
@@ -120,7 +122,7 @@ const CustomDrawerContent = ({ navigation, selectedTab }) => {
                         }}
                     >
                         <Text style={{ color: COLORS.white, ...FONTS.h3 }}>
-                            {dummyData.myProfile?.name}
+                            {info.name}
                         </Text>
                         <Text style={{ color: COLORS.white, ...FONTS.body4 }}>
                             View your profile

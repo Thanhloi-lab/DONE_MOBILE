@@ -11,6 +11,7 @@ const authenticationSlice = createSlice({
         setToken: (state, action) => {
             state.token = action.payload.token;
             state.id = action.payload.id;
+            state.info = action.payload.info
         },
         deleteToken: (state, action) => {
             state.token = "";

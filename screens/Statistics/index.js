@@ -285,7 +285,7 @@ const Statistics = () => {
         getTask(id)
             .then((res)=>res.json())
             .then(json=>{
-                setTasks(json)
+                setTasks(json || [])
             })
     }, [])
     
@@ -565,10 +565,10 @@ const Statistics = () => {
     }
 
     const getDataToPrint = (tasks) =>{
-        const completedTask = tasks.filter(task=>task.statusId===TASK_STATUS.COMPLETED).length
-        const uncompleteTask = tasks.filter(task=>task.statusId===TASK_STATUS.UNCOMPLETED).length
-        const bugTask = tasks.filter(task=>task.statusId===TASK_STATUS.BUG).length
-        const expiredTask = tasks.filter(task=>task.statusId===TASK_STATUS.EXPIRED).length
+        const completedTask = tasks.filter(task=>task.statusId===TASK_STATUS.COMPLETED).length || 0
+        const uncompleteTask = tasks.filter(task=>task.statusId===TASK_STATUS.UNCOMPLETED).length || 0
+        const bugTask = tasks.filter(task=>task.statusId===TASK_STATUS.BUG).length || 0
+        const expiredTask = tasks.filter(task=>task.statusId===TASK_STATUS.EXPIRED).length || 0
        
          let data =    [
                 {
@@ -603,10 +603,10 @@ const Statistics = () => {
  
     function processData(tasks) {
         
-        const completedTask = tasks.filter(task=>task.statusId===TASK_STATUS.COMPLETED).length
-        const uncompleteTask = tasks.filter(task=>task.statusId===TASK_STATUS.UNCOMPLETED).length
-        const bugTask = tasks.filter(task=>task.statusId===TASK_STATUS.BUG).length
-        const expiredTask = tasks.filter(task=>task.statusId===TASK_STATUS.EXPIRED).length
+        const completedTask = tasks.filter(task=>task.statusId===TASK_STATUS.COMPLETED).length || 0
+        const uncompleteTask = tasks.filter(task=>task.statusId===TASK_STATUS.UNCOMPLETED).length || 0
+        const bugTask = tasks.filter(task=>task.statusId===TASK_STATUS.BUG).length || 0
+        const expiredTask = tasks.filter(task=>task.statusId===TASK_STATUS.EXPIRED).length || 0
 
        
 

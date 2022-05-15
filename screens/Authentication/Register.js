@@ -8,14 +8,20 @@ import {
     TouchableOpacity,
     Keyboard,
     KeyboardAvoidingView,
-    ToastAndroid
+    ToastAndroid,
+    ImageBackground
 } from "react-native";
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+
 import { COLORS, FONTS, SIZES, icons, dummyData, constants } from '../../constants';
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { validate } from "../../util/validation";
 import { register } from "../../apis/UserApi";
+import * as ImagePicker from 'expo-image-picker';
+
+
 
 const Register = ({ navigation }) => {
     const [email, setEmail] = useState("");
@@ -23,12 +29,57 @@ const Register = ({ navigation }) => {
     const [emailError, setEmailError] = useState(false);
     const [name, setName] = useState("")
     const [phone, setPhone] = useState("")
+    const [avatar, setAvatar] = useState(null)
     const [passwordError, setPasswordError] = useState(false);
     const [confirmPassword, setConfirmPassword] = useState("");
     const [confirmPasswordError, setConfirmPasswordError] = useState(false);
 
+
+    const [image, setImage] = useState(dummyData.myProfile?.profile_image);
+    const [toggle, setToggle] = useState(false)
+
+    useEffect(() => {
+        (async () => {
+            if (Platform.OS !== 'web') {
+                const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+                if (status !== 'granted') {
+                    alert('Sorry, we need camera roll permissions to make this work!');
+                }
+            }
+        })();
+    }, []);
+
+  
+
+    const pickImage = async () => {
+       
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            allowsEditing: true,
+            aspect: [4, 3],
+            quality: 1,
+        });
+
+       // ImagePicker saves the taken photo to disk and returns a local URI to it
+       let localUri = result.uri;
+       let filename = localUri.split('/').pop();
+
+       // Infer the type of the image
+       let match = /\.(\w+)$/.exec(filename);
+       let type = match ? `image/${match[1]}` : `image`;
+
+        if (!result.cancelled) {
+            setAvatar({ uri: localUri, name: filename, type });
+            setImage(result.uri);
+
+        }
+
+    };
+
+    
+
     const onSubmit = () =>{
-        register({email, password, name, phone})
+        register({email, password, name, phone, avatar})
         .then(()=>{
             ToastAndroid.showWithGravity(
                 `Verification code have been sent to ${email}, please check your inbox`,
@@ -68,6 +119,47 @@ const Register = ({ navigation }) => {
                                 <Text style={{ fontSize: 24, color: "#333333", fontWeight: "bold" }}>
                                     Register
                                 </Text>
+                            </View>
+                            <View style={{ alignItems: 'center', marginBottom: 30, marginTop: 40 }}>
+
+                           <TouchableOpacity onPress={pickImage}>
+                                    <View style={{
+                                        height: 100,
+                                        width: 100,
+                                        borderRadius: 15,
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                    }}>
+                                        <ImageBackground
+                                            source={typeof (image) === 'string' ? { uri: image } : image}
+                                            style={{ height: 130, width: 130, borderWidth: 2, borderRadius: 30, borderColor: COLORS.gray }}
+                                            imageStyle={{ borderRadius: 30 }}>
+                                            <View style={{
+                                                flex: 1,
+                                                alignItems: 'center',
+                                                justifyContent: "flex-end",
+                                                flexDirection: "row",
+                                                marginTop: 90,
+                                                marginRight: 5
+                                            }}>
+                                                <Icon
+                                                    name="camera"
+                                                    size={30}
+                                                    color="#fff"
+                                                    style={{
+                                                        opacity: 0.7,
+                                                        alignItems: 'center',
+                                                        justifyContent: 'center',
+                                                        borderWidth: 1,
+                                                        borderColor: '#fff',
+                                                        borderRadius: 10,
+
+                                                    }} />
+                                            </View>
+                                        </ImageBackground>
+                                 
+                                    </View>
+                                </TouchableOpacity>
                             </View>
                             <View style={styles.inputContainer}>
                                 <View style={styles.icon}>
@@ -192,9 +284,14 @@ const Register = ({ navigation }) => {
                                     <Text style={styles.errorText}>Confirm password is not match</Text>
                                 </View>
                             )}
+                            
+
                             <TouchableOpacity style={styles.button} onPress={onSubmit}>
                                 <Text style={{ color: "white", fontSize: 15 }}>REGISTER</Text>
                             </TouchableOpacity>
+                            
+                            
+                           
 
                             <View style={{ alignItems: "center", marginTop: 30 }}>
                                 <TouchableOpacity onPress={() => navigation.goBack()}>

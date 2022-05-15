@@ -3,11 +3,9 @@ import {
 } from 'react-native'
 
 
-const API_URL = "https://385a-113-172-24-168.ap.ngrok.io"
+export const API_URL = "https://2440-113-172-24-168.ap.ngrok.io"
 
-export const getUserInfo = async (id) => {
-    return fetch(`${API_URL}/api/Users/getById?Id=${id}`)
-};
+
 
 export const register = async (data) => {
     const formData = new FormData();
@@ -15,6 +13,11 @@ export const register = async (data) => {
     formData.append("Password", data.password)
     formData.append("Name", data.name)
     formData.append("Phone", data.phone)
+    formData.append("Avatar", data.avatar)
+    formData.append("Address", "dsadasdsad")
+    formData.append("Gender", "Nam")
+    formData.append("BirthDate", "2021-01-01")
+
 
     return fetch(`${API_URL}/api/Users/register`, {
         method: 'POST', 
@@ -44,6 +47,9 @@ export const login = async (data) => {
     })
 };
 
+export const getUserInfoById = async (id) => {
+    return fetch(`${API_URL}/api/Users/getById?id=${id}`)
+};
 
 export const forgotPassword = async (email) => {
    
@@ -57,6 +63,34 @@ export const sendVerifyCode = async (email) => {
         method: 'POST', 
     })
 };
+
+export const editInfo = (data) =>{
+    const formData = new FormData();
+    formData.append("Id", data.id)
+    formData.append("Name", data.name)
+    formData.append("Phone", data.phone)
+    formData.append("Address", "dsadasdsad")
+    formData.append("Gender", "Nam")
+    formData.append("BirthDate", "2021-01-01")
+    return fetch(`${API_URL}/api/Users/UpdateInfo`, {
+        method: 'PUT', 
+        body:formData 
+
+    })
+}
+
+export const editAvatar = (data) =>{
+    const formData = new FormData();
+    formData.append("IdUser", data.id)
+    formData.append("Avatar", data.avatar)
+
+
+    return fetch(`${API_URL}/api/Users/updateAvatar`, {
+        method: 'PUT', 
+        body:formData 
+
+    })
+}
 
 export const changePassword = async (data) => {
     const formData = new FormData();
