@@ -475,7 +475,7 @@ const GroupDetail = (props) => {
             IdGroup: groupId,
             IdUser: myId
         }
-
+        //console.log([data])
         var result = addGroupMembers(data);
         result
             .then(response => {
@@ -574,6 +574,7 @@ const GroupDetail = (props) => {
                                     backgroundColor: COLORS.primary
                                 }]}
                                 onPress={() => {
+
                                     handleAddMember();
                                 }}
                             >

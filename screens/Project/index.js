@@ -60,6 +60,12 @@ const Project = ({ navigation }) => {
     React.useEffect(() => {
         setListProject(projects)
         handleChangeStatus(selectedStatus);
+
+        const willFocusSubscription = navigation.addListener('focus', () => {
+            handleReload();
+        });
+
+        return willFocusSubscription;
     }, []);
 
     function handleReload() {
@@ -90,6 +96,7 @@ const Project = ({ navigation }) => {
             );
             let projects = [];
             selectedProjectWithSTatus.forEach((project) => {
+                console.log(project.idGroup)
                 let item = {
                     idGroup: project.idGroup,
                     idProject: project.idProject,
