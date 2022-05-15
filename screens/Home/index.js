@@ -53,13 +53,11 @@ const Home = ({ navigation }) => {
             .catch(err => console.error(err))
 
         allUserGroup(myId).then(data => {
-            console.log(data);
             dispatch(jobsSlice.actions.setGroup(data));
         })
             .catch(err => console.error(err))
 
         allUserProject(myId).then(data => {
-            console.log(data);
             dispatch(jobsSlice.actions.setProject(data));
         })
             .catch(err => console.error(err))
@@ -210,7 +208,11 @@ const Home = ({ navigation }) => {
                             item={item}
                             onPress={() => {
                                 console.log("NAVIGATE")
-                                navigation.navigate("TaskDetail")
+                                console.log([item])
+                                navigation.navigate("TaskDetail", {
+                                    item: [item]
+
+                                })
                             }}
                         />
 

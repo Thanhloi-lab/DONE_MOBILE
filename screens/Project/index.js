@@ -280,7 +280,9 @@ const Project = ({ navigation }) => {
                                 console.log("NAVIGATE");
                                 navigation.navigate("ProjectDetail", {
                                     projectId: item.idProject,
-
+                                    projectName: item.nameProject,
+                                    createName: item.nameUserCreateProject,
+                                    userId: item.createUser,
                                 });
                             }}
                         />

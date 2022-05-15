@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
     View,
     Text,
@@ -15,17 +15,31 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { COLORS, dummyData, FONTS, icons, SIZES } from "../../constants";
-import { HorizontalGroupCard, HorizontalProjectCard } from "../../components";
+import { HorizontalGroupCard, HorizontalProjectCard, SelectItem } from "../../components";
 import BottomSheet from 'reanimated-bottom-sheet';
 import Animated from 'react-native-reanimated';
-import { editGroup } from "../../apis/GroupApi";
-import { createProject } from "../../apis/ProjectApi";
+import { editGroup, deleteGroup, allUserGroup, addGroupMembers, getGroupById, removeGroupMembers } from "../../apis/GroupApi";
+import { createProject, allProjectByGroupId } from "../../apis/ProjectApi";
+import { getUserByText, getUserByGroupId } from "../../apis/UserApi";
+import jobsSlice from "../../stores/Job/jobsSlice";
 import { useSelector, useDispatch } from "react-redux";
 
 const GroupDetail = (props) => {
-    const [projects, setProjects] = useState(dummyData.allTask);
+    const dispatch = useDispatch();
+    const [users, setUsers] = useState([]);
+    const [projects, setProjects] = useState([]);
+    const [group, setGroup] = useState({});
+    const [searchText, setSearchText] = useState("");
+    const [userId, setUserId] = useState("");
+
+
     const [modalVisible, setModalVisible] = useState(false);
     const [modalVisibleProject, setModalVisibleProject] = useState(false);
+    const [modalDeleteGroupVisible, setModalDeleteGroupVisible] = useState(false);
+    const [modalAddGroupMemberVisible, setModalAddGroupMemberVisible] = useState(false);
+    const [modalEditGroupMemberVisible, setModalEditGroupMemberVisible] = useState(false);
+    const [modalDeleteUserVisible, setModalDeleteUserVisible] = useState(false);
+
     const [groupName, setGroupName] = React.useState("");
     const [projectName, setProjectName] = React.useState("");
     const keyboardVerticalOffset = Platform.OS === 'ios' ? 40 : 0
@@ -33,28 +47,37 @@ const GroupDetail = (props) => {
     const groupId = props.route.params.groupId;
     const myId = useSelector((state) => state.authentication.id);
 
-    const handlePress = () => {
-        console.log("aaaaaa");
-
-        props.navigation.navigate("AddMember", { groupId: props.route.params.groupId })
-
-    }
-
     const bs = React.createRef();
     const fall = new Animated.Value(1);
 
+    useEffect(() => {
+        handleReload();
+    }, [])
+
+    const handleReload = () => {
+        allProjectByGroupId(groupId).then(data => {
+            setProjects(data)
+        })
+            .catch(err => console.error(err))
+
+        getGroupById(groupId).then(data => {
+            setGroup(data)
+        })
+            .catch(err => console.error(err))
+    }
+
     const renderInner = () => (
         <View style={styles.panel}>
-            <KeyboardAvoidingView style={{ justifyContent: "center", alignItems: "center", paddingBottom: 10 }}>
+            {/* <KeyboardAvoidingView style={{ justifyContent: "center", alignItems: "center", paddingBottom: 10 }}>
                 <TextInput style={FONTS.h2} placeholder="Name group/project..." />
-            </KeyboardAvoidingView>
+            </KeyboardAvoidingView> */}
 
             <TouchableOpacity style={[styles.panelButton, { backgroundColor: "lightsalmon" }]}
                 onPress={() => {
                     setModalVisibleProject(true);
                     bs.current.snapTo(1);
                 }}>
-                <Image source={icons.add} style={{ width: 30, height: 30, marginRight: 10 }} />
+                <Image source={icons.add} style={{ width: 20, height: 20, marginRight: 10 }} />
                 <Text style={styles.panelButtonTitle}>Create project</Text>
             </TouchableOpacity>
 
@@ -63,15 +86,34 @@ const GroupDetail = (props) => {
                     setModalVisible(true);
                     bs.current.snapTo(1);
                 }}>
-                <Image source={icons.editName} style={{ width: 30, height: 30, marginRight: 10 }} />
+                <Image source={icons.editName} style={{ width: 20, height: 20, marginRight: 10 }} />
                 <Text style={styles.panelButtonTitle}>Edit group name</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={[styles.panelButton, { backgroundColor: "lightsalmon" }]} onPress={handlePress}>
-                <Image source={icons.adduser} style={{ width: 30, height: 30, marginRight: 10 }} />
+            <TouchableOpacity style={[styles.panelButton, { backgroundColor: "lightsalmon" }]}
+                onPress={() => {
+                    bs.current.snapTo(1);
+                    setModalAddGroupMemberVisible(true);
+                }}
+            >
+                <Image source={icons.adduser} style={{ width: 20, height: 20, marginRight: 10 }} />
                 <Text style={styles.panelButtonTitle}>Add group's member</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={[styles.panelButton, { backgroundColor: "lightsalmon" }]}  >
-                <Image source={icons.deleteColor} style={{ width: 30, height: 30, marginRight: 10 }} />
+            <TouchableOpacity style={[styles.panelButton, { backgroundColor: "lightsalmon" }]}
+                onPress={() => {
+                    bs.current.snapTo(1);
+                    handleLoadUser();
+                    setModalEditGroupMemberVisible(true);
+                }}
+            >
+                <Image source={icons.adduser} style={{ width: 20, height: 20, marginRight: 10 }} />
+                <Text style={styles.panelButtonTitle}>Edit group's member</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={[styles.panelButton, { backgroundColor: "lightsalmon" }]}
+                onPress={() => {
+                    setModalDeleteGroupVisible(true);
+                    bs.current.snapTo(1);
+                }}>
+                <Image source={icons.deleteColor} style={{ width: 20, height: 20, marginRight: 10 }} />
                 <Text style={styles.panelButtonTitle}>Delete this group</Text>
             </TouchableOpacity>
             <TouchableOpacity
@@ -90,6 +132,35 @@ const GroupDetail = (props) => {
         </View>
     );
 
+    function handleDeleteGroup() {
+        var data = {
+            IdUser: myId,
+            IdSth: groupId
+        }
+        var result = deleteGroup(data);
+        result.then(response => {
+            // handleReload()
+            setGroupName("");
+            if (response.isSuccessed) {
+                Alert.alert(response.resultObject);
+                allUserGroup(myId).then(data => {
+                    dispatch(jobsSlice.actions.setGroup(data));
+                })
+                    .catch(err => console.error(err))
+
+                props.navigation.goBack();
+            }
+            else {
+                Alert.alert(response.message);
+            }
+
+
+        })
+            .catch(err => {
+                Alert.alert("Xóa thất bại");
+            })
+    }
+
     function handleEditGroup(groupName) {
         var data = {
             GroupName: groupName,
@@ -100,30 +171,40 @@ const GroupDetail = (props) => {
         result.then(response => {
             // handleReload()
             setGroupName("");
-            Alert.alert("Edit success")
+            handleReload();
+            if (response.isSuccessed) {
+                Alert.alert(response.resultObject);
+            }
+            else {
+                Alert.alert(response.message);
+            }
         })
             .catch(err => {
-                console.log(err)
+                Alert.alert("Sửa thất bại")
             })
-
     }
 
     function handleCreateProject(projectName) {
-        console.log(myId, projectName, groupId)
+
         var data = {
             IdGroup: groupId,
             IdUser: myId,
             NameProject: projectName,
         }
         var result = createProject(data);
-        result.then(reponse => {
+        result.then(response => {
             setProjectName("");
-            Alert.alert("Create success")
+            handleReload();
+            if (response.isSuccessed) {
+                Alert.alert(response.resultObject);
+            }
+            else {
+                Alert.alert(response.message);
+            }
         })
             .catch(err => {
-                Alert.alert(err.message());
+                Alert.alert(err);
             })
-
     }
 
     const modalEditGroupName = () => {
@@ -172,7 +253,6 @@ const GroupDetail = (props) => {
 
                                         handleEditGroup(groupName);
                                         setModalVisible(!modalVisible)
-                                        console.log('edit');
                                     }
                                 }}
                             >
@@ -240,7 +320,6 @@ const GroupDetail = (props) => {
                                     } else {
                                         handleCreateProject(projectName);
                                         setModalVisibleProject(!modalVisibleProject)
-                                        console.log('create');
                                     }
                                 }}
                             >
@@ -263,15 +342,449 @@ const GroupDetail = (props) => {
         )
     }
 
+    const modalDeleteGroup = () => {
+        return (
+            <Modal
+                style={styles.modalContent}
+                animationType="slide"
+                transparent={true}
+                visible={modalDeleteGroupVisible}
 
+                onRequestClose={() => {
+                    setModalDeleteGroupVisible(!modalDeleteGroupVisible);
+                }}
+            >
+                <View style={{ ...styles.centeredView, width: '100%' }}>
+                    <View style={{ ...styles.modalView, width: '100%' }}>
+                        <View>
+                            <Text style={{ fontSize: 15 }}>Delete group will delete all projects in group. Are you really want to delete group?</Text>
+                        </View>
+
+                        <View style={{
+                            flexDirection: 'row',
+                            justifyContent: 'space-around',
+                            alignItems: 'center',
+                            marginTop: 20
+                        }}>
+                            <TouchableOpacity
+                                style={[styles.buttonModal, styles.buttonClose, {
+                                    marginRight: 50,
+                                    marginLeft: 30,
+                                    width: 120,
+                                    backgroundColor: COLORS.primary
+                                }]}
+                                onPress={() => {
+                                    handleDeleteGroup();
+                                    setModalDeleteGroupVisible(!modalDeleteGroupVisible)
+                                }}
+                            >
+
+                                <Text style={styles.textStyle}>Delete</Text>
+
+                            </TouchableOpacity>
+
+                            <TouchableOpacity
+                                style={[styles.buttonModal, styles.buttonClose, { backgroundColor: "black", marginHorizontal: 50, width: 120 }]}
+                                onPress={() => setModalDeleteGroupVisible(!modalDeleteGroupVisible)}
+                            >
+                                <Text style={styles.textStyle}>Cancel</Text>
+                            </TouchableOpacity>
+                        </View>
+
+                    </View>
+                </View>
+            </Modal>
+        )
+    }
+
+    function renderSearch(callback) {
+        return (
+            <View style={{ width: '100%', flexDirection: 'row', justifyContent: "center", alignItems: 'center' }}>
+                <View
+                    style={{
+                        flexDirection: "row",
+                        height: 40,
+                        alignItems: "center",
+                        marginHorizontal: SIZES.padding,
+                        marginRight: 5,
+                        marginVertical: SIZES.base,
+                        paddingHorizontal: SIZES.radius,
+                        borderRadius: SIZES.radius,
+                        backgroundColor: COLORS.lightGray2,
+                        width: '80%'
+                    }}
+                >
+
+                    {/* Text input */}
+                    <TextInput
+                        style={{
+                            flex: 1,
+                            marginLeft: SIZES.radius,
+                            ...FONTS.body3,
+                        }}
+                        value={searchText}
+                        onChangeText={(value) => {
+                            setSearchText(value);
+                        }}
+                        placeholder="Search user...."
+                    />
+
+                </View>
+
+                <View style={{
+                    flex: 1,
+                    height: 40,
+                    marginRight: 5,
+                    marginVertical: SIZES.base,
+                    paddingHorizontal: SIZES.radius,
+                    borderRadius: SIZES.radius,
+                    backgroundColor: COLORS.lightGray2,
+                    justifyContent: "center",
+                    alignItems: "center",
+                }}>
+                    <TouchableOpacity onPress={() => callback()}>
+                        <Image
+                            source={icons.search}
+                            style={{
+                                height: 20,
+                                width: 20,
+                                tintColor: COLORS.black,
+                            }}
+                        />
+                    </TouchableOpacity>
+                </View>
+            </View>
+
+        );
+    }
+
+    function handleAddMember() {
+        var selectUsers = users.filter(x => x.isSelected);
+        var IdMembers = [];
+        selectUsers.forEach(x => {
+            IdMembers.push({
+                Id: x.Id
+            })
+        });
+        if (IdMembers.length === 0) {
+            Alert.alert("Vui lòng chọn đối tượng!");
+            return;
+        }
+        var data = {
+            IdMembers,
+            IdGroup: groupId,
+            IdUser: myId
+        }
+
+        var result = addGroupMembers(data);
+        result
+            .then(response => {
+                setUsers([]);
+                setModalAddGroupMemberVisible(!modalAddGroupMemberVisible);
+                Alert.alert(response.resultObject);
+            })
+            .catch(err => {
+                Alert.alert("Thêm thất bại.");
+            })
+        setSearchText("");
+    }
+
+    function handleLoadUser() {
+        getUserByGroupId(groupId).then(data => {
+            // var matchUsers = [];
+            // data.forEach(x => {
+            //     matchUsers.push({
+            //         Id: x.idUser,
+            //         Name: x.name,
+            //         Mail: x.mail,
+            //         isSelected: false,
+            //     })
+            // });
+            setUsers(data)
+        })
+            .catch(err => console.error(err))
+
+    }
+
+    function handleSearchUser() {
+        getUserByText(searchText).then(data => {
+            var matchUsers = [];
+            data.forEach(x => {
+                matchUsers.push({
+                    Id: x.idUser,
+                    Name: x.name,
+                    Mail: x.mail,
+                    isSelected: false,
+                })
+            });
+            setUsers(matchUsers)
+        })
+            .catch(err => console.error(err))
+
+    }
+
+    const modalAddMember = () => {
+        return (
+            <Modal
+                style={styles.modalContent}
+                animationType="slide"
+                transparent={true}
+                visible={modalAddGroupMemberVisible}
+
+                onRequestClose={() => {
+                    setModalAddGroupMemberVisible(!modalAddGroupMemberVisible);
+                }}
+            >
+                <View style={{ ...styles.centeredView, width: '100%' }}>
+                    <View style={{ ...styles.modalView, width: '100%', height: (SIZES.height * 70 / 100) }}>
+                        {renderSearch(handleSearchUser)}
+
+                        <View style={{ flex: 1 }}>
+                            <FlatList
+                                vertical
+                                data={users}
+                                keyExtractor={(item) => item.Id}
+                                showsVerticalScrollIndicator={false}
+                                renderItem={({ item, index }) => {
+                                    return (
+                                        <SelectItem
+                                            containerStyle={{
+                                                width: '100%',
+                                                justifyContent: "center",
+                                                marginHorizontal: SIZES.padding,
+                                            }}
+                                            item={item}
+                                        />
+                                    );
+                                }}
+                            />
+                        </View>
+
+                        <View style={{
+                            flexDirection: 'row',
+                            justifyContent: 'space-around',
+                            alignItems: 'center',
+                            marginTop: 20
+                        }}>
+                            <TouchableOpacity
+                                style={[styles.buttonModal, styles.buttonClose, {
+                                    marginRight: 50,
+                                    marginLeft: 30,
+                                    width: 120,
+                                    backgroundColor: COLORS.primary
+                                }]}
+                                onPress={() => {
+                                    handleAddMember();
+                                }}
+                            >
+
+                                <Text style={styles.textStyle}>Confirm</Text>
+
+                            </TouchableOpacity>
+
+                            <TouchableOpacity
+                                style={[styles.buttonModal, styles.buttonClose, { backgroundColor: "black", marginHorizontal: 50, width: 120 }]}
+                                onPress={() => {
+                                    setModalAddGroupMemberVisible(!modalAddGroupMemberVisible);
+                                    setSearchText("");
+                                    setUsers([]);
+                                }}
+                            >
+                                <Text style={styles.textStyle}>Cancel</Text>
+                            </TouchableOpacity>
+                        </View>
+
+                    </View>
+                </View>
+            </Modal>
+        )
+    }
+
+    const modalEditMember = () => {
+        return (
+            <Modal
+                style={styles.modalContent}
+                animationType="slide"
+                transparent={true}
+                visible={modalEditGroupMemberVisible}
+
+                onRequestClose={() => {
+                    setModalEditGroupMemberVisible(!modalEditGroupMemberVisible);
+                }}
+            >
+                <View style={{ ...styles.centeredView, width: '100%' }}>
+                    <View style={{ ...styles.modalView, width: '100%', height: (SIZES.height * 70 / 100) }}>
+                        {renderSearch(handleLoadUser)}
+
+                        <View style={{ width: '100%', flex: 1 }}>
+                            <FlatList
+                                vertical
+                                data={users}
+                                keyExtractor={(item) => item.idUser}
+                                showsVerticalScrollIndicator={false}
+                                renderItem={({ item, index }) => {
+                                    return (
+                                        <TouchableOpacity
+                                            onLongPress={() => {
+                                                setUserId(item.idUser);
+                                                setModalDeleteUserVisible(true)
+                                            }}
+                                        >
+                                            <View style={{
+                                                width: '100%',
+                                                backgroundColor: COLORS.lightGray2,
+                                                marginVertical: 2,
+                                                borderRadius: SIZES.radius
+                                            }}>
+                                                <View style={{ flex: 1, padding: 10 }} numberOfLines={1}>
+                                                    {/* name */}
+                                                    <Text style={{ ...FONTS.h2, fontSize: 16, lineHeight: 16 }}>
+                                                        {item.mail}
+                                                    </Text>
+
+                                                    {/* description */}
+                                                    <Text style={{ color: COLORS.darkGray1, ...FONTS.body4, fontSize: 15, lineHeight: 15 }} numberOfLines={1}>
+                                                        {item.name}
+                                                    </Text>
+
+                                                </View>
+                                            </View>
+                                        </TouchableOpacity>
+                                    );
+                                }}
+                            />
+                        </View>
+
+                        <View style={{
+                            flexDirection: 'row',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            marginTop: 20
+                        }}>
+                            {/* <TouchableOpacity
+                                style={[styles.buttonModal, styles.buttonClose, {
+                                    marginRight: 50,
+                                    marginLeft: 30,
+                                    width: 120,
+                                    backgroundColor: COLORS.primary
+                                }]}
+                                onPress={() => {
+                                    handleAddMember();
+                                }}
+                            >
+
+                                <Text style={styles.textStyle}>Confirm</Text>
+
+                            </TouchableOpacity> */}
+
+                            <TouchableOpacity
+                                style={[styles.buttonModal, styles.buttonClose, { backgroundColor: "black", width: 120 }]}
+                                onPress={() => {
+                                    setModalEditGroupMemberVisible(!modalEditGroupMemberVisible);
+                                }}
+                            >
+                                <Text style={styles.textStyle}>Cancel</Text>
+                            </TouchableOpacity>
+                        </View>
+
+                    </View>
+                </View>
+            </Modal>
+        )
+    }
+
+    const modalDeleteUser = () => {
+        return (
+            <Modal
+                style={styles.modalContent}
+                animationType="slide"
+                transparent={true}
+                visible={modalDeleteUserVisible}
+
+                onRequestClose={() => {
+                    setModalDeleteUserVisible(!modalDeleteUserVisible);
+                }}
+            >
+                <View style={{ ...styles.centeredView, width: '100%' }}>
+                    <View style={{ ...styles.modalView, width: '100%' }}>
+                        <View>
+                            <Text style={{ fontSize: 15 }}>Are you really want to delete this user?</Text>
+                        </View>
+
+                        <View style={{
+                            flexDirection: 'row',
+                            justifyContent: 'space-around',
+                            alignItems: 'center',
+                            marginTop: 20
+                        }}>
+                            <TouchableOpacity
+                                style={[styles.buttonModal, styles.buttonClose, {
+                                    marginRight: 50,
+                                    marginLeft: 30,
+                                    width: 120,
+                                    backgroundColor: COLORS.primary
+                                }]}
+                                onPress={() => {
+                                    handleDeleteUser();
+                                    setModalDeleteUserVisible(!modalDeleteUserVisible)
+                                }}
+                            >
+
+                                <Text style={styles.textStyle}>Delete</Text>
+
+                            </TouchableOpacity>
+
+                            <TouchableOpacity
+                                style={[styles.buttonModal, styles.buttonClose, { backgroundColor: "black", marginHorizontal: 50, width: 120 }]}
+                                onPress={() => setModalDeleteUserVisible(!modalDeleteUserVisible)}
+                            >
+                                <Text style={styles.textStyle}>Cancel</Text>
+                            </TouchableOpacity>
+                        </View>
+
+                    </View>
+                </View>
+            </Modal>
+        )
+    }
+
+    const handleDeleteUser = () => {
+        var data = {
+            IdUser: myId,
+            IdSth: userId,
+            IdGroup: groupId
+        }
+        var result = removeGroupMembers(data);
+        result.then(response => {
+            // handleReload()
+            setUserId("");
+            if (response.isSuccessed) {
+                handleLoadUser();
+                Alert.alert(response.resultObject);
+            }
+            else {
+                Alert.alert(response.message);
+            }
+
+        })
+            .catch(err => {
+                console.log(err);
+                Alert.alert("Xóa thất bại");
+            })
+    }
 
     return (
         <View >
             {modalEditGroupName()}
             {modalCreateProject()}
+            {modalDeleteGroup()}
+            {modalAddMember()}
+            {modalEditMember()}
+            {modalDeleteUser()}
+
             <BottomSheet
                 ref={bs}
-                snapPoints={[690, 0]}
+                snapPoints={[600, 0]}
                 renderContent={renderInner}
                 renderHeader={renderHeader}
                 initialSnap={1}
@@ -280,13 +793,12 @@ const GroupDetail = (props) => {
             />
             <Animated.View style={{
 
-                opacity: Animated.add(0.1, Animated.multiply(fall, 1.0)),
+                opacity: Animated.add(1, Animated.multiply(fall, 1.0)),
             }}>
                 <View style={{ marginHorizontal: 10, paddingVertical: 10, position: 'relative', }}>
 
                     <View
                         style={{
-
                             backgroundColor: 'white',
                             borderRadius: SIZES.radius,
                             paddingVertical: 10,
@@ -303,9 +815,9 @@ const GroupDetail = (props) => {
                         }}
                     >
                         <Text style={{ fontSize: SIZES.h2, fontWeight: "bold" }}>
-                            Group: {props.groupName}
+                            Group: {group.nameGroup}
                         </Text>
-                        <Text>Creator: {projects[0].nameUserCreateGroup}</Text>
+                        <Text>Creator: {group.mail}</Text>
                     </View>
                     <View style={{
                         top: 0,
@@ -356,16 +868,15 @@ const GroupDetail = (props) => {
                     }}
                 />
                 <FlatList
-                    // style={{ paddingBottom:300 }}
+                    style={{ height: '100%', }}
                     vertical
                     data={projects}
-                    keyExtractor={(item) => item.idTask}
+                    keyExtractor={(item, index) => index}
                     showsVerticalScrollIndicator={false}
                     renderItem={({ item, index }) => {
                         return (
                             <HorizontalProjectCard
                                 containerStyle={{
-                                    height: 130,
                                     justifyContent: "center",
                                     marginHorizontal: SIZES.padding,
                                     marginBottom: index === projects.length - 1 ? 200 : SIZES.radius,
@@ -376,6 +887,7 @@ const GroupDetail = (props) => {
                     }}
                 />
             </Animated.View>
+
         </View>
     );
 };
@@ -391,7 +903,7 @@ const styles = StyleSheet.create({
         margin: 20,
         backgroundColor: "white",
         borderRadius: 20,
-        padding: 35,
+        padding: 20,
         borderWidth: 1,
         borderColor: "#ccc",
         alignItems: "center",
@@ -426,10 +938,10 @@ const styles = StyleSheet.create({
         textAlign: "center",
     },
     panel: {
+        height: '100%',
         padding: 20,
         backgroundColor: '#FFFFFF',
         paddingTop: 20,
-        paddingBottom: 200
         // borderTopLeftRadius: 20,
         // borderTopRightRadius: 20,
         // shadowColor: '#000000',
@@ -473,7 +985,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         backgroundColor: '#FF6347',
         alignItems: 'center',
-        marginVertical: 7,
+        marginVertical: 4,
         flexDirection: "row",
         justifyContent: "center"
     },
@@ -525,6 +1037,10 @@ const styles = StyleSheet.create({
         padding: 10,
         elevation: 2,
     },
+    modalContent: {
+        height: '100%',
+
+    }
 });
 
 export default GroupDetail;
