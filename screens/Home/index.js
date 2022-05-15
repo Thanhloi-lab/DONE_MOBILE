@@ -43,9 +43,18 @@ const Home = ({ navigation }) => {
     const dispatch = useDispatch();
     const [selectedStatus, setSelectedStatus] = React.useState(1);
     const [listTask, setListTask] = React.useState([]);
-    const myId = useSelector((state) => state.authentication.id);
-    const allTask = useSelector((state) => state.jobs.allTask);
+    const [searchText, setSearchText] = React.useState("");
 
+    const myId = useSelector((state) => state.authentication.id);
+    const allTaskRaw = useSelector((state) => state.jobs.allTask);
+    var allTask = allTaskRaw;
+    
+    if(searchText!==null && searchText!==""){
+        allTask = allTaskRaw.filter(x=>x.nameTask.toLowerCase().includes(searchText.toLowerCase()));
+    }
+
+    console.log(allTask);
+    
     React.useEffect(() => {
         allTaskOfUser(myId).then(data => {
             dispatch(jobsSlice.actions.setTask(data));
@@ -62,7 +71,8 @@ const Home = ({ navigation }) => {
         })
             .catch(err => console.error(err))
 
-
+        
+        setSelectedStatus(selectedStatus);
         handleChangeStatus(selectedStatus);
     }, [])
 
@@ -106,6 +116,10 @@ const Home = ({ navigation }) => {
                         ...FONTS.body3
                     }}
                     placeholder="Search task...."
+                    onChangeText={(value) => {
+                        setSearchText(value);
+                    }}
+                    value={searchText}
                 />
 
                 {/* Filter Button */}

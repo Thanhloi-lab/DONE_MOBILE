@@ -30,24 +30,24 @@ const HorizontalGroupCard = ({ containerStyle, imageStyle, item, onPress }) => {
 
                 {/* description */}
                 <Text
-                    style={{ color: COLORS.darkGray1, ...FONTS.body4, fontSize: 12, lineHeight:12 }}
+                    style={{ color: COLORS.darkGray1, ...FONTS.h3, fontSize: 14, lineHeight:16, paddingTop:5 }}
                     numberOfLines={1}
                 >
-                    {item.mailUserCreateGroup}
+                    {item.mail}
+                </Text>
+
+                <Text
+                    style={{ marginTop: SIZES.base, ...FONTS.body4, fontSize: 14, lineHeight:14 }}
+                    numberOfLines={1}
+                >
+                    {item.name}
                 </Text>
 
                 <Text
                     style={{ marginTop: SIZES.base, ...FONTS.h3, fontSize: 14, lineHeight:14 }}
                     numberOfLines={1}
                 >
-                    {item.nameUserCreateGroup}
-                </Text>
-
-                <Text
-                    style={{ marginTop: SIZES.base, ...FONTS.h3, fontSize: 14, lineHeight:14 }}
-                    numberOfLines={1}
-                >
-                    {item.phoneUserCreateGroup}
+                    {item.phone}
                 </Text>
             </View>
         </TouchableOpacity>
