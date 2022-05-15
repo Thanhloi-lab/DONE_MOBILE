@@ -92,7 +92,7 @@ const Group = ({ navigation }) => {
     function handleCreateGroup(groupName) {
 
         var data = {
-            
+
             NameGroup: groupName,
             IdUser: myId
         }

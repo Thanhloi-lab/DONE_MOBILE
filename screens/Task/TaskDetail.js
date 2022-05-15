@@ -11,15 +11,18 @@ import {
     Pressable,
     TextInput,
     Alert,
+    FlatList,
 } from "react-native";
 import React, { useState } from "react";
 import { COLORS, FONTS, SIZES, icons } from '../../constants'
+import { SelectItem } from "../../components";
 import BottomSheet from 'reanimated-bottom-sheet';
 import Animated from 'react-native-reanimated';
 import { useDispatch, useSelector } from "react-redux";
 import jobsSlice from "../../stores/Job/jobsSlice";
-import { allTaskOfUser, deleteTask } from "../../apis/TaskApi";
-
+import { allTaskOfUser, deleteTask, removeTaskMembers, addTaskMembers } from "../../apis/TaskApi";
+import { getUserByText, getUserByTaskId } from "../../apis/UserApi";
+import { updateStatus } from "../../apis/TaskApi";
 const TaskDetail = (props) => {
     // console.log([props])
     const dispatch = useDispatch();
@@ -33,12 +36,39 @@ const TaskDetail = (props) => {
     const myId = useSelector((state) => state.authentication.id);
     const [modalDeleteTaskVisible, setModalDeleteTaskVisible] = useState(false);
 
+
+
+    const [modalAddTaskMemberVisible, setModalAddTaskMemberVisible] = useState(false);
+    const [modalEditTaskMemberVisible, setModalEditTaskMemberVisible] = useState(false);
+    const [modalDeleteUserVisible, setModalDeleteUserVisible] = useState(false);
+    const [users, setUsers] = useState([]);
+    const [task, setTask] = useState({});
+    const [searchText, setSearchText] = useState("");
+    const [userId, setUserId] = useState("");
+    const [userChoosen, setUserChoosen] = useState("");
+
+
     function handleReload() {
         allTaskOfUser(myId).then(data => {
             dispatch(jobsSlice.actions.setTask(data));
         })
             .catch(err => console.error(err))
 
+
+    }
+
+    function handleUpdateStatus() {
+        var data = {
+            IdTask: taskId,
+            IdStatus: 2,
+        }
+        var result = updateStatus(data);
+        result.then(response => {
+            handleReload()
+        })
+            .catch(err => {
+                console.log(err.message())
+            })
 
     }
 
@@ -136,9 +166,22 @@ const TaskDetail = (props) => {
                 <Image source={icons.editName} style={{ width: 30, height: 30, marginRight: 10 }} />
                 <Text style={styles.panelButtonTitle}>Edit task</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={[styles.panelButton, { backgroundColor: "lightsalmon" }]} >
+            <TouchableOpacity style={[styles.panelButton, { backgroundColor: "lightsalmon" }]} onPress={() => {
+                bs.current.snapTo(1);
+                setModalAddTaskMemberVisible(true);
+            }}>
                 <Image source={icons.adduser} style={{ width: 30, height: 30, marginRight: 10 }} />
                 <Text style={styles.panelButtonTitle}>Add task's member</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={[styles.panelButton, { backgroundColor: "lightsalmon" }]}
+                onPress={() => {
+                    bs.current.snapTo(1);
+                    handleLoadUser();
+                    setModalEditTaskMemberVisible(true);
+                }}
+            >
+                <Image source={icons.adduser} style={{ width: 20, height: 20, marginRight: 10 }} />
+                <Text style={styles.panelButtonTitle}>Edit task's member</Text>
             </TouchableOpacity>
             <TouchableOpacity style={[styles.panelButton, { backgroundColor: "lightsalmon" }]}
                 onPress={() => {
@@ -167,9 +210,396 @@ const TaskDetail = (props) => {
     const bs = React.createRef();
     const fall = new Animated.Value(1);
 
+
+
+    function renderSearch(callback) {
+        return (
+            <View style={{ width: '100%', flexDirection: 'row', justifyContent: "center", alignItems: 'center' }}>
+                <View
+                    style={{
+                        flexDirection: "row",
+                        height: 40,
+                        alignItems: "center",
+                        marginHorizontal: SIZES.padding,
+                        marginRight: 5,
+                        marginVertical: SIZES.base,
+                        paddingHorizontal: SIZES.radius,
+                        borderRadius: SIZES.radius,
+                        backgroundColor: COLORS.lightGray2,
+                        width: '80%'
+                    }}
+                >
+
+                    {/* Text input */}
+                    <TextInput
+                        style={{
+                            flex: 1,
+                            marginLeft: SIZES.radius,
+                            ...FONTS.body3,
+                        }}
+                        value={searchText}
+                        onChangeText={(value) => {
+                            setSearchText(value);
+                        }}
+                        placeholder="Search user...."
+                    />
+
+                </View>
+
+                <View style={{
+                    flex: 1,
+                    height: 40,
+                    marginRight: 5,
+                    marginVertical: SIZES.base,
+                    paddingHorizontal: SIZES.radius,
+                    borderRadius: SIZES.radius,
+                    backgroundColor: COLORS.lightGray2,
+                    justifyContent: "center",
+                    alignItems: "center",
+                }}>
+                    <TouchableOpacity onPress={() => callback()}>
+                        <Image
+                            source={icons.search}
+                            style={{
+                                height: 20,
+                                width: 20,
+                                tintColor: COLORS.black,
+                            }}
+                        />
+                    </TouchableOpacity>
+                </View>
+            </View>
+
+        );
+    }
+
+    function handleAddMember() {
+        var selectUsers = users.filter(x => x.isSelected);
+        var IdMember = [];
+        selectUsers.forEach(x => {
+            IdMember.push({
+                Id: x.Id
+            })
+        });
+        if (IdMember.length === 0) {
+            Alert.alert("Vui lòng chọn đối tượng!");
+            return;
+        }
+        var data = {
+            IdMember,
+            IdTask: taskId,
+            IdUser: myId
+        }
+
+        var result = addTaskMembers(data);
+        result
+            .then(response => {
+
+                setUsers([]);
+                setModalAddTaskMemberVisible(!modalAddTaskMemberVisible);
+                Alert.alert(response.resultObject);
+            })
+            .catch(err => {
+                Alert.alert("Thêm thất bại.");
+            })
+        setSearchText("");
+    }
+
+    function handleLoadUser() {
+        getUserByTaskId(taskId).then(data => {
+            // var matchUsers = [];
+            // data.forEach(x => {
+            //     matchUsers.push({
+            //         Id: x.idUser,
+            //         Name: x.name,
+            //         Mail: x.mail,
+            //         isSelected: false,
+            //     })
+            // });
+            setUsers(data)
+        })
+            .catch(err => console.error(err))
+
+    }
+
+    function handleSearchUser() {
+        getUserByText(searchText).then(data => {
+            var matchUsers = [];
+            data.forEach(x => {
+                matchUsers.push({
+                    Id: x.idUser,
+                    Name: x.name,
+                    Mail: x.mail,
+                    isSelected: false,
+                })
+            });
+
+            setUsers(matchUsers)
+        })
+            .catch(err => console.error(err))
+
+    }
+
+    const modalAddMember = () => {
+        return (
+            <Modal
+                style={styles.modalContent}
+                animationType="slide"
+                transparent={true}
+                visible={modalAddTaskMemberVisible}
+
+                onRequestClose={() => {
+                    setModalAddTaskMemberVisible(!modalAddTaskMemberVisible);
+                }}
+            >
+                <View style={{ ...styles.centeredView, width: '100%' }}>
+                    <View style={{ ...styles.modalView, width: '100%', height: (SIZES.height * 70 / 100) }}>
+                        {renderSearch(handleSearchUser)}
+
+                        <View style={{ flex: 1 }}>
+                            <FlatList
+                                vertical
+                                data={users}
+                                keyExtractor={(item) => item.Id}
+                                showsVerticalScrollIndicator={false}
+                                renderItem={({ item, index }) => {
+                                    return (
+                                        <SelectItem
+                                            containerStyle={{
+                                                width: '100%',
+                                                justifyContent: "center",
+                                                marginHorizontal: SIZES.padding,
+                                            }}
+                                            item={item}
+                                        />
+                                    );
+                                }}
+                            />
+                        </View>
+
+                        <View style={{
+                            flexDirection: 'row',
+                            justifyContent: 'space-around',
+                            alignItems: 'center',
+                            marginTop: 20
+                        }}>
+                            <TouchableOpacity
+                                style={[styles.buttonModal, styles.buttonClose, {
+                                    marginRight: 50,
+                                    marginLeft: 30,
+                                    width: 120,
+                                    backgroundColor: COLORS.primary
+                                }]}
+                                onPress={() => {
+
+                                    handleAddMember();
+                                }}
+                            >
+
+                                <Text style={styles.textStyle}>Confirm</Text>
+
+                            </TouchableOpacity>
+
+                            <TouchableOpacity
+                                style={[styles.buttonModal, styles.buttonClose, { backgroundColor: "black", marginHorizontal: 50, width: 120 }]}
+                                onPress={() => {
+                                    setModalAddTaskMemberVisible(!modalAddTaskMemberVisible);
+                                    setSearchText("");
+                                    setUsers([]);
+                                }}
+                            >
+                                <Text style={styles.textStyle}>Cancel</Text>
+                            </TouchableOpacity>
+                        </View>
+
+                    </View>
+                </View>
+            </Modal>
+        )
+    }
+
+    const modalEditMember = () => {
+        return (
+            <Modal
+                style={styles.modalContent}
+                animationType="slide"
+                transparent={true}
+                visible={modalEditTaskMemberVisible}
+
+                onRequestClose={() => {
+                    setModalEditTaskMemberVisible(!modalEditTaskMemberVisible);
+                }}
+            >
+                <View style={{ ...styles.centeredView, width: '100%' }}>
+                    <View style={{ ...styles.modalView, width: '100%', height: (SIZES.height * 70 / 100) }}>
+                        {renderSearch(handleLoadUser)}
+
+                        <View style={{ width: '100%', flex: 1 }}>
+                            <FlatList
+                                vertical
+                                data={users}
+                                keyExtractor={(item) => item.idUser}
+                                showsVerticalScrollIndicator={false}
+                                renderItem={({ item, index }) => {
+                                    return (
+                                        <TouchableOpacity
+                                            onLongPress={() => {
+                                                setUserChoosen(item.idUser);
+                                                setModalDeleteUserVisible(true)
+                                            }}
+                                        >
+                                            <View style={{
+                                                width: '100%',
+                                                backgroundColor: COLORS.lightGray2,
+                                                marginVertical: 2,
+                                                borderRadius: SIZES.radius
+                                            }}>
+                                                <View style={{ flex: 1, padding: 10 }} numberOfLines={1}>
+                                                    {/* name */}
+                                                    <Text style={{ ...FONTS.h2, fontSize: 16, lineHeight: 16 }}>
+                                                        {item.mail}
+                                                    </Text>
+
+                                                    {/* description */}
+                                                    <Text style={{ color: COLORS.darkGray1, ...FONTS.body4, fontSize: 15, lineHeight: 15 }} numberOfLines={1}>
+                                                        {item.name}
+                                                    </Text>
+
+                                                </View>
+                                            </View>
+                                        </TouchableOpacity>
+                                    );
+                                }}
+                            />
+                        </View>
+
+                        <View style={{
+                            flexDirection: 'row',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            marginTop: 20
+                        }}>
+                            {/* <TouchableOpacity
+                                style={[styles.buttonModal, styles.buttonClose, {
+                                    marginRight: 50,
+                                    marginLeft: 30,
+                                    width: 120,
+                                    backgroundColor: COLORS.primary
+                                }]}
+                                onPress={() => {
+                                    handleAddMember();
+                                }}
+                            >
+
+                                <Text style={styles.textStyle}>Confirm</Text>
+
+                            </TouchableOpacity> */}
+
+                            <TouchableOpacity
+                                style={[styles.buttonModal, styles.buttonClose, { backgroundColor: "black", width: 120 }]}
+                                onPress={() => {
+                                    setModalEditTaskMemberVisible(!modalEditTaskMemberVisible);
+                                }}
+                            >
+                                <Text style={styles.textStyle}>Cancel</Text>
+                            </TouchableOpacity>
+                        </View>
+
+                    </View>
+                </View>
+            </Modal>
+        )
+    }
+
+    const modalDeleteUser = () => {
+        return (
+            <Modal
+                style={styles.modalContent}
+                animationType="slide"
+                transparent={true}
+                visible={modalDeleteUserVisible}
+
+                onRequestClose={() => {
+                    setModalDeleteUserVisible(!modalDeleteUserVisible);
+                }}
+            >
+                <View style={{ ...styles.centeredView, width: '100%' }}>
+                    <View style={{ ...styles.modalView, width: '100%' }}>
+                        <View>
+                            <Text style={{ fontSize: 15 }}>Are you really want to delete this user?</Text>
+                        </View>
+
+                        <View style={{
+                            flexDirection: 'row',
+                            justifyContent: 'space-around',
+                            alignItems: 'center',
+                            marginTop: 20
+                        }}>
+                            <TouchableOpacity
+                                style={[styles.buttonModal, styles.buttonClose, {
+                                    marginRight: 50,
+                                    marginLeft: 30,
+                                    width: 120,
+                                    backgroundColor: COLORS.primary
+                                }]}
+                                onPress={() => {
+                                    //console.log([users])
+                                    handleDeleteUser();
+                                    setModalDeleteUserVisible(!modalDeleteUserVisible)
+                                }}
+                            >
+
+                                <Text style={styles.textStyle}>Delete</Text>
+
+                            </TouchableOpacity>
+
+                            <TouchableOpacity
+                                style={[styles.buttonModal, styles.buttonClose, { backgroundColor: "black", marginHorizontal: 50, width: 120 }]}
+                                onPress={() => setModalDeleteUserVisible(!modalDeleteUserVisible)}
+                            >
+                                <Text style={styles.textStyle}>Cancel</Text>
+                            </TouchableOpacity>
+                        </View>
+
+                    </View>
+                </View>
+            </Modal>
+        )
+    }
+
+    const handleDeleteUser = () => {
+        var data = {
+            IdUser: myId,
+            IdSth: userChoosen,
+            IdTask: taskId
+        }
+        var result = removeTaskMembers(data);
+        result.then(response => {
+            // handleReload()
+            setUserChoosen("");
+            if (response.isSuccessed) {
+                handleLoadUser();
+                Alert.alert(response.resultObject);
+            }
+            else {
+                Alert.alert(response.message);
+            }
+
+        })
+            .catch(err => {
+                console.log(err);
+                Alert.alert("Xóa thất bại");
+            })
+    }
+
+
+
     return (
         <SafeAreaView style={{ height: '100%', }}>
             {modalDeleteProject()}
+            {modalAddMember()}
+            {modalEditMember()}
+            {modalDeleteUser()}
             <BottomSheet
                 ref={bs}
                 snapPoints={[600, 0]}
@@ -452,7 +882,7 @@ const TaskDetail = (props) => {
                     </View>
 
                     <View style={{ justifyContent: 'center', alignItems: 'center', marginBottom: 30 }}>
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={() => { handleUpdateStatus(), props.navigation.goBack() }} >
                             <View style={{
                                 backgroundColor: COLORS.COMPLETED1,
                                 margin: 10,
