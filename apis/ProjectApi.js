@@ -4,6 +4,13 @@ export async function allUserProject(id) {
     return data;
 };
 
+export async function allProjectByGroupId(id) {
+    let response = await fetch(`http://192.168.0.103:50003/api/Projects/getByGroup?idGroup=${id}`);
+    let data = await response.json();
+    return data;
+};
+
+
 export async function createProject(data) {
     // Default options are marked with *
     //console.log(data);

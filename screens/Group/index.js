@@ -61,7 +61,6 @@ const Group = ({ navigation}) => {
     const myId = useSelector((state) => state.authentication.id);
 
     const keyboardVerticalOffset = Platform.OS === 'ios' ? 40 : 0
-    console.log("reload");
     React.useEffect(() => {
         
         setListGroup(groups)
@@ -93,6 +92,7 @@ const Group = ({ navigation}) => {
     function handleCreateGroup(groupName) {
         
         var data = {
+            
             NameGroup: groupName,
             IdUser: myId
         }

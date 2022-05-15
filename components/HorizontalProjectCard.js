@@ -70,24 +70,24 @@ const HorizontalProjectCard = ({
 
                 {/* description */}
                 <Text
-                    style={{ color: COLORS.darkGray1, ...FONTS.body4, fontSize: 12, lineHeight:12 }}
+                    style={{color:'#000000', marginTop: SIZES.base, ...FONTS.h3, fontSize: 14, lineHeight:14}}
                     numberOfLines={1}
                 >
-                    {item.mailUserCreateProject}
+                    Email creator: {item.mail}
                 </Text>
 
                 <Text
                     style={{ marginTop: SIZES.base, ...FONTS.h3, fontSize: 14, lineHeight:14 }}
                     numberOfLines={1}
                 >
-                    {item.nameUserCreateProject}
+                    Creator: {item.name}
                 </Text>
 
                 <Text
                     style={{ marginTop: SIZES.base, ...FONTS.h3, fontSize: 14, lineHeight:14 }}
                     numberOfLines={1}
                 >
-                    {item.phoneUserCreateProject}
+                    Phone's creator: {item.phone}
                 </Text>
             </View>
         </TouchableOpacity>

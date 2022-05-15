@@ -4,6 +4,8 @@ import VerticalFoodCard from "./VerticalFoodCard";
 import HorizontalProjectCard from "./HorizontalProjectCard";
 import HorizontalGroupCard from "./HorizontalGroupCard";
 import HorizontalNotificationCard from "./HorizontalNotifitionCard";
+import SelectItem from "./SelectItem";
+
 
 export {
   Header,
@@ -12,4 +14,5 @@ export {
   HorizontalProjectCard,
   HorizontalGroupCard,
   HorizontalNotificationCard,
+  SelectItem
 };
