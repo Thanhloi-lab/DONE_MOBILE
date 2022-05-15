@@ -36,7 +36,7 @@ const VerifyEmail = ({ navigation, route }) => {
             style={styles.gradientContainer}
         >
             <TouchableWithoutFeedback onPress={() => { Keyboard.dismiss() }}>
-                <KeyboardAvoidingView behavior="padding">
+                <KeyboardAvoidingView>
                     <View style={{ width: '100%', height: '100%' }}>
                         <View
                             style={{

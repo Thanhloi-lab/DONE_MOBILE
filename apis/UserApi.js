@@ -3,11 +3,7 @@ import {
 } from 'react-native'
 
 
-const API_URL = "https://385a-113-172-24-168.ap.ngrok.io"
-
-export const getUserInfo = async (id) => {
-    return fetch(`${API_URL}/api/Users/getById?Id=${id}`)
-};
+const API_URL = "http://192.168.0.103:50003";
 
 export const register = async (data) => {
     const formData = new FormData();
@@ -15,6 +11,7 @@ export const register = async (data) => {
     formData.append("Password", data.password)
     formData.append("Name", data.name)
     formData.append("Phone", data.phone)
+    console.log(`${API_URL}/api/Users/register`);
 
     return fetch(`${API_URL}/api/Users/register`, {
         method: 'POST', 
