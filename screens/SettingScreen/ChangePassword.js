@@ -9,7 +9,8 @@ import {
     Keyboard,
     ImageBackground,
     ScrollView,
-    KeyboardAvoidingView
+    KeyboardAvoidingView,
+    ToastAndroid
 } from "react-native";
 
 import {
@@ -32,6 +33,7 @@ import { validate } from "../../util/validation";
 import { useDispatch, useSelector } from "react-redux";
 import authenticationSlice from '../../stores/Authentication/authenticationSlice';
 import { SafeAreaView } from "react-native-safe-area-context";
+import { changePassword } from "../../apis/UserApi";
 
 
 
@@ -49,11 +51,27 @@ const ChangePassword = ({ navigation }) => {
 
     const dispatch = useDispatch();
 
+    const id = useSelector((state) => state.authentication.id);
+
     useLayoutEffect(() => {
         currentPasswordError ? setError(1) : setError("");
         newPasswordError ? setError(2) : setError("");
         confirmPasswordError ? setError(3) : setError("");
     }, [currentPasswordError, newPasswordError, confirmPasswordError])
+
+    const onSubmit = () =>{
+        console.log(id);
+        changePassword({id:id, password: currentPassword, newPassword})
+            .then((res)=>{
+                console.log(res.status);
+                ToastAndroid.showWithGravity(
+                    `Password changed`,
+                    ToastAndroid.SHORT,
+                    ToastAndroid.BOTTOM
+                  );
+            }
+            )
+    }
 
     return (
         <LinearGradient
@@ -288,7 +306,7 @@ const ChangePassword = ({ navigation }) => {
                                 </View>
                             )}
 
-                            <TouchableOpacity style={styles.button} onPress={() => navigation.goBack()}>
+                            <TouchableOpacity style={styles.button} onPress={onSubmit}>
                                 <Text style={{ color: "white", fontSize: 15 }}>CONFIRMED</Text>
                             </TouchableOpacity>
 

@@ -1,5 +1,5 @@
 export async function allUserGroup(id) {
-    let response = await fetch(`http://192.168.1.4:50003/api/Groups/allGroupOf?Id=${id}`);
+    let response = await fetch(`http://192.168.30.104:50003/api/Groups/allGroupOf?Id=${id}`);
     let data = await response.json();
     return data;
 };
