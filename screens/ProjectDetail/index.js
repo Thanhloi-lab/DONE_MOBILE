@@ -30,11 +30,11 @@ const ProjectDetail = (props) => {
     const bs = React.createRef();
     const fall = new Animated.Value(1);
     const projectId = props.route.params.projectId;
-    const userId = props.route.params.userId;
     const myId = useSelector((state) => state.authentication.id);
     const allTask = useSelector((state) => state.jobs.allTask);
     const projects = useSelector((state) => state.jobs.allProject);
     const [projectName, setProjectName] = React.useState("");
+    const idProject = props.route.params.projectId;
     const keyboardVerticalOffset = Platform.OS === 'ios' ? 40 : 0
 
     React.useEffect(() => {
@@ -43,6 +43,19 @@ const ProjectDetail = (props) => {
         })
             .catch(err => console.error(err))
     }, []);
+
+    React.useEffect(() => {
+        handleReload();
+    }, []);
+
+    function handleReload() {
+        allTaskOfUser(myId).then(data => {
+            dispatch(jobsSlice.actions.setTask(data));
+        })
+            .catch(err => console.error(err))
+
+    }
+
 
     const renderInner = () => (
         <View style={styles.panel}>
@@ -58,7 +71,7 @@ const ProjectDetail = (props) => {
                 <Image source={icons.editName} style={{ width: 20, height: 20, marginRight: 10 }} />
                 <Text style={styles.panelButtonTitle}>Edit project's name</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={[styles.panelButton, { backgroundColor: "lightsalmon" }]} onPress={() => props.navigation.navigate("CreateTask")}>
+            <TouchableOpacity style={[styles.panelButton, { backgroundColor: "lightsalmon" }]} onPress={() => props.navigation.navigate("CreateTask", { projectId: idProject })}>
                 <Image source={icons.add} style={{ width: 20, height: 20, marginRight: 10 }} />
                 <Text style={styles.panelButtonTitle}>Create task</Text>
             </TouchableOpacity>
@@ -211,9 +224,9 @@ const ProjectDetail = (props) => {
                         }}
                     >
                         <Text style={{ fontSize: SIZES.h2, fontWeight: "bold" }}>
-                            Project:
+                            Project: {props.route.params.projectName}
                         </Text>
-                        <Text>Creator: </Text>
+                        <Text>Creator: {props.route.params.userId} </Text>
                     </View>
                     <View style={{
                         top: 0,
@@ -261,12 +274,25 @@ const ProjectDetail = (props) => {
                         return (
                             <HorizontalTaskCard
                                 containerStyle={{
-                                    height: 130,
                                     justifyContent: "center",
                                     marginHorizontal: SIZES.padding,
-                                    marginBottom: index === projects.length - 1 ? 200 : SIZES.radius,
+                                    marginBottom:
+                                        index == allTask.length - 1 ? 200 : SIZES.radius,
                                 }}
                                 item={item}
+                                onPress={() => {
+
+                                    props.navigation.navigate("EditTask", {
+                                        projectId: item.idProject,
+                                        taskId: item.idTask,
+                                        userId: item.idUser,
+                                        taskName: item.nameTask,
+                                        taskDeadline: item.deadline,
+                                        taskContent: item.content,
+                                        taskStatus: item.statusId,
+
+                                    });
+                                }}
                             />
                         );
                     }}
