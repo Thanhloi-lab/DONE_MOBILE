@@ -31,13 +31,30 @@ import { allTaskOfUser, createTask, editTask } from "../../apis/TaskApi";
 
 
 
-const CreateTask = (props) => {
+const EditTask = (props) => {
 
-    const [name, setName] = useState()
+    const projectId = props.route.params.projectId;
+    const taskId = props.route.params.taskId;
+    const userId = props.route.params.userId;
+    const taskName = props.route.params.taskName;
+    const taskDeadline = props.route.params.taskDeadline;
+    let fields = taskDeadline.split('/')
+    var month = fields[0]
+    var day = fields[1]
+    var field = fields[2].split(' ')
+    var year = field[0]
+    var time = field[1]
+    const dateTineTask = year + '-' + month + '-' + day + 'T' + time + 'Z';
+
+
+    const taskContent = props.route.params.taskContent;
+    const taskStatus = props.route.params.taskStatus;
+    const [status, setStatus] = useState(taskStatus)
+    const [name, setName] = useState(taskName)
     const [nameError, setNameError] = useState(false);
-    const [deadline, setDeadline] = useState();
+    const [deadline, setDeadline] = useState(dateTineTask);
     const [deadlineError, setDeadlineError] = useState(false);
-    const [content, setContent] = useState();
+    const [content, setContent] = useState(taskContent);
     const [contentError, setContentError] = useState(false);
     const [complete, setComplete] = useState(false);
     const [error, setError] = useState("");
@@ -60,6 +77,7 @@ const CreateTask = (props) => {
         nameError || contentError ? setError(true) : setError(false)
     }, [nameError, contentError])
 
+
     function handleReload() {
         allTaskOfUser(myId).then(data => {
             dispatch(jobsSlice.actions.setTask(data));
@@ -68,34 +86,30 @@ const CreateTask = (props) => {
 
     }
 
-    const projectId = props.route.params.projectId;
     const myId = useSelector((state) => state.authentication.id);
 
 
-    function handleCreateTask(taskName, deadtime, info) {
-
+    function handleEditTask(taskName, deadtime, info) {
         var data = {
+            IdTask: taskId,
             IdUser: myId,
-            IdProject: projectId,
-            NameTask: taskName,
+            TaskName: taskName,
             Deadline: deadtime,
             Content: info
-
         }
-        var result = createTask(data);
-        result.then(reponse => {
-            Alert.alert("Create success")
-            handleReload();
+        var result = editTask(data);
+        result.then(response => {
+
+            Alert.alert("Edit success")
+            handleReload()
             props.navigation.goBack()
         })
             .catch(err => {
-                Alert.alert(err.message());
-
+                Alert.alert("You are not permitted to edit this")
+                console.log(err.message())
             })
 
     }
-
-
 
 
     return (
@@ -135,7 +149,7 @@ const CreateTask = (props) => {
                         alignItems: "center",
                         width: "80%"
                     }}>
-                        <Text style={{ color: '#fff', fontSize: 20, fontWeight: 'bold' }}>Create Task</Text>
+                        <Text style={{ color: '#fff', fontSize: 20, fontWeight: 'bold' }}>Edit Task</Text>
                     </View>
 
                 </View>
@@ -297,6 +311,29 @@ const CreateTask = (props) => {
                                     </View>
                                 )}
 
+                                <View style={styles.inputContainer}>
+                                    <View style={styles.icon}>
+                                        <Image source={icons.status1}
+                                            style={{
+                                                width: 20,
+                                                height: 20,
+                                                tintColor: "red"
+                                            }}
+                                        />
+                                    </View>
+                                    <Picker
+                                        selectedValue={status}
+                                        style={styles.input}
+                                        onValueChange={(itemValue) => setStatus(itemValue)}
+                                    >
+                                        <Picker.Item label="Uncompleted" value="1" />
+                                        <Picker.Item label="Completed" value="2" />
+                                        <Picker.Item label="Bug" value="3" />
+                                        <Picker.Item label="Expired" value="4" />
+                                    </Picker>
+                                </View>
+
+
 
 
                                 <TouchableOpacity style={styles.button} onPress={() => {
@@ -313,7 +350,7 @@ const CreateTask = (props) => {
                                             "Projet's field not null ");
                                     } else {
 
-                                        handleCreateTask(name, deadline, content);
+                                        handleEditTask(name, deadline, content)
 
                                     }
 
@@ -450,4 +487,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default CreateTask
+export default EditTask

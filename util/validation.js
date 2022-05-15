@@ -10,6 +10,11 @@ export function validate(input, type) {
         return false;
       }
       break;
+    case "deadline":
+      if (input == "" || input == null || input == undefined) {
+        return false;
+      }
+      break;
     case "address":
       if (input.trim() == "" || input.trim() == null) {
         return false;

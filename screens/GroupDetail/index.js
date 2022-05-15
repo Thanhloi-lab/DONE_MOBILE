@@ -109,7 +109,7 @@ const GroupDetail = (props) => {
     }
 
     function handleCreateProject(projectName) {
-        console.log(myId, projectName, groupId)
+
         var data = {
             IdGroup: groupId,
             IdUser: myId,

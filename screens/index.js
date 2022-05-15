@@ -3,7 +3,7 @@ import Management from "./Management";
 import Home from "./Home";
 import Statistics from "./Statistics";
 import Notification from "./Notification";
-import { TaskDetail, CreateTask } from "./Task";
+import { TaskDetail, CreateTask, EditTask } from "./Task";
 import Project from "./Project";
 import GroupDetail from "./GroupDetail";
 import ProjectDetail from "./ProjectDetail";
@@ -37,4 +37,5 @@ export {
   HelpCenter,
   CreateTask,
   AddMember,
+  EditTask,
 };
