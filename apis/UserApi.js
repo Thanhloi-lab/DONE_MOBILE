@@ -3,9 +3,8 @@ import {
 } from 'react-native'
 
 
-export const API_URL = "https://2440-113-172-24-168.ap.ngrok.io"
 
-
+const API_URL = "http://192.168.43.93:50003";
 
 export const register = async (data) => {
     const formData = new FormData();
@@ -20,7 +19,7 @@ export const register = async (data) => {
 
 
     return fetch(`${API_URL}/api/Users/register`, {
-        method: 'POST', 
+        method: 'POST',
         body: formData // body data type must match "Content-Type" header
     })
 };
@@ -31,7 +30,7 @@ export const verifyEmail = async (data) => {
     formData.append("ActivationToken", data.token)
 
     return fetch(`${API_URL}/api/Users/ConfirmMail`, {
-        method: 'PUT', 
+        method: 'PUT',
         body: formData // body data type must match "Content-Type" header
     })
 };
@@ -42,8 +41,8 @@ export const login = async (data) => {
     formData.append("Password", data.password)
 
     return fetch(`${API_URL}/api/Users/Login`, {
-        method: 'POST', 
-        body: formData 
+        method: 'POST',
+        body: formData
     })
 };
 
@@ -52,15 +51,15 @@ export const getUserInfoById = async (id) => {
 };
 
 export const forgotPassword = async (email) => {
-   
+
     return fetch(`${API_URL}/api/Users/forgetPassword?mail=${email}`, {
-        method: 'POST', 
+        method: 'POST',
     })
 };
 
 export const sendVerifyCode = async (email) => {
     return fetch(`${API_URL}/api/Users/ReSendMailConfirm?mail=${email}`, {
-        method: 'POST', 
+        method: 'POST',
     })
 };
 
@@ -100,7 +99,7 @@ export const changePassword = async (data) => {
 
     return fetch(`${API_URL}/api/Users/changePassword`, {
         method: 'PUT',
-        body:formData 
+        body: formData
     })
 };
 
@@ -120,24 +119,35 @@ export const getUserInfo = async (id) => {
     //         console.error(error);
     //     });
 
-    fetch('http://192.168.0.103:50003/api/Users/getUser?Id=' + id)
-    .then((response)  => response.json())
-    .then((json) => {
-        return json;
-    }).catch((error) => {
-        console.error(error);
-    });
+    fetch('http://192.168.43.93:50003/api/Users/getUser?Id=' + id)
+        .then((response) => response.json())
+        .then((json) => {
+            return json;
+        }).catch((error) => {
+            console.error(error);
+        });
 };
 
 export async function getUserByText(text) {
-    let response = await fetch(`http://192.168.0.103:50003/api/Users/findUser?keyword=${text}`);
+    let response = await fetch(`${API_URL}/api/Users/findUser?keyword=${text}`);
     let data = await response.json();
     return data;
 };
 
 export async function getUserByGroupId(id) {
-    let response = await fetch(`http://192.168.0.103:50003/api/Groups/allMembers?Id=${id}`);
+    let response = await fetch(`${API_URL}/api/Groups/allMembers?Id=${id}`);
     let data = await response.json();
     return data;
 };
 
+export async function getUserByProjectId(id) {
+    let response = await fetch(`${API_URL}/api/Projects/allMembers?Id=${id}`);
+    let data = await response.json();
+    return data;
+};
+
+export async function getUserByTaskId(id) {
+    let response = await fetch(`${API_URL}/api/Tasks/allMembers?Id=${id}`);
+    let data = await response.json();
+    return data;
+};

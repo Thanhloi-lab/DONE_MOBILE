@@ -53,9 +53,25 @@ const Home = ({ navigation }) => {
         allTask = allTaskRaw.filter(x=>x.nameTask.toLowerCase().includes(searchText.toLowerCase()));
     }
 
-    console.log(allTask);
+    // console.log(allTask);
     
     React.useEffect(() => {
+        const willFocusSubscription = navigation.addListener('focus', () => {
+            handleReload();
+        });
+
+        return willFocusSubscription;
+    }, [])
+
+    function handleChangeStatus(statusId) {
+        //retrieve recommend list
+        let selectedTaskWithSTatus = allTask.filter(a => a.statusId == statusId)
+        //set 
+        setListTask(selectedTaskWithSTatus);
+        // console.log(selectedTaskWithSTatus)
+    }
+
+    function handleReload(){
         allTaskOfUser(myId).then(data => {
             dispatch(jobsSlice.actions.setTask(data));
         })
@@ -74,17 +90,83 @@ const Home = ({ navigation }) => {
         
         setSelectedStatus(selectedStatus);
         handleChangeStatus(selectedStatus);
-    }, [])
-
-    function handleChangeStatus(statusId) {
-        //retrieve recommend list
-        let selectedTaskWithSTatus = allTask.filter(a => a.statusId == statusId)
-        //set 
-        setListTask(selectedTaskWithSTatus);
-        // console.log(selectedTaskWithSTatus)
     }
 
     function renderSearch() {
+        return (
+            <View style={{ width: '100%', flexDirection: 'row', justifyContent: "center", alignItems: 'center' }}>
+                <View
+                    style={{
+                        flexDirection: "row",
+                        height: 40,
+                        alignItems: "center",
+                        marginHorizontal: SIZES.padding,
+                        marginVertical: SIZES.base,
+                        paddingHorizontal: SIZES.radius,
+                        borderRadius: SIZES.radius,
+                        backgroundColor: COLORS.lightGray2,
+                        width: "80%",
+                    }}
+                >
+                    {/* Icon */}
+                    <Image
+                        source={icons.search}
+                        style={{
+                            height: 20,
+                            width: 20,
+                            tintColor: COLORS.black,
+                        }}
+                    />
+
+                    {/* Text input */}
+                    <TextInput
+                        style={{
+                            flex: 1,
+                            marginLeft: SIZES.radius,
+                            ...FONTS.body3,
+                        }}
+                        placeholder="Search project...."
+                    />
+
+                    {/* Filter Button */}
+                    <TouchableOpacity>
+                        <Image
+                            source={icons.filter}
+                            style={{
+                                height: 20,
+                                width: 20,
+                                tintColor: COLORS.black,
+                            }}
+                        />
+                    </TouchableOpacity>
+                </View>
+                <View style={{
+                    flex: 1,
+                    height: 40,
+                    marginRight: 5,
+                    marginVertical: SIZES.base,
+                    paddingHorizontal: SIZES.radius,
+                    borderRadius: SIZES.radius,
+                    backgroundColor: COLORS.lightGray2,
+                    justifyContent: "center",
+                    alignItems: "center",
+                }}>
+                    <TouchableOpacity onPress={() => handleReload()}>
+                        <Image
+                            source={icons.reload}
+                            style={{
+                                height: 20,
+                                width: 20,
+                                tintColor: COLORS.black,
+                            }}
+                        />
+                    </TouchableOpacity>
+                </View>
+            </View>
+        );
+    }
+
+    function renderSearch1() {
         return (
             <View
                 style={{
