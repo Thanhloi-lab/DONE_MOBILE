@@ -51,7 +51,13 @@ const GroupDetail = (props) => {
     const fall = new Animated.Value(1);
 
     useEffect(() => {
-        handleReload();
+        // handleReload();
+        
+        const willFocusSubscription = props.navigation.addListener('focus', () => {
+            handleReload();
+        });
+
+        return willFocusSubscription;
     }, [])
 
     const handleReload = () => {
@@ -820,40 +826,42 @@ const GroupDetail = (props) => {
                         </Text>
                         <Text>Creator: {group.mail}</Text>
                     </View>
-                    <View style={{
-                        top: 0,
-                        right: 0,
-                        position: "absolute",
-                        elevation: 8,
-                    }}>
-                        <TouchableOpacity
-                            style={{
-                                borderRadius: 50,
-                                width: 40,
-                                height: 40,
-                                backgroundColor: COLORS.primary,
-                                flexDirection: "row",
-                                justifyContent: "center",
-                                alignItems: "center",
-
-                            }}
-                            onPress={() => {
-                                bs.current.snapTo(0)
-                            }}
-                        >
-                            <Text
+                    { group.createUser == myId && 
+                        <View style={{
+                            top: 0,
+                            right: 0,
+                            position: "absolute",
+                            elevation: 8,
+                        }}>
+                            <TouchableOpacity
                                 style={{
-                                    fontSize: 30,
-                                    color: "white",
-                                    textAlign: "center",
-                                    textAlignVertical: "center",
-                                    flex: 1
+                                    borderRadius: 50,
+                                    width: 40,
+                                    height: 40,
+                                    backgroundColor: COLORS.primary,
+                                    flexDirection: "row",
+                                    justifyContent: "center",
+                                    alignItems: "center",
+    
+                                }}
+                                onPress={() => {
+                                    bs.current.snapTo(0)
                                 }}
                             >
-                                +
-                            </Text>
-                        </TouchableOpacity>
-                    </View>
+                                <Text
+                                    style={{
+                                        fontSize: 30,
+                                        color: "white",
+                                        textAlign: "center",
+                                        textAlignVertical: "center",
+                                        flex: 1
+                                    }}
+                                >
+                                    +
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
+                    }
 
                 </View>
                 <View
@@ -883,6 +891,15 @@ const GroupDetail = (props) => {
                                     marginBottom: index === projects.length - 1 ? 200 : SIZES.radius,
                                 }}
                                 item={item}
+                                onPress={()=>{
+                                    props.navigation.navigate("ProjectDetail", {
+                                        projectId: item.idProject,
+                                        projectName: item.nameProject,
+                                        createName: item.nameUserCreateProject,
+                                        userId: item.createUser,
+                                        userName: item.mail,
+                                    });
+                                }}
                             />
                         );
                     }}

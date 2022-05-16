@@ -281,6 +281,7 @@ const Home = ({ navigation }) => {
                 showsVerticalScrollIndicator={false}
                 ListHeaderComponent={
                     <View style={{ flex: 1 }}>
+                        
                         {/* meny types */}
                         {renderMenuTypes()}
                     </View>

@@ -3,7 +3,8 @@ import {
 } from 'react-native'
 
 
-const API_URL = "http://192.168.43.93:50003";
+export const API_URL = "http://192.168.43.93:50003";
+
 
 export const register = async (data) => {
     const formData = new FormData();

@@ -29,6 +29,7 @@ const ProjectDetail = (props) => {
     const [modalVisible, setModalVisible] = useState(false);
     const bs = React.createRef();
     const fall = new Animated.Value(1);
+
     const projectId = props.route.params.projectId;
     const myId = useSelector((state) => state.authentication.id);
     const allTask = useSelector((state) => state.jobs.allTask);
@@ -451,7 +452,7 @@ const ProjectDetail = (props) => {
                             <FlatList
                                 vertical
                                 data={users}
-                                keyExtractor={(item) => item.Id}
+                                keyExtractor={(item, index) => index}
                                 showsVerticalScrollIndicator={false}
                                 renderItem={({ item, index }) => {
                                     return (
@@ -529,7 +530,7 @@ const ProjectDetail = (props) => {
                             <FlatList
                                 vertical
                                 data={users}
-                                keyExtractor={(item) => item.idUser}
+                                keyExtractor={(item, index) => index}
                                 showsVerticalScrollIndicator={false}
                                 renderItem={({ item, index }) => {
                                     return (
@@ -728,47 +729,51 @@ const ProjectDetail = (props) => {
                         </Text>
                         <Text>Creator: {props.route.params.userName} </Text>
                     </View>
-                    <View style={{
-                        top: 0,
-                        right: 0,
-                        position: "absolute",
-                        elevation: 8,
-                    }}>
-                        <TouchableOpacity
-                            style={{
-                                borderRadius: 50,
-                                width: 40,
-                                height: 40,
-                                backgroundColor: COLORS.primary,
-                                flexDirection: "row",
-                                justifyContent: "center",
-                                alignItems: "center",
+                    {props.route.params.userId == myId &&
 
-                            }}
-                            onPress={() => {
-                                bs.current.snapTo(0)
-                            }}
-                        >
-                            <Text
+                        <View style={{
+                            top: 0,
+                            right: 0,
+                            position: "absolute",
+                            elevation: 8,
+                        }}>
+                            <TouchableOpacity
                                 style={{
-                                    fontSize: 30,
-                                    color: "white",
-                                    textAlign: "center",
-                                    textAlignVertical: "center",
-                                    flex: 1
+                                    borderRadius: 50,
+                                    width: 40,
+                                    height: 40,
+                                    backgroundColor: COLORS.primary,
+                                    flexDirection: "row",
+                                    justifyContent: "center",
+                                    alignItems: "center",
+
+                                }}
+                                onPress={() => {
+                                    bs.current.snapTo(0)
                                 }}
                             >
-                                +
-                            </Text>
-                        </TouchableOpacity>
-                    </View>
+                                <Text
+                                    style={{
+                                        fontSize: 30,
+                                        color: "white",
+                                        textAlign: "center",
+                                        textAlignVertical: "center",
+                                        flex: 1
+                                    }}
+                                >
+                                    +
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
+
+                    }
 
                 </View>
                 <FlatList
                     style={{ height: "100%" }}
                     vertical
                     data={task}
-                    keyExtractor={(item) => item.idTask}
+                    keyExtractor={(item, index) => index}
                     showsVerticalScrollIndicator={false}
                     renderItem={({ item, index }) => {
                         return (

@@ -81,9 +81,10 @@ const Profile = ({ navigation }) => {
         });
 
         console.log(result);
-        console.log(test);
+        // console.log(test);
         if (!result.cancelled) {
             setImage(result.uri);
+            updateAvatar(result);
         }
 
     };
@@ -201,11 +202,13 @@ const Profile = ({ navigation }) => {
                 </View>
 
                 <Animated.View style={{
-
+                    height:'100%',
+                    flex:1,
+                    backgroundColor:'#fff',
                     opacity: Animated.add(0.1, Animated.multiply(fall, 1.0)),
                 }}>
-                    <ScrollView style={{ flexDirection: 'column' }}>
-                        <View style={styles.container}>
+                    <ScrollView style={{ flexDirection: 'column', height:'100%',  }}>
+                        <View style={{...styles.container}}>
 
                             <View style={{ alignItems: 'center', marginBottom: 30, marginTop: 40 }}>
                                 <TouchableOpacity onPress={() => bs.current.snapTo(0)}>
@@ -254,24 +257,27 @@ const Profile = ({ navigation }) => {
 
                             <View style={styles.infoContainer}>
                                 <View style={{
-
+                                    
                                     flexDirection: "row",
                                     alignItems: "center",
-                                    justifyContent: "space-between"
+                                    justifyContent: "space-between",
+                                    paddingLeft:10
                                 }}>
                                     <Text style={{ color: "gray" }}>Personal Information</Text>
                                     <TouchableOpacity onPress={() => navigation.navigate("EditPersonal")}>
-                                        <Text style={styles.button}>EDIT INFO</Text>
+                                        <Text style={styles.button}>Edit info</Text>
                                     </TouchableOpacity>
                                 </View>
                                 <View >
                                     <View style={styles.detail}>
                                         <Image source={icons.user1} style={styles.icon} />
-                                        <Text>Name:         <Text style={{ ...FONTS.h4 }}>{user.info.name}</Text></Text>
+                                        <Text style={{marginRight:10}}>Name:</Text>
+                                        <Text style={{ ...FONTS.h4 }}>{user.info.name}</Text>
                                     </View>
                                     <View style={styles.detail}>
                                         <Image source={icons.phone1} style={styles.icon} />
-                                        <Text>Phone:          <Text style={{ ...FONTS.h4 }}>{user.info.phone}</Text></Text>
+                                        <Text style={{marginRight:10}}>Phone:</Text>
+                                        <Text style={{ ...FONTS.h4 }}>{user.info.phone}</Text>
                                     </View>
                                     
                                 </View>
@@ -306,6 +312,7 @@ const styles = StyleSheet.create({
         backgroundColor: "white",
         width: "100%",
         height: "100%",
+        flex:1,
         paddingTop: 10,
         borderTopLeftRadius: SIZES.radius * 2,
         borderTopRightRadius: SIZES.radius * 2,
@@ -316,7 +323,7 @@ const styles = StyleSheet.create({
         backgroundColor: "snow",
         width: "100%",
         marginTop: 20,
-        paddingBottom: 20,
+        padding: 10,
         shadowColor: "#000",
         shadowOffset: {
             width: 0,
@@ -354,12 +361,14 @@ const styles = StyleSheet.create({
         shadowRadius: 2.62,
 
         elevation: 4,
-        ...FONTS.h4
+        ...FONTS.h4,
+        color:COLORS.primary
     },
     panel: {
         padding: 20,
         backgroundColor: '#FFFFFF',
         paddingTop: 20,
+        height:'100%',
         // borderTopLeftRadius: 20,
         // borderTopRightRadius: 20,
         // shadowColor: '#000000',

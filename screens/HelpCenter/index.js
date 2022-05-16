@@ -93,7 +93,7 @@ const HelpCenter = ({ navigation }) => {
 
                         <View style={styles.viewContainer}>
                             <Image source={icons.customerservice} style={styles.imageStyle} />
-                            <Text style={{ color: "black", fontSize: 15, ...FONTS.h4, marginLeft: "5%" }}>Contact <Text style={{ color: "blue" }}>Mr.Loi Cao</Text> {'\n'}for more information. {'\n'}Phone number: <Text style={{ color: "green" }}>0394 653 441</Text></Text>
+                            <Text style={{ color: "black", ...FONTS.h4, marginLeft: "5%", fontSize: 14 }}>Contact <Text style={{ color: "blue" }}>Mr.Loi Cao</Text> {'\n'}for more information. {'\n'}Phone number: <Text style={{ color: "green" }}>0394 653 441</Text></Text>
                         </View>
                     </TouchableOpacity>
 
@@ -101,21 +101,21 @@ const HelpCenter = ({ navigation }) => {
 
                         <View style={styles.viewContainer}>
                             <Image source={icons.smartphone} style={styles.imageStyle} />
-                            <Text style={{ color: "black", fontSize: 15, ...FONTS.h4, marginLeft: "5%" }}>Contact <Text style={{ color: "blue" }}>Mr.Do Khang</Text> {'\n'}for more information. {'\n'}SMS number: <Text style={{ color: "green" }}>0765 167 276</Text></Text>
+                            <Text style={{ color: "black", ...FONTS.h4, marginLeft: "5%", fontSize: 14 }}>Contact <Text style={{ color: "blue" }}>Mr.Do Khang</Text> {'\n'}for more information. {'\n'}SMS number: <Text style={{ color: "green" }}>0765 167 276</Text></Text>
                         </View>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.button} onPress={() => { Linking.openURL(`fb://facewebmodal/f?href=https://www.facebook.com/thanhhienm4`) }}>
 
                         <View style={styles.viewContainer}>
                             <Image source={icons.facebook} style={styles.imageStyle} />
-                            <Text style={{ color: "black", fontSize: 15, ...FONTS.h4, marginLeft: "5%" }}>Contact <Text style={{ color: "blue" }}>Mr.Hien Nguyen</Text> {'\n'}for more information. {'\n'}FB: <Text style={{ color: "green" }}>facebook.com/thanhhienm4</Text></Text>
+                            <Text style={{ color: "black",  ...FONTS.h4, marginLeft: "5%", fontSize: 14 }}>Contact <Text style={{ color: "blue" }}>Mr.Hien Nguyen</Text> {'\n'}for more information. {'\n'}FB: <Text style={{ color: "green" }}>facebook.com/thanhhienm4</Text></Text>
                         </View>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.button} onPress={() => { Linking.openURL(`mailto:ntdtestmail@gmail.com?subject=DoneApp&body=${message}`) }}>
 
                         <View style={styles.viewContainer}>
                             <Image source={icons.sendemail} style={styles.imageStyle} />
-                            <Text style={{ color: "black", fontSize: 15, ...FONTS.h4, marginLeft: "5%" }}>Contact <Text style={{ color: "blue" }}>Mr.Duy Nguyen</Text> {'\n'}for more information. {'\n'}Mail: <Text style={{ color: "green" }}>ntdtestmail@gmail.com</Text></Text>
+                            <Text style={{ color: "black",  ...FONTS.h4, marginLeft: "5%", fontSize: 14 }}>Contact <Text style={{ color: "blue" }}>Mr.Duy Nguyen</Text> {'\n'}for more information. {'\n'}Mail: <Text style={{ color: "green" }}>ntdtestmail@gmail.com</Text></Text>
                         </View>
                     </TouchableOpacity>
                 </View>

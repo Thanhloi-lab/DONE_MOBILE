@@ -37,7 +37,6 @@ const TaskDetail = (props) => {
     const [modalDeleteTaskVisible, setModalDeleteTaskVisible] = useState(false);
 
 
-
     const [modalAddTaskMemberVisible, setModalAddTaskMemberVisible] = useState(false);
     const [modalEditTaskMemberVisible, setModalEditTaskMemberVisible] = useState(false);
     const [modalDeleteUserVisible, setModalDeleteUserVisible] = useState(false);
@@ -638,38 +637,40 @@ const TaskDetail = (props) => {
                         </Text>
                         <Text>Creator:{userName} </Text>
                     </View>
-                    <View style={{
-                        top: 0,
-                        right: 0,
-                        position: "absolute",
-                        elevation: 8,
-                    }}>
-                        <TouchableOpacity
-                            style={{
-                                borderRadius: 50,
-                                width: 40,
-                                height: 40,
-                                backgroundColor: COLORS.primary,
-                                flexDirection: "row",
-                                justifyContent: "center",
-                                alignItems: "center",
-
-                            }}
-                            onPress={() => bs.current.snapTo(0)}
-                        >
-                            <Text
+                    {myId == props.route.params.item[0].userCreateProject &&
+                        <View style={{
+                            top: 0,
+                            right: 0,
+                            position: "absolute",
+                            elevation: 8,
+                        }}>
+                            <TouchableOpacity
                                 style={{
-                                    fontSize: 30,
-                                    color: "white",
-                                    textAlign: "center",
-                                    textAlignVertical: "center",
-                                    flex: 1
+                                    borderRadius: 50,
+                                    width: 40,
+                                    height: 40,
+                                    backgroundColor: COLORS.primary,
+                                    flexDirection: "row",
+                                    justifyContent: "center",
+                                    alignItems: "center",
+
                                 }}
+                                onPress={() => bs.current.snapTo(0)}
                             >
-                                +
-                            </Text>
-                        </TouchableOpacity>
-                    </View>
+                                <Text
+                                    style={{
+                                        fontSize: 30,
+                                        color: "white",
+                                        textAlign: "center",
+                                        textAlignVertical: "center",
+                                        flex: 1
+                                    }}
+                                >
+                                    +
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
+                    }
 
                 </View>
                 <ScrollView style={{ flexDirection: 'column', marginBottom: 100 }}>
@@ -723,8 +724,8 @@ const TaskDetail = (props) => {
                                 borderTopRightRadius: SIZES.radius,
                             }}
                             >
-                                <Text style={{ ...FONTS.h3, fontSize: 20, lineHeight: 20, color: COLORS.primary }}>My task: </Text>
-                                <Text style={{ ...FONTS.body3, fontSize: 20, lineHeight: 20, flexShrink: 1 }}>{props.route.params.item[0].nameTask}</Text>
+                                <Text style={{ ...FONTS.h3, fontSize: 18, lineHeight: 18, color: COLORS.primary }}>My task: </Text>
+                                <Text style={{ ...FONTS.body3, fontSize: 18, lineHeight: 18, flexShrink: 1 }}>{props.route.params.item[0].nameTask}</Text>
                             </View>
                             <View style={{
                                 flexDirection: 'row',
@@ -732,8 +733,8 @@ const TaskDetail = (props) => {
                                 paddingHorizontal: 10,
                             }}
                             >
-                                <Text style={{ ...FONTS.h3, fontSize: 20, lineHeight: 20, color: COLORS.primary }}>Description: </Text>
-                                <Text style={{ ...FONTS.body3, fontSize: 20, lineHeight: 20, flexShrink: 1 }}>{props.route.params.item[0].content}</Text>
+                                <Text style={{ ...FONTS.h3, fontSize: 18, lineHeight: 18, color: COLORS.primary }}>Description: </Text>
+                                <Text style={{ ...FONTS.body3, fontSize: 18, lineHeight: 18, flexShrink: 1 }}>{props.route.params.item[0].content}</Text>
                             </View>
                             <View style={{
                                 flexDirection: 'row',
@@ -741,8 +742,8 @@ const TaskDetail = (props) => {
                                 paddingHorizontal: 10,
                             }}
                             >
-                                <Text style={{ ...FONTS.h3, fontSize: 20, lineHeight: 20, color: COLORS.primary }}>Created date: </Text>
-                                <Text style={{ ...FONTS.body3, fontSize: 20, lineHeight: 20, flexShrink: 1 }}>{props.route.params.item[0].taskCreateDate}</Text>
+                                <Text style={{ ...FONTS.h3, fontSize: 18, lineHeight: 18, color: COLORS.primary }}>Created date: </Text>
+                                <Text style={{ ...FONTS.body3, fontSize: 18, lineHeight: 18, flexShrink: 1 }}>{props.route.params.item[0].taskCreateDate}</Text>
                             </View>
                             <View style={{
                                 flexDirection: 'row',
@@ -750,8 +751,8 @@ const TaskDetail = (props) => {
                                 paddingHorizontal: 10,
                             }}
                             >
-                                <Text style={{ ...FONTS.h3, fontSize: 20, lineHeight: 20, color: COLORS.primary }}>Deadline: </Text>
-                                <Text style={{ ...FONTS.body3, fontSize: 20, lineHeight: 20, flexShrink: 1 }}>{props.route.params.item[0].deadline}</Text>
+                                <Text style={{ ...FONTS.h3, fontSize: 18, lineHeight: 18, color: COLORS.primary }}>Deadline: </Text>
+                                <Text style={{ ...FONTS.body3, fontSize: 18, lineHeight: 18, flexShrink: 1 }}>{props.route.params.item[0].deadline}</Text>
                             </View>
                             <View style={{
                                 flexDirection: 'row',
@@ -761,8 +762,8 @@ const TaskDetail = (props) => {
                                 borderBottomRightRadius: SIZES.radius,
                             }}
                             >
-                                <Text style={{ ...FONTS.h3, fontSize: 20, lineHeight: 20, color: COLORS.primary }}>Updated date: </Text>
-                                <Text style={{ ...FONTS.body3, fontSize: 20, lineHeight: 20, flexShrink: 1 }}>{props.route.params.item[0].updateDate}</Text>
+                                <Text style={{ ...FONTS.h3, fontSize: 18, lineHeight: 18, color: COLORS.primary }}>Updated date: </Text>
+                                <Text style={{ ...FONTS.body3, fontSize: 18, lineHeight: 18, flexShrink: 1 }}>{props.route.params.item[0].updateDate}</Text>
                             </View>
                         </View>
 
@@ -788,8 +789,8 @@ const TaskDetail = (props) => {
                                 borderTopRightRadius: SIZES.radius,
                             }}
                             >
-                                <Text style={{ ...FONTS.h3, fontSize: 20, lineHeight: 20, color: COLORS.primary }}>Project: </Text>
-                                <Text style={{ ...FONTS.body3, fontSize: 20, lineHeight: 20, flexShrink: 1 }}>{props.route.params.item[0].nameProject}</Text>
+                                <Text style={{ ...FONTS.h3, fontSize: 18, lineHeight: 18, color: COLORS.primary }}>Project: </Text>
+                                <Text style={{ ...FONTS.body3, fontSize: 18, lineHeight: 18, flexShrink: 1 }}>{props.route.params.item[0].nameProject}</Text>
                             </View>
                             <View style={{
                                 flexDirection: 'row',
@@ -797,8 +798,8 @@ const TaskDetail = (props) => {
                                 paddingHorizontal: 10,
                             }}
                             >
-                                <Text style={{ ...FONTS.h3, fontSize: 20, lineHeight: 20, color: COLORS.primary }}>MailUserProject: </Text>
-                                <Text style={{ ...FONTS.body3, fontSize: 20, lineHeight: 20, flexShrink: 1 }}>{props.route.params.item[0].mailUserCreateProject}</Text>
+                                <Text style={{ ...FONTS.h3, fontSize: 18, lineHeight: 18, color: COLORS.primary }}>MailUserProject: </Text>
+                                <Text style={{ ...FONTS.body3, fontSize: 18, lineHeight: 18, flexShrink: 1 }}>{props.route.params.item[0].mailUserCreateProject}</Text>
                             </View>
                             <View style={{
                                 flexDirection: 'row',
@@ -806,8 +807,8 @@ const TaskDetail = (props) => {
                                 paddingHorizontal: 10,
                             }}
                             >
-                                <Text style={{ ...FONTS.h3, fontSize: 20, lineHeight: 20, color: COLORS.primary }}>Created date: </Text>
-                                <Text style={{ ...FONTS.body3, fontSize: 20, lineHeight: 20, flexShrink: 1 }}>{props.route.params.item[0].projectCreateDate}</Text>
+                                <Text style={{ ...FONTS.h3, fontSize: 18, lineHeight: 18, color: COLORS.primary }}>Created date: </Text>
+                                <Text style={{ ...FONTS.body3, fontSize: 18, lineHeight: 18, flexShrink: 1 }}>{props.route.params.item[0].projectCreateDate}</Text>
                             </View>
                             <View style={{
                                 flexDirection: 'row',
@@ -817,8 +818,8 @@ const TaskDetail = (props) => {
                                 borderBottomRightRadius: SIZES.radius,
                             }}
                             >
-                                <Text style={{ ...FONTS.h3, fontSize: 20, lineHeight: 20, color: COLORS.primary }}>NameUserProject: </Text>
-                                <Text style={{ ...FONTS.body3, fontSize: 20, lineHeight: 20, flexShrink: 1 }}>{props.route.params.item[0].nameUserCreateProject}</Text>
+                                <Text style={{ ...FONTS.h3, fontSize: 18, lineHeight: 18, color: COLORS.primary }}>NameUserProject: </Text>
+                                <Text style={{ ...FONTS.body3, fontSize: 18, lineHeight: 18, flexShrink: 1 }}>{props.route.params.item[0].nameUserCreateProject}</Text>
                             </View>
 
                         </View>
@@ -845,8 +846,8 @@ const TaskDetail = (props) => {
                                 borderTopRightRadius: SIZES.radius,
                             }}
                             >
-                                <Text style={{ ...FONTS.h3, fontSize: 20, lineHeight: 20, color: COLORS.primary }}>Group: </Text>
-                                <Text style={{ ...FONTS.body3, fontSize: 20, lineHeight: 20, flexShrink: 1 }}>{props.route.params.item[0].nameGroup}</Text>
+                                <Text style={{ ...FONTS.h3, fontSize: 18, lineHeight: 18, color: COLORS.primary }}>Group: </Text>
+                                <Text style={{ ...FONTS.body3, fontSize: 18, lineHeight: 18, flexShrink: 1 }}>{props.route.params.item[0].nameGroup}</Text>
                             </View>
                             <View style={{
                                 flexDirection: 'row',
@@ -854,8 +855,8 @@ const TaskDetail = (props) => {
                                 paddingHorizontal: 10,
                             }}
                             >
-                                <Text style={{ ...FONTS.h3, fontSize: 20, lineHeight: 20, color: COLORS.primary }}>MailUserGroup: </Text>
-                                <Text style={{ ...FONTS.body3, fontSize: 20, lineHeight: 20, flexShrink: 1 }}>{props.route.params.item[0].mailUserCreateGroup}</Text>
+                                <Text style={{ ...FONTS.h3, fontSize: 18, lineHeight: 18, color: COLORS.primary }}>MailUserGroup: </Text>
+                                <Text style={{ ...FONTS.body3, fontSize: 18, lineHeight: 18, flexShrink: 1 }}>{props.route.params.item[0].mailUserCreateGroup}</Text>
                             </View>
                             <View style={{
                                 flexDirection: 'row',
@@ -863,8 +864,8 @@ const TaskDetail = (props) => {
                                 paddingHorizontal: 10,
                             }}
                             >
-                                <Text style={{ ...FONTS.h3, fontSize: 20, lineHeight: 20, color: COLORS.primary }}>PhoneUserGroup: </Text>
-                                <Text style={{ ...FONTS.body3, fontSize: 20, lineHeight: 20, flexShrink: 1 }}>{props.route.params.item[0].phoneUserCreateGroup}</Text>
+                                <Text style={{ ...FONTS.h3, fontSize: 18, lineHeight: 18, color: COLORS.primary }}>PhoneUserGroup: </Text>
+                                <Text style={{ ...FONTS.body3, fontSize: 18, lineHeight: 18, flexShrink: 1 }}>{props.route.params.item[0].phoneUserCreateGroup}</Text>
                             </View>
                             <View style={{
                                 flexDirection: 'row',
@@ -874,46 +875,48 @@ const TaskDetail = (props) => {
                                 borderBottomRightRadius: SIZES.radius,
                             }}
                             >
-                                <Text style={{ ...FONTS.h3, fontSize: 20, lineHeight: 20, color: COLORS.primary }}>UserCreateGroup: </Text>
-                                <Text style={{ ...FONTS.body3, fontSize: 20, lineHeight: 20, flexShrink: 1 }}>{props.route.params.item[0].nameUserCreateGroup}</Text>
+                                <Text style={{ ...FONTS.h3, fontSize: 18, lineHeight: 18, color: COLORS.primary }}>UserCreateGroup: </Text>
+                                <Text style={{ ...FONTS.body3, fontSize: 18, lineHeight: 18, flexShrink: 1 }}>{props.route.params.item[0].nameUserCreateGroup}</Text>
                             </View>
 
                         </View>
                     </View>
 
                     <View style={{ justifyContent: 'center', alignItems: 'center', marginBottom: 30 }}>
-                        <TouchableOpacity onPress={() => { handleUpdateStatus(), props.navigation.goBack() }} >
-                            <View style={{
-                                backgroundColor: COLORS.COMPLETED1,
-                                margin: 10,
-                                marginTop: 0,
-                                paddingVertical: 15,
-                                paddingHorizontal: 15,
-                                borderRadius: SIZES.radius,
-                                flexDirection: 'row',
-                                shadowColor: "#000",
-                                shadowOffset: {
-                                    width: 0,
-                                    height: 2,
-                                },
-                                shadowOpacity: 0.29,
-                                shadowRadius: 4.65,
-                                elevation: 7,
-                                borderRadius: SIZES.radius * 1.5,
-                            }}>
-                                <Image
-                                    source={icons.completed}
-                                    style={{
-                                        width: 20,
-                                        height: 20,
-                                        marginRight: 5
-                                    }}
-                                />
-                                <Text style={{ ...FONTS.h3 }}>
-                                    Confirm completed
-                                </Text>
-                            </View>
-                        </TouchableOpacity>
+                        { taskStatus==1 && 
+                            <TouchableOpacity onPress={() => { handleUpdateStatus(), props.navigation.goBack() }} >
+                                <View style={{
+                                    backgroundColor: COLORS.COMPLETED1,
+                                    margin: 10,
+                                    marginTop: 0,
+                                    paddingVertical: 15,
+                                    paddingHorizontal: 15,
+                                    borderRadius: SIZES.radius,
+                                    flexDirection: 'row',
+                                    shadowColor: "#000",
+                                    shadowOffset: {
+                                        width: 0,
+                                        height: 2,
+                                    },
+                                    shadowOpacity: 0.29,
+                                    shadowRadius: 4.65,
+                                    elevation: 7,
+                                    borderRadius: SIZES.radius * 1.5,
+                                }}>
+                                    <Image
+                                        source={icons.completed}
+                                        style={{
+                                            width: 20,
+                                            height: 20,
+                                            marginRight: 5
+                                        }}
+                                    />
+                                    <Text style={{ ...FONTS.h3 }}>
+                                        Confirm completed
+                                    </Text>
+                                </View>
+                            </TouchableOpacity>
+                        }
                     </View>
                 </ScrollView>
             </Animated.View>

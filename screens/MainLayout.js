@@ -321,6 +321,7 @@ const MainLayout = ({ navigation, mainNavigation }) => {
                         />
                     </TouchableOpacity>
                 }
+                url={API_URL + "/"+  avatar}
                 rightComponent={
                     <TouchableOpacity
                         style={{

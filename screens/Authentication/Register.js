@@ -49,10 +49,10 @@ const Register = ({ navigation }) => {
         })();
     }, []);
 
-  
+
 
     const pickImage = async () => {
-       
+
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.All,
             allowsEditing: true,
@@ -60,13 +60,13 @@ const Register = ({ navigation }) => {
             quality: 1,
         });
 
-       // ImagePicker saves the taken photo to disk and returns a local URI to it
-       let localUri = result.uri;
-       let filename = localUri.split('/').pop();
+        // ImagePicker saves the taken photo to disk and returns a local URI to it
+        let localUri = result.uri;
+        let filename = localUri.split('/').pop();
 
-       // Infer the type of the image
-       let match = /\.(\w+)$/.exec(filename);
-       let type = match ? `image/${match[1]}` : `image`;
+        // Infer the type of the image
+        let match = /\.(\w+)$/.exec(filename);
+        let type = match ? `image/${match[1]}` : `image`;
 
         if (!result.cancelled) {
             setAvatar({ uri: localUri, name: filename, type });
@@ -76,17 +76,18 @@ const Register = ({ navigation }) => {
 
     };
 
-    
 
-    const onSubmit = () =>{
-        register({email, password, name, phone, avatar})
-        .then(()=>{
-            ToastAndroid.showWithGravity(
-                `Verification code have been sent to ${email}, please check your inbox`,
-                ToastAndroid.SHORT,
-                ToastAndroid.BOTTOM
-              );
-            navigation.push("VerifyEmail",{email:email})})
+
+    const onSubmit = () => {
+        register({ email, password, name, phone, avatar })
+            .then(() => {
+                ToastAndroid.showWithGravity(
+                    `Verification code have been sent to ${email}, please check your inbox`,
+                    ToastAndroid.SHORT,
+                    ToastAndroid.BOTTOM
+                );
+                navigation.push("VerifyEmail", { email: email })
+            })
     }
 
     return (
@@ -120,9 +121,9 @@ const Register = ({ navigation }) => {
                                     Register
                                 </Text>
                             </View>
-                            <View style={{ alignItems: 'center', marginBottom: 30, marginTop: 40 }}>
+                            <View style={{ alignItems: 'center', marginBottom: 30, marginTop: 5 }}>
 
-                           <TouchableOpacity onPress={pickImage}>
+                                <TouchableOpacity onPress={pickImage}>
                                     <View style={{
                                         height: 100,
                                         width: 100,
@@ -157,7 +158,7 @@ const Register = ({ navigation }) => {
                                                     }} />
                                             </View>
                                         </ImageBackground>
-                                 
+
                                     </View>
                                 </TouchableOpacity>
                             </View>
@@ -254,8 +255,8 @@ const Register = ({ navigation }) => {
                                     </Text>
                                 </View>
                             )}
-                            
-                            
+
+
                             <View style={styles.inputContainer}>
                                 <View style={styles.icon}>
                                     <Image source={icons.password}
@@ -284,14 +285,14 @@ const Register = ({ navigation }) => {
                                     <Text style={styles.errorText}>Confirm password is not match</Text>
                                 </View>
                             )}
-                            
+
 
                             <TouchableOpacity style={styles.button} onPress={onSubmit}>
                                 <Text style={{ color: "white", fontSize: 15 }}>REGISTER</Text>
                             </TouchableOpacity>
-                            
-                            
-                           
+
+
+
 
                             <View style={{ alignItems: "center", marginTop: 30 }}>
                                 <TouchableOpacity onPress={() => navigation.goBack()}>
@@ -312,7 +313,7 @@ const styles = StyleSheet.create({
         flex: 1,
         // justifyContent: "flex-end",
         // alignItems: "center",
-        paddingTop: 100,
+        paddingTop: 40,
     },
     container: {
         backgroundColor: "white",

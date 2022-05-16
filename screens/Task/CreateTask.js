@@ -438,6 +438,8 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         borderRadius: 25,
         height: 35,
+        paddingVertical:5,
+        paddingHorizontal:10,
 
         shadowColor: "#000",
         shadowOffset: {
