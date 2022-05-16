@@ -114,24 +114,17 @@ const Group = ({ navigation }) => {
 
         } else {
             let selectedGroupWithSTatus = allTask.filter(
-                (a) => a.userCreateGroup !== myId
+                a => a.userCreateGroup != myId
             );
+            
             let Groups = [];
             selectedGroupWithSTatus.forEach((Group) => {
                 let item = {
                     idGroup: Group.idGroup,
-                    idProject: Group.idProject,
-                    mailUserCreateGroup: Group.mailUserCreateGroup,
-                    mailUserCreateProject: Group.mailUserCreateGroup,
                     nameGroup: Group.nameGroup,
-                    nameProject: Group.nameProject,
-                    nameUserCreateGroup: Group.nameUserCreateGroup,
-                    nameUserCreateProject: Group.nameUserCreateProject,
-                    phoneUserCreateGroup: Group.phoneUserCreateGroup,
-                    phoneUserCreateProject: Group.phoneUserCreateProject,
-                    projectCreateDate: Group.projectCreateDate,
-                    userCreateGroup: Group.userCreateGroup,
-                    userCreateProject: Group.userCreateProject,
+                    mail: Group.mailUserCreateGroup,
+                    name: Group.nameUserCreateGroup,
+                    phone: Group.phoneUserCreateGroup,
                 };
                 Groups.push(item);
             });

@@ -85,7 +85,7 @@ const CreateTask = (props) => {
         var result = createTask(data);
         result.then(reponse => {
             Alert.alert("Create success")
-            handleReload();
+            // handleReload();
             props.navigation.goBack()
         })
             .catch(err => {

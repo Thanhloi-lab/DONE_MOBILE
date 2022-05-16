@@ -92,7 +92,7 @@ const Project = ({ navigation }) => {
             setListProject(projects);
         } else {
             let selectedProjectWithSTatus = allTask.filter(
-                (a) => a.userCreateProject !== myId
+                (a) => a.userCreateProject != myId
             );
             let projects = [];
             selectedProjectWithSTatus.forEach((project) => {
@@ -100,17 +100,10 @@ const Project = ({ navigation }) => {
                 let item = {
                     idGroup: project.idGroup,
                     idProject: project.idProject,
-                    mailUserCreateGroup: project.mailUserCreateGroup,
-                    mailUserCreateProject: project.mailUserCreateGroup,
-                    nameGroup: project.nameGroup,
+                    mail: project.mailUserCreateProject,
+                    name: project.nameUserCreateProject,
+                    phone: project.phoneUserCreateProject,
                     nameProject: project.nameProject,
-                    nameUserCreateGroup: project.nameUserCreateGroup,
-                    nameUserCreateProject: project.nameUserCreateProject,
-                    phoneUserCreateGroup: project.phoneUserCreateGroup,
-                    phoneUserCreateProject: project.phoneUserCreateProject,
-                    projectCreateDate: project.projectCreateDate,
-                    userCreateGroup: project.userCreateGroup,
-                    userCreateProject: project.userCreateProject,
                 };
                 projects.push(item);
             });
@@ -290,6 +283,7 @@ const Project = ({ navigation }) => {
                                     projectName: item.nameProject,
                                     createName: item.nameUserCreateProject,
                                     userId: item.createUser,
+                                    userName: item.mail,
                                 });
                             }}
                         />

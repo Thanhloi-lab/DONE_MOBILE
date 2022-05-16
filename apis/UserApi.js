@@ -3,7 +3,7 @@ import {
 } from 'react-native'
 
 
-const API_URL = "http://192.168.1.4:50003";
+const API_URL = "http://192.168.43.93:50003";
 
 export const register = async (data) => {
     const formData = new FormData();
@@ -83,7 +83,7 @@ export const getUserInfo = async (id) => {
     //         console.error(error);
     //     });
 
-    fetch('http://192.168.1.4:50003/api/Users/getUser?Id=' + id)
+    fetch('http://192.168.43.93:50003/api/Users/getUser?Id=' + id)
         .then((response) => response.json())
         .then((json) => {
             return json;
@@ -93,25 +93,25 @@ export const getUserInfo = async (id) => {
 };
 
 export async function getUserByText(text) {
-    let response = await fetch(`http://192.168.1.4:50003/api/Users/findUser?keyword=${text}`);
+    let response = await fetch(`${API_URL}/api/Users/findUser?keyword=${text}`);
     let data = await response.json();
     return data;
 };
 
 export async function getUserByGroupId(id) {
-    let response = await fetch(`http://192.168.1.4:50003/api/Groups/allMembers?Id=${id}`);
+    let response = await fetch(`${API_URL}/api/Groups/allMembers?Id=${id}`);
     let data = await response.json();
     return data;
 };
 
 export async function getUserByProjectId(id) {
-    let response = await fetch(`http://192.168.1.4:50003/api/Projects/allMembers?Id=${id}`);
+    let response = await fetch(`${API_URL}/api/Projects/allMembers?Id=${id}`);
     let data = await response.json();
     return data;
 };
 
 export async function getUserByTaskId(id) {
-    let response = await fetch(`http://192.168.1.4:50003/api/Tasks/allMembers?Id=${id}`);
+    let response = await fetch(`${API_URL}/api/Tasks/allMembers?Id=${id}`);
     let data = await response.json();
     return data;
 };

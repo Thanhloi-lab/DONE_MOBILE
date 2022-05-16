@@ -51,20 +51,24 @@ const ProjectDetail = (props) => {
 
     React.useEffect(() => {
 
-        allTaskByProject(projectId, myId).then(data => {
-            setTask(data)
-        })
-            .catch(err => console.error(err))
+
+
+        const willFocusSubscription = props.navigation.addListener('focus', () => {
+            handleReload();
+        });
+
+        return willFocusSubscription;
     }, []);
 
-    React.useEffect(() => {
-        handleReload();
-    }, []);
+    // React.useEffect(() => {
+    //     handleReload();
+    // }, []);
 
     function handleReload() {
 
         allTaskByProject(projectId, myId).then(data => {
             dispatch(jobsSlice.actions.setTask(data));
+            setTask(data)
         })
             .catch(err => console.error(err))
 
@@ -722,7 +726,7 @@ const ProjectDetail = (props) => {
                         <Text style={{ fontSize: SIZES.h2, fontWeight: "bold" }}>
                             Project: {props.route.params.projectName}
                         </Text>
-                        <Text>Creator: {props.route.params.userId} </Text>
+                        <Text>Creator: {props.route.params.userName} </Text>
                     </View>
                     <View style={{
                         top: 0,

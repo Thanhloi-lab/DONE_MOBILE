@@ -66,16 +66,16 @@ const HorizontalTaskCard = ({ containerStyle, imageStyle, item, onPress }) => {
             {/* info */}
             <View style={{ flex: 1, padding: 15, paddingTop: 0 }} numberOfLines={1}>
                 {/* name */}
-                <Text style={{ ...FONTS.h2, fontSize:18, lineHeight:20 }}>
+                <Text style={{ ...FONTS.h2, fontSize:15, lineHeight:17 }}>
                     Task: {item.nameTask}
                 </Text>
 
                 {/* description */}
-                <Text style={{ color: COLORS.darkGray1, ...FONTS.body4, fontSize: 14, lineHeight:16 }} numberOfLines={1}>
+                <Text style={{ color: COLORS.darkGray1, ...FONTS.body4, fontSize: 13, lineHeight:14 }} numberOfLines={1}>
                     {item.content}
                 </Text>
 
-                <Text style={{ marginTop: SIZES.base, ...FONTS.h2, fontSize: 16, lineHeight:16 }} numberOfLines={1}>
+                <Text style={{ marginTop: SIZES.base, ...FONTS.h2, fontSize: 13, lineHeight:14 }} numberOfLines={1}>
                     Project: {item.nameProject}
                 </Text>
             </View>
