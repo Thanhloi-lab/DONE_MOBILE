@@ -11,6 +11,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 //store
 import { useDispatch, useSelector } from "react-redux";
 import authenticationSlice from "./stores/Authentication/authenticationSlice";
+import { getUserInfo, getUserInfoById } from "./apis/UserApi";
 
 const theme = {
     ...DefaultTheme,
@@ -32,14 +33,12 @@ export default function Wrapper() {
 
             const token = await AsyncStorage.getItem('token')
             const id = await AsyncStorage.getItem('id')
-
-            if(token !== null) {
-                dispatch(authenticationSlice.actions.setToken({token,id}))
-
-            }else{
-                console.log("null");
+            if(id && token){
+                const userInfo = await getUserInfoById(id)
+                const json = await userInfo.json();
+                console.log(json.avatar);
+                dispatch(authenticationSlice.actions.setToken({token,id, info: json}))
             }
- 
         }
         getToken()
       

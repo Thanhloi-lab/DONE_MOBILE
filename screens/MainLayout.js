@@ -35,6 +35,7 @@ import {
     Notification,
 } from "../screens/index.js";
 import { Header } from "../components";
+import { API_URL } from "../apis/UserApi";
 
 const TabButton = ({
     label,
@@ -273,6 +274,8 @@ const MainLayout = ({ navigation, mainNavigation }) => {
             borderRadiusLayout.value = withTiming(0, { duration: 250 });
         }
     }, [isDrawerOpen]);
+    const avatar = useSelector(state=>state.authentication.info.avatar)
+
     return (
         <Animated.View
             style={[
@@ -328,7 +331,7 @@ const MainLayout = ({ navigation, mainNavigation }) => {
                         onPress={() => navigation.navigate("Profile")}
                     >
                         <Image
-                            source={dummyData.myProfile?.profile_image}
+                            source={{uri: API_URL + "/"+  avatar}}
                             style={{
                                 width: 40,
                                 height: 40,

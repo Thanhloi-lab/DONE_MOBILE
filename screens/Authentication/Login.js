@@ -42,7 +42,7 @@ const Login = ({ navigation }) => {
             
             if(response.status === 200){
                 const json = await response.json()
-                dispatch(authenticationSlice.actions.setToken({token: json.token, id:json.idUser + ""}))
+                dispatch(authenticationSlice.actions.setToken({token: json.token, id:json.idUser, info:json }))
                 console.log("login", json.idUser + "");
                 await AsyncStorage.setItem('token', json.token)
                 await AsyncStorage.setItem('id', json.idUser + "")

@@ -10,6 +10,7 @@ import {
     ImageBackground,
     ScrollView,
     Alert,
+    ToastAndroid
 } from "react-native";
 
 import {
@@ -33,12 +34,15 @@ import Animated from 'react-native-reanimated';
 import * as ImagePicker from 'expo-image-picker';
 
 
-import { getUserInfo } from "../../apis/UserApi";
+import { API_URL, editAvatar, getUserInfo, getUserInfoById } from "../../apis/UserApi";
+import { useDispatch, useSelector } from "react-redux";
+import authenticationSlice from "../../stores/Authentication/authenticationSlice";
 
 
 const Profile = ({ navigation }) => {
-    const [image, setImage] = useState(dummyData.myProfile?.profile_image);
-
+    const user = useSelector(state=>state.authentication)
+    const [image, setImage] = useState(user.info.avatar);
+    const dispatch = useDispatch()
 
     useEffect(() => {
         (async () => {
@@ -63,6 +67,7 @@ const Profile = ({ navigation }) => {
 
         if (!result.cancelled) {
             setImage(result.uri);
+            updateAvatar(result)
         }
 
     };
@@ -76,12 +81,37 @@ const Profile = ({ navigation }) => {
         });
 
         console.log(result);
-
+        console.log(test);
         if (!result.cancelled) {
             setImage(result.uri);
         }
 
     };
+
+    const updateAvatar = async (result) =>{
+        // ImagePicker saves the taken photo to disk and returns a local URI to it
+       let localUri = result.uri;
+       let filename = localUri.split('/').pop();
+
+       // Infer the type of the image
+       let match = /\.(\w+)$/.exec(filename);
+       let type = match ? `image/${match[1]}` : `image`;
+
+        const data = { uri: localUri, name: filename, type };
+
+        const res = await editAvatar({id: user.info.idUser, avatar: data})
+        if(res.status === 200){
+            ToastAndroid.showWithGravity(
+                `Info Updated`,
+                ToastAndroid.SHORT,
+                ToastAndroid.BOTTOM
+                );
+            const userRes =  await getUserInfoById(user.info.idUser)
+            const userJson = await userRes.json()
+            dispatch(authenticationSlice.actions.setToken({token:user.token,id:user.id, info: userJson}))
+                
+        }
+    }
 
 
 
@@ -187,7 +217,7 @@ const Profile = ({ navigation }) => {
                                         alignItems: 'center',
                                     }}>
                                         <ImageBackground
-                                            source={typeof (image) === 'string' ? { uri: image } : image}
+                                            source={typeof (image) === 'string' ? {uri: !image.startsWith("file") ? API_URL + "/"+  image: image} : image}
                                             style={{ height: 130, width: 130, borderWidth: 2, borderRadius: 30, borderColor: COLORS.gray }}
                                             imageStyle={{ borderRadius: 30 }}>
                                             <View style={{
@@ -217,7 +247,7 @@ const Profile = ({ navigation }) => {
                                             marginTop: 15,
                                             marginBottom: 5,
                                             ...FONTS.h2
-                                        }]}>@{dummyData.myProfile?.name}</Title>
+                                        }]}>@{user.info.name}</Title>
                                     </View>
                                 </TouchableOpacity>
                             </View>
@@ -237,51 +267,17 @@ const Profile = ({ navigation }) => {
                                 <View >
                                     <View style={styles.detail}>
                                         <Image source={icons.user1} style={styles.icon} />
-                                        <Text>Name:         <Text style={{ ...FONTS.h4 }}>{dummyData.myProfile?.name}</Text></Text>
-                                    </View>
-                                    <View style={styles.detail}>
-                                        <Image source={icons.gender} style={styles.icon} />
-                                        <Text>Gender:       <Text style={{ ...FONTS.h4 }}>{dummyData.myProfile?.gender}</Text></Text>
-                                    </View>
-                                    <View style={styles.detail}>
-                                        <Image source={icons.birthday} style={styles.icon} />
-                                        <Text>Birth:           <Text style={{ ...FONTS.h4 }}>{dummyData.myProfile?.birth}</Text></Text>
-                                    </View>
-                                    <View style={styles.detail}>
-                                        <Image source={icons.place} style={styles.icon} />
-                                        <Text>Address:     <Text style={{ ...FONTS.h4 }}>{dummyData.myProfile?.address}</Text></Text>
-                                    </View>
-                                    <View style={styles.detail}>
-                                        <Image source={icons.status} style={styles.icon} />
-                                        <Text>Satus:          <Text style={{ ...FONTS.h4 }}>{dummyData.myProfile?.status}</Text></Text>
-                                    </View>
-                                </View>
-                            </View>
-
-                            <View style={styles.infoContainer}>
-                                <View style={{
-
-                                    flexDirection: "row",
-                                    alignItems: "center",
-                                    justifyContent: "space-between"
-                                }}>
-                                    <Text style={{ color: "gray" }}>Contact Information</Text>
-                                    <TouchableOpacity onPress={() => navigation.navigate("EditContact")}>
-                                        <Text style={styles.button}>EDIT INFO</Text>
-                                    </TouchableOpacity>
-                                </View>
-                                <View >
-                                    <View style={styles.detail}>
-                                        <Image source={icons.email1} style={styles.icon} />
-                                        <Text>Email:           <Text style={{ ...FONTS.h4 }}>{dummyData.myProfile?.email}</Text></Text>
+                                        <Text>Name:         <Text style={{ ...FONTS.h4 }}>{user.info.name}</Text></Text>
                                     </View>
                                     <View style={styles.detail}>
                                         <Image source={icons.phone1} style={styles.icon} />
-                                        <Text>Phone:          <Text style={{ ...FONTS.h4 }}>{dummyData.myProfile?.phone}</Text></Text>
+                                        <Text>Phone:          <Text style={{ ...FONTS.h4 }}>{user.info.phone}</Text></Text>
                                     </View>
-
+                                    
                                 </View>
                             </View>
+
+                            
 
                         </View>
 

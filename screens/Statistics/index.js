@@ -283,9 +283,15 @@ const Statistics = () => {
 
     useEffect(() => {
         getTask(id)
+<<<<<<< HEAD
+            .then((res)=>res.json())
+            .then(json=>{
+                setTasks(json || [])
+=======
             .then((res) => res.json())
             .then(json => {
                 setTasks(json)
+>>>>>>> c293c3d6b4f1060de1cf3dcc034c660260fd9c90
             })
     }, [])
 
@@ -574,6 +580,41 @@ const Statistics = () => {
         return finalChartData
     }
 
+<<<<<<< HEAD
+    const getDataToPrint = (tasks) =>{
+        const completedTask = tasks.filter(task=>task.statusId===TASK_STATUS.COMPLETED).length || 0
+        const uncompleteTask = tasks.filter(task=>task.statusId===TASK_STATUS.UNCOMPLETED).length || 0
+        const bugTask = tasks.filter(task=>task.statusId===TASK_STATUS.BUG).length || 0
+        const expiredTask = tasks.filter(task=>task.statusId===TASK_STATUS.EXPIRED).length || 0
+       
+         let data =    [
+                {
+                    type: "Complete",
+                    percentage: `${(completedTask / tasks.length * 100).toFixed(0)}%`,
+                },
+                {
+                    type: "Uncomplete",
+                    percentage: `${(uncompleteTask / tasks.length * 100).toFixed(0)}%`,
+                },
+                {
+                    type: "Bug",
+                    percentage: `${(bugTask / tasks.length * 100).toFixed(0)}%`,
+                    
+                },
+                {
+                    type: "Expired",
+                    percentage: `${(expiredTask / tasks.length * 100).toFixed(0)}%`,
+                }
+            ]
+            const tasksData = tasks.map(task=>({
+                name:task.nameTask,
+                project: task.nameProject,
+                group: task.nameGroup,
+                "created date":task.taskCreateDate,
+                deadline:task.deadline,
+                status:task.statusName
+            }))
+=======
     const getDataToPrint = (tasks) => {
         const completedTask = tasks.filter(task => task.statusId === TASK_STATUS.COMPLETED).length
         const uncompleteTask = tasks.filter(task => task.statusId === TASK_STATUS.UNCOMPLETED).length
@@ -607,11 +648,20 @@ const Statistics = () => {
             deadline: task.deadline,
             status: task.statusName
         }))
+>>>>>>> c293c3d6b4f1060de1cf3dcc034c660260fd9c90
         data = [...data, ...tasksData]
         return data
     }
 
     function processData(tasks) {
+<<<<<<< HEAD
+        
+        const completedTask = tasks.filter(task=>task.statusId===TASK_STATUS.COMPLETED).length || 0
+        const uncompleteTask = tasks.filter(task=>task.statusId===TASK_STATUS.UNCOMPLETED).length || 0
+        const bugTask = tasks.filter(task=>task.statusId===TASK_STATUS.BUG).length || 0
+        const expiredTask = tasks.filter(task=>task.statusId===TASK_STATUS.EXPIRED).length || 0
+=======
+>>>>>>> c293c3d6b4f1060de1cf3dcc034c660260fd9c90
 
         const completedTask = tasks.filter(task => task.statusId === TASK_STATUS.COMPLETED).length
         const uncompleteTask = tasks.filter(task => task.statusId === TASK_STATUS.UNCOMPLETED).length
