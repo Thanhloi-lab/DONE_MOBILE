@@ -25,6 +25,7 @@ import {
     icons,
     dummyData,
     constants,
+    images
 } from "../constants";
 import { useDrawerProgress, useDrawerStatus } from "@react-navigation/drawer";
 import {
@@ -35,8 +36,6 @@ import {
     Notification,
 } from "../screens/index.js";
 import { Header } from "../components";
-import { API_URL } from "../apis/UserApi";
-
 const TabButton = ({
     label,
     icon,
@@ -274,7 +273,7 @@ const MainLayout = ({ navigation, mainNavigation }) => {
             borderRadiusLayout.value = withTiming(0, { duration: 250 });
         }
     }, [isDrawerOpen]);
-    const avatar = useSelector(state=>state.authentication.info.avatar)
+    const avatar = useSelector(state=>state.authentication.user.avatar)
 
     return (
         <Animated.View
@@ -321,7 +320,6 @@ const MainLayout = ({ navigation, mainNavigation }) => {
                         />
                     </TouchableOpacity>
                 }
-                url={API_URL + "/"+  avatar}
                 rightComponent={
                     <TouchableOpacity
                         style={{
@@ -332,7 +330,7 @@ const MainLayout = ({ navigation, mainNavigation }) => {
                         onPress={() => navigation.navigate("Profile")}
                     >
                         <Image
-                            source={{uri: API_URL + "/"+  avatar}}
+                            source={avatar ? {uri: constants.API_URL + "/"+  avatar} : images.penguin}
                             style={{
                                 width: 40,
                                 height: 40,

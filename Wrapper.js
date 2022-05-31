@@ -24,8 +24,7 @@ const theme = {
 const Stack = createStackNavigator();
 
 export default function Wrapper() {
-    const token = useSelector((state) => state.authentication.token);
-
+    const user = useSelector((state) => state.authentication.user);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -36,8 +35,7 @@ export default function Wrapper() {
             if(id && token){
                 const userInfo = await getUserInfoById(id)
                 const json = await userInfo.json();
-                console.log(json.avatar);
-                dispatch(authenticationSlice.actions.setToken({token,id, info: json}))
+                dispatch(authenticationSlice.actions.setToken(json))
             }
         }
         getToken()
@@ -47,7 +45,7 @@ export default function Wrapper() {
 
     return (
         <NavigationContainer style={{ flex: 1 }}>
-            {token !== null && token !== "" ? (
+            {user && user.token !== null && user && user.token !== "" ? (
                 <Stack.Navigator
                     screenOptions={{
                         headerShown: false,

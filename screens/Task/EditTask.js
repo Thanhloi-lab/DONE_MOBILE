@@ -80,25 +80,25 @@ const EditTask = (props) => {
 
 
     function handleReload() {
-        allTaskOfUser(myId).then(data => {
+        allTaskOfUser(user.idUser, user.token).then(data => {
             dispatch(jobsSlice.actions.setTask(data));
         })
             .catch(err => console.error(err))
 
     }
 
-    const myId = useSelector((state) => state.authentication.id);
+    const user = useSelector((state) => state.authentication.user);
 
 
     function handleEditTask(taskName, deadtime, info) {
         var data = {
             IdTask: taskId,
-            IdUser: myId,
+            IdUser: user.idUser,
             TaskName: taskName,
             Deadline: deadtime,
             Content: info
         }
-        var result = editTask(data);
+        var result = editTask(data, user.token);
         result.then(response => {
 
             Alert.alert("Edit success")
@@ -117,7 +117,7 @@ const EditTask = (props) => {
             IdTask: taskId,
             IdStatus: statusId,
         }
-        var result = updateStatus(data);
+        var result = updateStatus(data, user.token);
         result.then(response => {
             handleReload()
         })

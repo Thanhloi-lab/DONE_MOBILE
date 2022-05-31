@@ -53,7 +53,7 @@ const Project = ({ navigation }) => {
 
     const projects = useSelector((state) => state.jobs.allProject);
     const allTask = useSelector((state) => state.jobs.allTask);
-    const myId = useSelector((state) => state.authentication.id);
+    const user = useSelector((state) => state.authentication.user);
 
     const keyboardVerticalOffset = Platform.OS === 'ios' ? 40 : 0
 
@@ -70,7 +70,7 @@ const Project = ({ navigation }) => {
 
     function handleReload() {
 
-        allTaskOfUser(myId).then(data => {
+        allTaskOfUser(user.idUser, user.token).then(data => {
 
             dispatch(jobsSlice.actions.setTask(data));
 
@@ -78,7 +78,7 @@ const Project = ({ navigation }) => {
             .catch(err => console.error(err))
 
 
-        allUserProject(myId).then(data => {
+        allUserProject(user.idUser, user.token).then(data => {
             dispatch(jobsSlice.actions.setProject(data));
 
         })
@@ -92,7 +92,7 @@ const Project = ({ navigation }) => {
             setListProject(projects);
         } else {
             let selectedProjectWithSTatus = allTask.filter(
-                (a) => a.userCreateProject != myId
+                (a) => a.userCreateProject != user.idUser
             );
             let projects = [];
             selectedProjectWithSTatus.forEach((project) => {

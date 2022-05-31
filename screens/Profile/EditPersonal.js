@@ -33,27 +33,27 @@ import authenticationSlice from "../../stores/Authentication/authenticationSlice
 
 
 const EditPersonal = ({ navigation }) => {
-    const user = useSelector(state=>state.authentication)
+    const user = useSelector(state=>state.authentication.user)
 
 
-    const [name, setName] = useState(user.info.name)
+    const [name, setName] = useState(user.name)
     const [nameError, setNameError] = useState(false);
    
-    const [phone, setPhone] = useState(user.info.phone);
+    const [phone, setPhone] = useState(user.phone);
     const [phoneError, setPhoneError] = useState(false);
 
     const dispatch = useDispatch();
 
 
     const onSubmit = async () =>{
-        const res = await editInfo({name, phone, id: user.info.idUser})
+        const res = await editInfo({name, phone, id: user.idUser}, user.token)
         if(res.status === 200){
             ToastAndroid.showWithGravity(
                 `Info Updated`,
                 ToastAndroid.SHORT,
                 ToastAndroid.BOTTOM
               );
-            const userRes =  await getUserInfoById(user.info.idUser)
+            const userRes =  await getUserInfoById(user.idUser, user.token)
             const userJson = await userRes.json()
             dispatch(authenticationSlice.actions.setToken({token:user.token,id:user.id, info: userJson}))
                 

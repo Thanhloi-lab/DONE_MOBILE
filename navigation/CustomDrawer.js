@@ -4,13 +4,12 @@ import { View, Text, Image, TouchableOpacity, StatusBar } from 'react-native';
 import { createDrawerNavigator, DrawerContentScrollView } from '@react-navigation/drawer';
 import MainLayout from "../screens/MainLayout";
 import Animated from "react-native-reanimated";
-import { COLORS, FONTS, SIZES, icons, dummyData, constants } from '../constants';
+import { COLORS, FONTS, SIZES, icons, dummyData, constants, images } from '../constants';
 
 import tabsSlice from '../stores/tab/tabsSlice';
 import authenticationSlice from '../stores/Authentication/authenticationSlice';
 import { useSelector, useDispatch } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { API_URL } from '../apis/UserApi';
 
 
 const Drawer = createDrawerNavigator();
@@ -56,7 +55,7 @@ const CustomDrawerItem = ({ label, icon, isFocused, onPress }) => {
 
 const CustomDrawerContent = ({ navigation, selectedTab }) => {
     const dispatch = useDispatch();
-    const info = useSelector(state=>state.authentication.info)
+    const info = useSelector(state=>state.authentication.user)
 
     return (
         <DrawerContentScrollView
@@ -109,7 +108,7 @@ const CustomDrawerContent = ({ navigation, selectedTab }) => {
                     onPress={() => (navigation.navigate("Profile"))}
                 >
                     <Image
-                        source={{uri: API_URL + "/"+  info.avatar}}
+                        source={info.avatar ? {uri: constants.API_URL + "/"+  info.avatar} : images.penguin}
                         style={{
                             width: 45,
                             height: 45,

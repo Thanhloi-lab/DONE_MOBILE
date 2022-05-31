@@ -271,17 +271,17 @@ const Statistics = () => {
         }
     }
 
-    const [categories, setCategories] = React.useState(categoriesData)
-    const [viewMode, setViewMode] = React.useState("chart")
-    const [selectedCategory, setSelectedCategory] = React.useState(null)
-    const [showMoreToggle, setShowMoreToggle] = React.useState(false)
-    const id = useSelector((state) => state.authentication.id);
+    const [categories, setCategories] = React.useState(categoriesData);
+    const [viewMode, setViewMode] = React.useState("chart");
+    const [selectedCategory, setSelectedCategory] = React.useState(null);
+    const [showMoreToggle, setShowMoreToggle] = React.useState(false);
+    const user = useSelector((state) => state.authentication.user);
 
-    const [tasks, setTasks] = useState([])
-    const [dataToPrint, setDataToPrint] = useState([])
+    const [tasks, setTasks] = useState([]);
+    const [dataToPrint, setDataToPrint] = useState([]);
 
     useEffect(() => {
-        getTask(id)
+        getTask(user.idUser, user.token)
             .then((res)=>res.json())
             .then(json=>{
                 setTasks(json || [])

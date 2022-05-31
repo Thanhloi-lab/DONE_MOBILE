@@ -1,36 +1,37 @@
 
-const api = `http://192.168.43.93:50003`;
-export async function allTaskOfUser(id) {
-    // let response = await fetch(`https://192.168.0.103:50003/api/Tasks/allTaskOf?Id=${id}`);
-    // let data = await response.json();
-    // return data;
-    // console.log(`http://192.168.0.103:50003/api/Tasks/allTaskOf?Id=${id}`);
-    // fetch(`http://192.168.0.103:50003/api/Tasks/allTaskOf?Id=${id}`)
-    //     .then((response) => response.json())
-    //     .then((json) => {
-    //         // console.log(json)
-    //         return json;
-    //     }).catch((error) => {
-    //         console.error(error);
-    //     });
+import { constants } from "../constants";
 
-    let response = await fetch(`${api}/api/Tasks/allTaskOf?Id=${id}`);
+export async function allTaskOfUser(id, token) {
+    let response = await fetch(`${constants.API_URL}/api/Tasks/allTaskOf?Id=${id}`,{
+        method: 'GET',
+        mode: 'cors', 
+        cache: 'no-cache', 
+        credentials: 'same-origin',
+        headers: {
+            'Content-Type': 'application/json',
+            // 'Content-Type': 'application/x-www-form-urlencoded',
+            'Authorization': 'Bearer ' + token,
+        },
+        redirect: 'follow',
+        referrerPolicy: 'no-referrer',
+    });
+    
     let data = await response.json();
     return data;
 };
 
-export async function createTask(data) {
+export async function createTask(data, token) {
     // Default options are marked with *
     // console.log(data);
-    const response = await fetch(`${api}/api/Tasks/create`, {
+    const response = await fetch(`${constants.API_URL}/api/Tasks/create`, {
         method: 'POST', // *GET, POST, PUT, DELETE, etc.
         mode: 'cors', // no-cors, *cors, same-origin
         cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
         credentials: 'same-origin', // include, *same-origin, omit
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
             // 'Content-Type': 'application/x-www-form-urlencoded',
-            //Thêm token ở đây nha gái
+            'Authorization': 'Bearer ' + token,
         },
         redirect: 'follow', // manual, *follow, error
         referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
@@ -39,18 +40,18 @@ export async function createTask(data) {
     return response.json(); // parses JSON response into native JavaScript objects
 }
 
-export async function editTask(data) {
+export async function editTask(data, token) {
     // Default options are marked with *
     // console.log(data);
-    const response = await fetch(`${api}/api/Tasks/Edit`, {
+    const response = await fetch(`${constants.API_URL}/api/Tasks/Edit`, {
         method: 'PUT', // *GET, POST, PUT, DELETE, etc.
         mode: 'cors', // no-cors, *cors, same-origin
         cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
         credentials: 'same-origin', // include, *same-origin, omit
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
             // 'Content-Type': 'application/x-www-form-urlencoded',
-            //Thêm token ở đây nha gái
+            'Authorization': 'Bearer ' + token,
         },
         redirect: 'follow', // manual, *follow, error
         referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
@@ -61,18 +62,18 @@ export async function editTask(data) {
     return response.json(); // parses JSON response into native JavaScript objects
 }
 
-export async function updateStatus(data) {
+export async function updateStatus(data, token) {
     // Default options are marked with *
     // console.log(data);
-    const response = await fetch(`${api}/api/Tasks/updateStatus`, {
+    const response = await fetch(`${constants.API_URL}/api/Tasks/updateStatus`, {
         method: 'PUT', // *GET, POST, PUT, DELETE, etc.
         mode: 'cors', // no-cors, *cors, same-origin
         cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
         credentials: 'same-origin', // include, *same-origin, omit
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
             // 'Content-Type': 'application/x-www-form-urlencoded',
-            //Thêm token ở đây nha gái
+            'Authorization': 'Bearer ' + token,
         },
         redirect: 'follow', // manual, *follow, error
         referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
@@ -83,17 +84,17 @@ export async function updateStatus(data) {
     return response.json(); // parses JSON response into native JavaScript objects
 }
 
-export async function deleteTask(data) {
+export async function deleteTask(data, token) {
     // Default options are marked with *
-    const response = await fetch(`${api}/api/Tasks/removeTask`, {
+    const response = await fetch(`${constants.API_URL}/api/Tasks/removeTask`, {
         method: 'PUT', // *GET, POST, PUT, DELETE, etc.
         mode: 'cors', // no-cors, *cors, same-origin
         cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
         credentials: 'same-origin', // include, *same-origin, omit
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
             // 'Content-Type': 'application/x-www-form-urlencoded',
-            //Thêm token ở đây nha gái
+            'Authorization': 'Bearer ' + token,
         },
         redirect: 'follow', // manual, *follow, error
         referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
@@ -104,18 +105,18 @@ export async function deleteTask(data) {
     return response.json(); // parses JSON response into native JavaScript objects
 }
 
-export async function addTaskMembers(data) {
+export async function addTaskMembers(data, token) {
     // Default options are marked with *
     //console.log(data);
-    const response = await fetch(`${api}/api/Tasks/addMember`, {
+    const response = await fetch(`${constants.API_URL}/api/Tasks/addMember`, {
         method: 'POST', // *GET, POST, PUT, DELETE, etc.
         mode: 'cors', // no-cors, *cors, same-origin
         cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
         credentials: 'same-origin', // include, *same-origin, omit
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
             // 'Content-Type': 'application/x-www-form-urlencoded',
-            //Thêm token ở đây nha gái
+            'Authorization': 'Bearer ' + token,
         },
         redirect: 'follow', // manual, *follow, error
         referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
@@ -124,18 +125,18 @@ export async function addTaskMembers(data) {
     return response.json(); // parses JSON response into native JavaScript objects
 }
 
-export async function removeTaskMembers(data) {
+export async function removeTaskMembers(data, token) {
     // Default options are marked with *
     //console.log(data);
-    const response = await fetch(`${api}/api/Tasks/removeMember`, {
+    const response = await fetch(`${constants.API_URL}/api/Tasks/removeMember`, {
         method: 'DELETE', // *GET, POST, PUT, DELETE, etc.
         mode: 'cors', // no-cors, *cors, same-origin
         cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
         credentials: 'same-origin', // include, *same-origin, omit
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
             // 'Content-Type': 'application/x-www-form-urlencoded',
-            //Thêm token ở đây nha gái
+            'Authorization': 'Bearer ' + token,
         },
         redirect: 'follow', // manual, *follow, error
         referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
@@ -144,9 +145,20 @@ export async function removeTaskMembers(data) {
     return response.json(); // parses JSON response into native JavaScript objects
 }
 
-export async function allTaskByProject(projectId, userId) {
+export async function allTaskByProject(projectId, userId, token) {
 
-    let response = await fetch(`${api}/api/Tasks/getByProject?idProject=${projectId}&idUser=${userId}`);
+    let response = await fetch(`${constants.API_URL}/api/Tasks/getByProject?idProject=${projectId}&idUser=${userId}`,{
+        method: 'GET',
+        mode: 'cors', 
+        cache: 'no-cache', 
+        credentials: 'same-origin',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token,
+        },
+        redirect: 'follow', // manual, *follow, error
+        referrerPolicy: 'no-referrer', 
+    });
     let data = await response.json();
     return data;
 };

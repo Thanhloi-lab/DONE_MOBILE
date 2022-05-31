@@ -22,7 +22,7 @@ import {
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import React from "react";
-import { COLORS, FONTS, SIZES, icons, dummyData } from '../../constants'
+import { COLORS, FONTS, SIZES, icons, dummyData, constants } from '../../constants'
 
 
 import { useState, useEffect } from "react";
@@ -34,14 +34,14 @@ import Animated from 'react-native-reanimated';
 import * as ImagePicker from 'expo-image-picker';
 
 
-import { API_URL, editAvatar, getUserInfo, getUserInfoById } from "../../apis/UserApi";
+import { editAvatar, getUserInfo, getUserInfoById } from "../../apis/UserApi";
 import { useDispatch, useSelector } from "react-redux";
 import authenticationSlice from "../../stores/Authentication/authenticationSlice";
 
 
 const Profile = ({ navigation }) => {
-    const user = useSelector(state=>state.authentication)
-    const [image, setImage] = useState(user.info.avatar);
+    const user = useSelector(state=>state.authentication.user)
+    const [image, setImage] = useState(user.avatar);
     const dispatch = useDispatch()
 
     useEffect(() => {
@@ -100,14 +100,14 @@ const Profile = ({ navigation }) => {
 
         const data = { uri: localUri, name: filename, type };
 
-        const res = await editAvatar({id: user.info.idUser, avatar: data})
+        const res = await editAvatar({id: user.idUser, avatar: data}, user.token)
         if(res.status === 200){
             ToastAndroid.showWithGravity(
                 `Info Updated`,
                 ToastAndroid.SHORT,
                 ToastAndroid.BOTTOM
                 );
-            const userRes =  await getUserInfoById(user.info.idUser)
+            const userRes =  await getUserInfoById(user.idUser, user.token)
             const userJson = await userRes.json()
             dispatch(authenticationSlice.actions.setToken({token:user.token,id:user.id, info: userJson}))
                 
@@ -220,7 +220,7 @@ const Profile = ({ navigation }) => {
                                         alignItems: 'center',
                                     }}>
                                         <ImageBackground
-                                            source={typeof (image) === 'string' ? {uri: !image.startsWith("file") ? API_URL + "/"+  image: image} : image}
+                                            source={typeof (image) === 'string' ? {uri: !image.startsWith("file") ? constants.API_URL + "/"+  image: image} : image}
                                             style={{ height: 130, width: 130, borderWidth: 2, borderRadius: 30, borderColor: COLORS.gray }}
                                             imageStyle={{ borderRadius: 30 }}>
                                             <View style={{
@@ -250,7 +250,7 @@ const Profile = ({ navigation }) => {
                                             marginTop: 15,
                                             marginBottom: 5,
                                             ...FONTS.h2
-                                        }]}>@{user.info.name}</Title>
+                                        }]}>@{user.name}</Title>
                                     </View>
                                 </TouchableOpacity>
                             </View>
@@ -272,12 +272,12 @@ const Profile = ({ navigation }) => {
                                     <View style={styles.detail}>
                                         <Image source={icons.user1} style={styles.icon} />
                                         <Text style={{marginRight:10}}>Name:</Text>
-                                        <Text style={{ ...FONTS.h4 }}>{user.info.name}</Text>
+                                        <Text style={{ ...FONTS.h4 }}>{user.name}</Text>
                                     </View>
                                     <View style={styles.detail}>
                                         <Image source={icons.phone1} style={styles.icon} />
                                         <Text style={{marginRight:10}}>Phone:</Text>
-                                        <Text style={{ ...FONTS.h4 }}>{user.info.phone}</Text>
+                                        <Text style={{ ...FONTS.h4 }}>{user.phone}</Text>
                                     </View>
                                     
                                 </View>

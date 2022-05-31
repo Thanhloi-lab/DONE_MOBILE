@@ -61,7 +61,7 @@ const CreateTask = (props) => {
     }, [nameError, contentError])
 
     function handleReload() {
-        allTaskOfUser(myId).then(data => {
+        allTaskOfUser(user.idUser, user.token).then(data => {
             dispatch(jobsSlice.actions.setTask(data));
         })
             .catch(err => console.error(err))
@@ -69,20 +69,20 @@ const CreateTask = (props) => {
     }
 
     const projectId = props.route.params.projectId;
-    const myId = useSelector((state) => state.authentication.id);
+    const user= useSelector((state) => state.authentication.user);
 
 
     function handleCreateTask(taskName, deadtime, info) {
 
         var data = {
-            IdUser: myId,
+            IdUser: user.idUser,
             IdProject: projectId,
             NameTask: taskName,
             Deadline: deadtime,
             Content: info
 
         }
-        var result = createTask(data);
+        var result = createTask(data, user.token);
         result.then(reponse => {
             Alert.alert("Create success")
             // handleReload();

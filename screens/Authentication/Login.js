@@ -36,14 +36,12 @@ const Login = ({ navigation }) => {
 
     const onSubmit = async () =>{
         try{
-
             const response =  await login({email, password})
             
-            
             if(response.status === 200){
+                // console.log("login");
                 const json = await response.json()
-                dispatch(authenticationSlice.actions.setToken({token: json.token, id:json.idUser, info:json }))
-                console.log("login", json.idUser + "");
+                dispatch(authenticationSlice.actions.setToken(json))
                 await AsyncStorage.setItem('token', json.token)
                 await AsyncStorage.setItem('id', json.idUser + "")
                 
@@ -136,14 +134,11 @@ const Login = ({ navigation }) => {
                                     style={styles.input}
                                     value={password}
                                     onChangeText={(value) => {
-                                        setPasswordError(!validate(value, "password"));
+                                        // setPasswordError(!validate(value, "password"));
                                         setPassword(value);
                                     }}
                                     placeholder="Password"
                                 />
-
-
-
                             </View>
                             {passwordError && (
                                 <View style={styles.errorContainer}>

@@ -31,7 +31,7 @@ const ProjectDetail = (props) => {
     const fall = new Animated.Value(1);
 
     const projectId = props.route.params.projectId;
-    const myId = useSelector((state) => state.authentication.id);
+    const user = useSelector((state) => state.authentication.user);
     const allTask = useSelector((state) => state.jobs.allTask);
     const projects = useSelector((state) => state.jobs.allProject);
     const [projectName, setProjectName] = React.useState("");
@@ -67,13 +67,13 @@ const ProjectDetail = (props) => {
 
     function handleReload() {
 
-        allTaskByProject(projectId, myId).then(data => {
+        allTaskByProject(projectId, user.idUser, user.token).then(data => {
             dispatch(jobsSlice.actions.setTask(data));
             setTask(data)
         })
             .catch(err => console.error(err))
 
-        allUserProject(myId).then(data => {
+        allUserProject(user.idUser, user.token).then(data => {
             dispatch(jobsSlice.actions.setProject(data));
         })
             .catch(err => console.error(err))
@@ -142,11 +142,11 @@ const ProjectDetail = (props) => {
     function handleEditProject(projectName) {
         var data = {
 
-            IdUser: myId,
+            IdUser: user.idUser,
             IdProject: projectId,
             ProjectName: projectName
         }
-        var result = editProject(data);
+        var result = editProject(data, user.token);
         result.then(response => {
 
             setProjectName("");
@@ -161,11 +161,11 @@ const ProjectDetail = (props) => {
 
     function handleDeleteProject() {
         var data = {
-            IdUser: myId,
+            IdUser: user.idUser,
             IdSth: projectId
         }
 
-        var result = deleteProject(data);
+        var result = deleteProject(data, user.token);
         result.then(response => {
 
             setProjectName("");
@@ -381,10 +381,10 @@ const ProjectDetail = (props) => {
         var data = {
             IdMember,
             IdProject: projectId,
-            IdUser: myId
+            IdUser: user.idUser
         }
 
-        var result = addProjectMembers(data);
+        var result = addProjectMembers(data, user.token);
         result
             .then(response => {
                 setUsers([]);
@@ -398,7 +398,7 @@ const ProjectDetail = (props) => {
     }
 
     function handleLoadUser() {
-        getUserByProjectId(projectId).then(data => {
+        getUserByProjectId(projectId, user.token).then(data => {
             // var matchUsers = [];
             // data.forEach(x => {
             //     matchUsers.push({
@@ -415,7 +415,7 @@ const ProjectDetail = (props) => {
     }
 
     function handleSearchUser() {
-        getUserByText(searchText).then(data => {
+        getUserByText(searchText, user.token).then(data => {
             var matchUsers = [];
             data.forEach(x => {
                 matchUsers.push({
@@ -661,11 +661,11 @@ const ProjectDetail = (props) => {
 
     const handleDeleteUser = () => {
         var data = {
-            IdUser: myId,
+            IdUser: user.idUser,
             IdSth: userChoosen,
             IdProject: projectId
         }
-        var result = removeProjectMembers(data);
+        var result = removeProjectMembers(data, user.token);
         result.then(response => {
             // handleReload()
             setUserChoosen("");
@@ -729,7 +729,7 @@ const ProjectDetail = (props) => {
                         </Text>
                         <Text>Creator: {props.route.params.userName} </Text>
                     </View>
-                    {props.route.params.userId == myId &&
+                    {props.route.params.userId == user.idUser &&
 
                         <View style={{
                             top: 0,

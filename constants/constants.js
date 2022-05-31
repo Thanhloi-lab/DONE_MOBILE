@@ -29,13 +29,14 @@ const bottom_tabs = [
         id: 4,
         label: screens.notification,
     }
-]
+];
 
-
+const API_URL = "http://192.168.0.103:50003";
 
 const constants = {
     screens,
-    bottom_tabs
+    bottom_tabs,
+    API_URL
 }
 
 export default constants

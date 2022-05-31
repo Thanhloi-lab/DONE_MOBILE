@@ -33,7 +33,7 @@ const TaskDetail = (props) => {
     const taskDeadline = props.route.params.item[0].deadline;
     const taskContent = props.route.params.item[0].content;
     const taskStatus = props.route.params.item[0].statusId;
-    const myId = useSelector((state) => state.authentication.id);
+    const user = useSelector((state) => state.authentication.user);
     const [modalDeleteTaskVisible, setModalDeleteTaskVisible] = useState(false);
 
 
@@ -48,7 +48,7 @@ const TaskDetail = (props) => {
 
 
     function handleReload() {
-        allTaskOfUser(myId).then(data => {
+        allTaskOfUser(user.idUser, user.token).then(data => {
             dispatch(jobsSlice.actions.setTask(data));
         })
             .catch(err => console.error(err))
@@ -61,7 +61,7 @@ const TaskDetail = (props) => {
             IdTask: taskId,
             IdStatus: 2,
         }
-        var result = updateStatus(data);
+        var result = updateStatus(data, user.token);
         result.then(response => {
             handleReload()
         })
@@ -75,11 +75,11 @@ const TaskDetail = (props) => {
 
     function handleDeleteTask() {
         var data = {
-            IdUser: myId,
+            IdUser: user.idUser,
             IdSth: taskId
         }
 
-        var result = deleteTask(data);
+        var result = deleteTask(data, user.token);
         result.then(response => {
             handleReload()
             Alert.alert("delete success");
@@ -287,10 +287,10 @@ const TaskDetail = (props) => {
         var data = {
             IdMember,
             IdTask: taskId,
-            IdUser: myId
+            IdUser: user.idUser
         }
 
-        var result = addTaskMembers(data);
+        var result = addTaskMembers(data, user.token);
         result
             .then(response => {
 
@@ -305,7 +305,7 @@ const TaskDetail = (props) => {
     }
 
     function handleLoadUser() {
-        getUserByTaskId(taskId).then(data => {
+        getUserByTaskId(taskId, user.token).then(data => {
             // var matchUsers = [];
             // data.forEach(x => {
             //     matchUsers.push({
@@ -322,7 +322,7 @@ const TaskDetail = (props) => {
     }
 
     function handleSearchUser() {
-        getUserByText(searchText).then(data => {
+        getUserByText(searchText, user.token).then(data => {
             var matchUsers = [];
             data.forEach(x => {
                 matchUsers.push({
@@ -568,11 +568,11 @@ const TaskDetail = (props) => {
 
     const handleDeleteUser = () => {
         var data = {
-            IdUser: myId,
+            IdUser: user.idUser,
             IdSth: userChoosen,
             IdTask: taskId
         }
-        var result = removeTaskMembers(data);
+        var result = removeTaskMembers(data, user.token);
         result.then(response => {
             // handleReload()
             setUserChoosen("");
@@ -637,7 +637,7 @@ const TaskDetail = (props) => {
                         </Text>
                         <Text>Creator:{userName} </Text>
                     </View>
-                    {myId == props.route.params.item[0].userCreateProject &&
+                    {user.idUser == props.route.params.item[0].userCreateProject &&
                         <View style={{
                             top: 0,
                             right: 0,

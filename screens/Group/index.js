@@ -58,7 +58,7 @@ const Group = ({ navigation }) => {
 
     const groups = useSelector((state) => state.jobs.allGroup);
     const allTask = useSelector((state) => state.jobs.allTask);
-    const myId = useSelector((state) => state.authentication.id);
+    const user = useSelector((state) => state.authentication.user);
 
     const keyboardVerticalOffset = Platform.OS === 'ios' ? 40 : 0
     React.useEffect(() => {
@@ -74,13 +74,13 @@ const Group = ({ navigation }) => {
     }, []);
 
     function handleReload() {
-        allTaskOfUser(myId).then(data => {
+        allTaskOfUser(user.idUser, user.token).then(data => {
             dispatch(jobsSlice.actions.setTask(data));
 
         })
             .catch(err => console.error(err))
 
-        allUserGroup(myId).then(data => {
+        allUserGroup(user.idUser, user.token).then(data => {
             dispatch(jobsSlice.actions.setGroup(data));
             setListGroup(data)
         })
@@ -94,9 +94,9 @@ const Group = ({ navigation }) => {
         var data = {
 
             NameGroup: groupName,
-            IdUser: myId
+            IdUser: user.idUser
         }
-        var result = createGroup(data);
+        var result = createGroup(data, user.token);
         result.then(data => {
             handleReload();
             Alert.alert("create success");
@@ -114,7 +114,7 @@ const Group = ({ navigation }) => {
 
         } else {
             let selectedGroupWithSTatus = allTask.filter(
-                a => a.userCreateGroup != myId
+                a => a.userCreateGroup != user.idUser
             );
             
             let Groups = [];

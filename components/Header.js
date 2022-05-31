@@ -7,8 +7,6 @@ import {
 import { FONTS } from '../constants';
 
 const Header = ({ containerStyle, title, leftComponent, rightComponent, url }) => {
-    console.log(url);
-
     return (
         <View
             style={{

@@ -45,7 +45,7 @@ const GroupDetail = (props) => {
     const keyboardVerticalOffset = Platform.OS === 'ios' ? 40 : 0
 
     const groupId = props.route.params.groupId;
-    const myId = useSelector((state) => state.authentication.id);
+    const user = useSelector((state) => state.authentication.user);
 
     const bs = React.createRef();
     const fall = new Animated.Value(1);
@@ -61,12 +61,12 @@ const GroupDetail = (props) => {
     }, [])
 
     const handleReload = () => {
-        allProjectByGroupId(groupId).then(data => {
-            setProjects(data)
-        })
-            .catch(err => console.error(err))
+        // allProjectByGroupId(groupId, user.token).then(data => {
+        //     setProjects(data)
+        // })
+        //     .catch(err => console.error(err))
 
-        getGroupById(groupId).then(data => {
+        getGroupById(groupId, user.token).then(data => {
             setGroup(data)
         })
             .catch(err => console.error(err))
@@ -140,16 +140,16 @@ const GroupDetail = (props) => {
 
     function handleDeleteGroup() {
         var data = {
-            IdUser: myId,
+            IdUser: user.idUser,
             IdSth: groupId
         }
-        var result = deleteGroup(data);
+        var result = deleteGroup(data, user.token);
         result.then(response => {
             // handleReload()
             setGroupName("");
             if (response.isSuccessed) {
                 Alert.alert(response.resultObject);
-                allUserGroup(myId).then(data => {
+                allUserGroup(user.idUser, user.token).then(data => {
                     dispatch(jobsSlice.actions.setGroup(data));
                 })
                     .catch(err => console.error(err))
@@ -170,10 +170,10 @@ const GroupDetail = (props) => {
     function handleEditGroup(groupName) {
         var data = {
             GroupName: groupName,
-            IdUser: myId,
+            IdUser: user.idUser,
             IdGroup: groupId
         }
-        var result = editGroup(data);
+        var result = editGroup(data, user.token);
         result.then(response => {
             // handleReload()
             setGroupName("");
@@ -194,10 +194,10 @@ const GroupDetail = (props) => {
 
         var data = {
             IdGroup: groupId,
-            IdUser: myId,
+            IdUser: user.idUser,
             NameProject: projectName,
         }
-        var result = createProject(data);
+        var result = createProject(data, user.token);
         result.then(response => {
             setProjectName("");
             handleReload();
@@ -479,10 +479,10 @@ const GroupDetail = (props) => {
         var data = {
             IdMembers,
             IdGroup: groupId,
-            IdUser: myId
+            IdUser: user.idUser
         }
         //console.log([data])
-        var result = addGroupMembers(data);
+        var result = addGroupMembers(data, user.token);
         result
             .then(response => {
                 setUsers([]);
@@ -496,7 +496,7 @@ const GroupDetail = (props) => {
     }
 
     function handleLoadUser() {
-        getUserByGroupId(groupId).then(data => {
+        getUserByGroupId(groupId, user.token).then(data => {
             // var matchUsers = [];
             // data.forEach(x => {
             //     matchUsers.push({
@@ -513,7 +513,7 @@ const GroupDetail = (props) => {
     }
 
     function handleSearchUser() {
-        getUserByText(searchText).then(data => {
+        getUserByText(searchText, user.token).then(data => {
             var matchUsers = [];
             data.forEach(x => {
                 matchUsers.push({
@@ -757,11 +757,11 @@ const GroupDetail = (props) => {
 
     const handleDeleteUser = () => {
         var data = {
-            IdUser: myId,
+            IdUser: user.idUser,
             IdSth: userId,
             IdGroup: groupId
         }
-        var result = removeGroupMembers(data);
+        var result = removeGroupMembers(data, user.token);
         result.then(response => {
             // handleReload()
             setUserId("");
@@ -826,7 +826,7 @@ const GroupDetail = (props) => {
                         </Text>
                         <Text>Creator: {group.mail}</Text>
                     </View>
-                    { group.createUser == myId && 
+                    { group.createUser == user.idUser && 
                         <View style={{
                             top: 0,
                             right: 0,

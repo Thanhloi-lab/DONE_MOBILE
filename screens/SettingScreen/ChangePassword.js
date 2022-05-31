@@ -51,7 +51,7 @@ const ChangePassword = ({ navigation }) => {
 
     const dispatch = useDispatch();
 
-    const id = useSelector((state) => state.authentication.id);
+    const user = useSelector((state) => state.authentication.user);
 
     useLayoutEffect(() => {
         currentPasswordError ? setError(1) : setError("");
@@ -60,8 +60,7 @@ const ChangePassword = ({ navigation }) => {
     }, [currentPasswordError, newPasswordError, confirmPasswordError])
 
     const onSubmit = () =>{
-        console.log(id);
-        changePassword({id:id, password: currentPassword, newPassword})
+        changePassword({id:user.idUser, password: currentPassword, newPassword}, user.token)
             .then((res)=>{
                 console.log(res.status);
                 ToastAndroid.showWithGravity(

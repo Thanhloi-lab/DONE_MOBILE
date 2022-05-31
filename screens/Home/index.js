@@ -45,7 +45,7 @@ const Home = ({ navigation }) => {
     const [listTask, setListTask] = React.useState([]);
     const [searchText, setSearchText] = React.useState("");
 
-    const myId = useSelector((state) => state.authentication.id);
+    const user = useSelector((state) => state.authentication.user);
     const allTaskRaw = useSelector((state) => state.jobs.allTask);
     var allTask = allTaskRaw;
     
@@ -72,17 +72,17 @@ const Home = ({ navigation }) => {
     }
 
     function handleReload(){
-        allTaskOfUser(myId).then(data => {
+        allTaskOfUser(user.idUser, user.token).then(data => {
             dispatch(jobsSlice.actions.setTask(data));
         })
             .catch(err => console.error(err))
 
-        allUserGroup(myId).then(data => {
+        allUserGroup(user.idUser, user.token).then(data => {
             dispatch(jobsSlice.actions.setGroup(data));
         })
             .catch(err => console.error(err))
 
-        allUserProject(myId).then(data => {
+        allUserProject(user.idUser, user.token).then(data => {
             dispatch(jobsSlice.actions.setProject(data));
         })
             .catch(err => console.error(err))
