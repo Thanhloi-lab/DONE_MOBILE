@@ -52,7 +52,7 @@ const GroupDetail = (props) => {
 
     useEffect(() => {
         // handleReload();
-        
+
         const willFocusSubscription = props.navigation.addListener('focus', () => {
             handleReload();
         });
@@ -201,12 +201,9 @@ const GroupDetail = (props) => {
         result.then(response => {
             setProjectName("");
             handleReload();
-            if (response.isSuccessed) {
-                Alert.alert(response.resultObject);
-            }
-            else {
-                Alert.alert(response.message);
-            }
+
+            Alert.alert("create success");
+
         })
             .catch(err => {
                 Alert.alert(err);
@@ -826,7 +823,7 @@ const GroupDetail = (props) => {
                         </Text>
                         <Text>Creator: {group.mail}</Text>
                     </View>
-                    { group.createUser == user.idUser && 
+                    {group.createUser == user.idUser &&
                         <View style={{
                             top: 0,
                             right: 0,
@@ -842,7 +839,7 @@ const GroupDetail = (props) => {
                                     flexDirection: "row",
                                     justifyContent: "center",
                                     alignItems: "center",
-    
+
                                 }}
                                 onPress={() => {
                                     bs.current.snapTo(0)
@@ -891,7 +888,7 @@ const GroupDetail = (props) => {
                                     marginBottom: index === projects.length - 1 ? 200 : SIZES.radius,
                                 }}
                                 item={item}
-                                onPress={()=>{
+                                onPress={() => {
                                     props.navigation.navigate("ProjectDetail", {
                                         projectId: item.idProject,
                                         projectName: item.nameProject,

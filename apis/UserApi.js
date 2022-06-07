@@ -30,6 +30,7 @@ export const verifyEmail = async (data) => {
 };
 
 export const login = async (data) => {
+    console.log(data)
     const formData = new FormData();
     formData.append("Mail", data.email)
     formData.append("Password", data.password)
@@ -57,7 +58,7 @@ export const sendVerifyCode = async (email) => {
     })
 };
 
-export const editInfo = (data, token) =>{
+export const editInfo = (data, token) => {
     const formData = new FormData();
     formData.append("Id", data.id)
     formData.append("Name", data.name)
@@ -66,10 +67,10 @@ export const editInfo = (data, token) =>{
     formData.append("Gender", "Nam")
     formData.append("BirthDate", "2021-01-01")
     return fetch(`${constants.API_URL}/api/Users/UpdateInfo`, {
-        method: 'PUT', 
-        body:formData,
-        mode: 'cors', 
-        cache: 'no-cache', 
+        method: 'PUT',
+        body: formData,
+        mode: 'cors',
+        cache: 'no-cache',
         credentials: 'same-origin',
         headers: {
             'Content-Type': 'application/json',
@@ -77,21 +78,21 @@ export const editInfo = (data, token) =>{
             'Authorization': 'Bearer ' + token,
         },
         redirect: 'follow', // manual, *follow, error
-        referrerPolicy: 'no-referrer', 
+        referrerPolicy: 'no-referrer',
     })
 }
 
-export const editAvatar = (data, token) =>{
+export const editAvatar = (data, token) => {
     const formData = new FormData();
     formData.append("IdUser", data.id)
     formData.append("Avatar", data.avatar)
 
 
     return fetch(`${constants.API_URL}/api/Users/updateAvatar`, {
-        method: 'PUT', 
-        body:formData,
-        mode: 'cors', 
-        cache: 'no-cache', 
+        method: 'PUT',
+        body: formData,
+        mode: 'cors',
+        cache: 'no-cache',
         credentials: 'same-origin',
         headers: {
             'Content-Type': 'application/json',
@@ -99,7 +100,7 @@ export const editAvatar = (data, token) =>{
             'Authorization': 'Bearer ' + token,
         },
         redirect: 'follow', // manual, *follow, error
-        referrerPolicy: 'no-referrer', 
+        referrerPolicy: 'no-referrer',
     })
 }
 
@@ -112,8 +113,8 @@ export const changePassword = async (data, token) => {
     return fetch(`${constants.API_URL}/api/Users/changePassword`, {
         method: 'PUT',
         body: formData,
-        mode: 'cors', 
-        cache: 'no-cache', 
+        mode: 'cors',
+        cache: 'no-cache',
         credentials: 'same-origin',
         headers: {
             'Content-Type': 'application/json',
@@ -121,16 +122,16 @@ export const changePassword = async (data, token) => {
             'Authorization': 'Bearer ' + token,
         },
         redirect: 'follow', // manual, *follow, error
-        referrerPolicy: 'no-referrer', 
+        referrerPolicy: 'no-referrer',
     })
 };
 
 
 export const getTask = async (id, token) => {
-    return fetch(`${constants.API_URL}/api/Tasks/allTaskOf?Id=${id}`,{
+    return fetch(`${constants.API_URL}/api/Tasks/allTaskOf?Id=${id}`, {
         method: 'GET',
-        mode: 'cors', 
-        cache: 'no-cache', 
+        mode: 'cors',
+        cache: 'no-cache',
         credentials: 'same-origin',
         headers: {
             'Content-Type': 'application/json',
@@ -153,10 +154,10 @@ export const getUserInfo = async (id) => {
 };
 
 export async function getUserByText(text, token) {
-    let response = await fetch(`${constants.API_URL}/api/Users/findUser?keyword=${text}`,{
+    let response = await fetch(`${constants.API_URL}/api/Users/findUser?keyword=${text}`, {
         method: 'GET',
-        mode: 'cors', 
-        cache: 'no-cache', 
+        mode: 'cors',
+        cache: 'no-cache',
         credentials: 'same-origin',
         headers: {
             'Content-Type': 'application/json',
@@ -164,17 +165,17 @@ export async function getUserByText(text, token) {
             'Authorization': 'Bearer ' + token,
         },
         redirect: 'follow', // manual, *follow, error
-        referrerPolicy: 'no-referrer', 
+        referrerPolicy: 'no-referrer',
     });
     let data = await response.json();
     return data;
 };
 
 export async function getUserByGroupId(id, token) {
-    let response = await fetch(`${constants.API_URL}/api/Groups/allMembers?Id=${id}`,{
+    let response = await fetch(`${constants.API_URL}/api/Groups/allMembers?Id=${id}`, {
         method: 'GET',
-        mode: 'cors', 
-        cache: 'no-cache', 
+        mode: 'cors',
+        cache: 'no-cache',
         credentials: 'same-origin',
         headers: {
             'Content-Type': 'application/json',
@@ -182,17 +183,17 @@ export async function getUserByGroupId(id, token) {
             'Authorization': 'Bearer ' + token,
         },
         redirect: 'follow', // manual, *follow, error
-        referrerPolicy: 'no-referrer', 
+        referrerPolicy: 'no-referrer',
     });
     let data = await response.json();
     return data;
 };
 
 export async function getUserByProjectId(id, token) {
-    let response = await fetch(`${constants.API_URL}/api/Projects/allMembers?Id=${id}`,{
+    let response = await fetch(`${constants.API_URL}/api/Projects/allMembers?Id=${id}`, {
         method: 'GET',
-        mode: 'cors', 
-        cache: 'no-cache', 
+        mode: 'cors',
+        cache: 'no-cache',
         credentials: 'same-origin',
         headers: {
             'Content-Type': 'application/json',
@@ -200,17 +201,17 @@ export async function getUserByProjectId(id, token) {
             'Authorization': 'Bearer ' + token,
         },
         redirect: 'follow', // manual, *follow, error
-        referrerPolicy: 'no-referrer', 
+        referrerPolicy: 'no-referrer',
     });
     let data = await response.json();
     return data;
 };
 
 export async function getUserByTaskId(id, token) {
-    let response = await fetch(`${constants.API_URL}/api/Tasks/allMembers?Id=${id}`,{
+    let response = await fetch(`${constants.API_URL}/api/Tasks/allMembers?Id=${id}`, {
         method: 'GET',
-        mode: 'cors', 
-        cache: 'no-cache', 
+        mode: 'cors',
+        cache: 'no-cache',
         credentials: 'same-origin',
         headers: {
             'Content-Type': 'application/json',
@@ -218,7 +219,7 @@ export async function getUserByTaskId(id, token) {
             'Authorization': 'Bearer ' + token,
         },
         redirect: 'follow', // manual, *follow, error
-        referrerPolicy: 'no-referrer', 
+        referrerPolicy: 'no-referrer',
     });
     let data = await response.json();
     return data;

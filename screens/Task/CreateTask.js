@@ -48,12 +48,12 @@ const CreateTask = (props) => {
         const currentDate = selectedDate || date;
         setShow("")
         setDate(currentDate);
-        let tempDate = new Date(currentDate);
-        let month = tempDate.getMonth() + 1;
-        if (month < 10) { month = '0' + month }
-        let fDate = tempDate.getFullYear() + '-' + month + '-' + tempDate.getDate();
-        let fTime = tempDate.getHours() + ':' + tempDate.getMinutes() + ':' + tempDate.getSeconds();
-        setDeadline(fDate + 'T' + fTime + 'Z')
+        // let tempDate = new Date(currentDate);
+        // let month = tempDate.getMonth() + 1;
+        // if (month < 10) { month = '0' + month }
+        // let fDate = tempDate.getFullYear() + '-' + month + '-' + tempDate.getDate();
+        // let fTime = tempDate.getHours() + ':' + tempDate.getMinutes() + ':' + tempDate.getSeconds();
+        setDeadline(date.toISOString())
     }
 
     useLayoutEffect(() => {
@@ -69,7 +69,7 @@ const CreateTask = (props) => {
     }
 
     const projectId = props.route.params.projectId;
-    const user= useSelector((state) => state.authentication.user);
+    const user = useSelector((state) => state.authentication.user);
 
 
     function handleCreateTask(taskName, deadtime, info) {
@@ -438,8 +438,8 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         borderRadius: 25,
         height: 35,
-        paddingVertical:5,
-        paddingHorizontal:10,
+        paddingVertical: 5,
+        paddingHorizontal: 10,
 
         shadowColor: "#000",
         shadowOffset: {

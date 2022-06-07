@@ -9,7 +9,7 @@ import {
     Keyboard,
     KeyboardAvoidingView,
     ToastAndroid,
-    
+
 } from "react-native";
 import { COLORS, FONTS, SIZES, icons, dummyData, constants } from '../../constants';
 import { done_name } from '../../constants/icons';
@@ -34,34 +34,34 @@ const Login = ({ navigation }) => {
 
     const dispatch = useDispatch();
 
-    const onSubmit = async () =>{
-        try{
-            const response =  await login({email, password})
-            
-            if(response.status === 200){
+    const onSubmit = async () => {
+        try {
+            const response = await login({ email, password })
+            console.log("inin")
+            if (response.status === 200) {
                 // console.log("login");
                 const json = await response.json()
                 dispatch(authenticationSlice.actions.setToken(json))
                 await AsyncStorage.setItem('token', json.token)
                 await AsyncStorage.setItem('id', json.idUser + "")
-                
+
             }
-            else{
+            else {
                 ToastAndroid.showWithGravity(
                     "Wrong email or password",
                     ToastAndroid.SHORT,
                     ToastAndroid.BOTTOM
-                    );
-                }
+                );
+            }
         }
-        catch (err){
+        catch (err) {
             console.log(err);
         }
     }
 
-    useEffect(()=>{
-        
-        },[])
+    useEffect(() => {
+
+    }, [])
 
     return (
         <LinearGradient

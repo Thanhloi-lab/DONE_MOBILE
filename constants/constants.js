@@ -16,22 +16,22 @@ const bottom_tabs = [
     {
         id: 1,
         label: screens.group,
-    }, 
+    },
     {
         id: 2,
         label: screens.project,
-    }, 
+    },
     {
         id: 3,
         label: screens.statistics,
-    }, 
+    },
     {
         id: 4,
         label: screens.notification,
     }
 ];
 
-const API_URL = "http://192.168.0.103:50003";
+const API_URL = "http://192.168.1.4:50003";
 
 const constants = {
     screens,
