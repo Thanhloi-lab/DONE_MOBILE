@@ -99,7 +99,7 @@ const Group = ({ navigation }) => {
         var result = createGroup(data, user.token);
         result.then(data => {
             handleReload();
-            Alert.alert("create success");
+            Alert.alert("create success"); 
         })
             .catch(err => {
                 Alert.alert(err);

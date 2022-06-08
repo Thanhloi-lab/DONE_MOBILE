@@ -61,10 +61,10 @@ const GroupDetail = (props) => {
     }, [])
 
     const handleReload = () => {
-        // allProjectByGroupId(groupId, user.token).then(data => {
-        //     setProjects(data)
-        // })
-        //     .catch(err => console.error(err))
+        allProjectByGroupId(groupId, user.token).then(data => {
+            setProjects(data)
+        })
+            .catch(err => console.error(err))
 
         getGroupById(groupId, user.token).then(data => {
             setGroup(data)
@@ -200,9 +200,10 @@ const GroupDetail = (props) => {
         var result = createProject(data, user.token);
         result.then(response => {
             setProjectName("");
-            handleReload();
+
 
             Alert.alert("create success");
+            handleReload();
 
         })
             .catch(err => {
